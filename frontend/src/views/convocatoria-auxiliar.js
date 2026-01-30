@@ -223,21 +223,59 @@ export class ConvocatoriaAuxiliar extends LitElement {
         border-radius: 18px;
     }
 
-    .nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        color: white;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0 12px;
-        border-radius: 50%;
+    /* ================= MODAL PDF ================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
     }
 
-    .nav.left { left: 10px; }
-    .nav.right { right: 10px; }
+    .modal {
+      background: #fff;
+      width: 90%;
+      max-width: 900px;
+      height: 85vh;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: #0a0f24;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      flex: 1;
+    }
+
+    /* Visor PDF */
+    .modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+
+      /* zoom / pellizco */
+      touch-action: pinch-zoom;
+    }
 
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
@@ -423,6 +461,16 @@ export class ConvocatoriaAuxiliar extends LitElement {
       globalThis.location.href = '/preregistro';
     }
 
+    showPdfModal = false;
+
+    openPdf() {
+      this.showPdfModal = true;
+    }
+
+    closePdf() {
+      this.showPdfModal = false;
+    }
+
   /* ========================================= HTML ======================================== */
   render() {
     return html`
@@ -439,7 +487,9 @@ export class ConvocatoriaAuxiliar extends LitElement {
       <main>
         <section class="hero">
           <div class="poster">
-            <img class="convocatoria-img" src="/src/assets/policia/ConvocatoriaPolicia.jpg" @click=${() => window.open('/src/assets/policia/ConvocatoriaPolicia.jpg', '_blank')}/>
+            <button class="btn" @click=${this.openPdf}>
+              VER CONVOCATORIA (PDF)
+            </button>
           </div>
 
           <div class="content">
@@ -504,6 +554,27 @@ export class ConvocatoriaAuxiliar extends LitElement {
           </span>
         </div>
       </main>
+
+      ${this.showPdfModal ? html`
+        <div class="modal-backdrop" @click=${this.closePdf}>
+          <div class="modal" @click=${e => e.stopPropagation()}>
+            
+            <div class="modal-header">
+              <span>Convocatoria Policía Auxiliar</span>
+              <button class="modal-close" @click=${this.closePdf}>✕</button>
+            </div>
+
+            <div class="modal-body">
+              <iframe
+                src="/src/assets/convocatoria/convocatoria-pa.pdf"
+                title="Convocatoria Policía Auxiliar">
+              </iframe>
+            </div>
+
+          </div>
+        </div>
+      ` : null}
+
     `;
   }
 }
