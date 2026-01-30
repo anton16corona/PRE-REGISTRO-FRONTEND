@@ -487,9 +487,12 @@ export class ConvocatoriaAuxiliar extends LitElement {
       <main>
         <section class="hero">
           <div class="poster">
-            <button class="btn" @click=${this.openPdf}>
-              VER CONVOCATORIA (PDF)
-            </button>
+            <img
+              class="convocatoria-img"
+              src="/src/assets/policia/ConvocatoriaPolicia.jpg"
+              alt="Convocatoria Policía Auxiliar"
+              @click=${this.openPdf}
+            />
           </div>
 
           <div class="content">
