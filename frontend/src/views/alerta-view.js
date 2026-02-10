@@ -27,6 +27,7 @@ export class AlertaView extends LitElement {
     .modal {
       width: 92%;
       max-width: 900px;
+      pointer-events: auto;
     }
 
     /* ===== ALERTA ===== */
@@ -413,6 +414,8 @@ export class AlertaView extends LitElement {
             <div class="extra">${this.extra}</div>
           ` : ''}
         </div>
+
+        <slot></slot>
 
         ${this.boton ? html`
           <div class="acciones">

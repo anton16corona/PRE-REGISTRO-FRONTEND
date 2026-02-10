@@ -2,8 +2,6 @@ import { LitElement, html, css } from 'lit';
 
 export class ConvocatoriaProximidadSegPub extends LitElement {
 static styles = css`
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
-
     :host {
       display: block;
       min-height: 100vh;
@@ -140,43 +138,7 @@ static styles = css`
       gap: 0.8rem;
     }
 
-    /* =========================== IMAGES =========================== */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin: 4rem 0;
-    }
-
-    .gallery img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 16px;
-    }
-
-    .convocatoria-img {
-        cursor: zoom-in;
-        transition: transform 0.3s ease;
-    }
-
-    .poster img {
-      width: 100%;
-      max-width: 456px;
-      border-radius: 16px;
-
-      touch-action: pinch-zoom;
-    }
-
-    .gallery {
-      transition: transform 0.3s ease;
-    }
-
-    .gallery:hover {
-      transform: scale(1.05);
-    }
-
-    /* =========================== FOOTER TEXT =========================== */
+    /* ============================== CONSULTA FOLIO ============================== */ 
     .consulta-folio {
       text-align: center;
       font-size: 1.2rem;
@@ -193,38 +155,6 @@ static styles = css`
       color: #0d6fff;
       font-weight: 800;
       cursor: pointer;
-    }
-
-    /* ===================== CARRUSEL DE FOTOS ================== */
-    .carousel {
-        position: relative;
-        width: 100%;
-        max-width: 620px; 
-        height: 320px;     
-        margin: 3rem auto 0;
-        overflow: hidden;
-        border-radius: 18px;
-    }
-
-    .carousel-track {
-        display: flex;
-        height: 100%;
-        transition: transform 0.6s ease-in-out; /* movimiento suave */
-    }
-
-    .carousel-image {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-        object-fit: cover;
-        border-radius: 18px;
-    }
-
-    .carousels-wrapper {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      flex-wrap: wrap;
     }
 
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
@@ -309,14 +239,22 @@ static styles = css`
 
   /* ============================================= JAVASCRIPT ============================================= */
 
-    navigate(path) {
-        history.pushState({}, '', path);
-        globalThis.dispatchEvent(new PopStateEvent('popstate'));
-    }
+  /* ============== NAVEGACIÓN A PREREGISTRO Y ATRÁS ============== */
+  navigate(path) {
+    history.pushState({}, '', path);
+    globalThis.dispatchEvent(new PopStateEvent('popstate'));
+  }
 
-    goBack() {
-        globalThis.location.href = '/perfiles-proximidad';
-    }
+  goBack() {
+    globalThis.location.href = '/perfiles-proximidad';
+  }
+
+  goToPreregistro(e) {
+    e?.preventDefault?.();
+    const origen = globalThis.location.pathname;
+    sessionStorage.setItem('origen_convocatoria', origen);
+    globalThis.location.href = '/preregistro';
+  }
 
     // ---------- CARRUSEL DE FOTOS. ----------
     imagesLeft = [
@@ -330,72 +268,6 @@ static styles = css`
       '/src/assets/proximidad/SegPubE.jpeg',
       '/src/assets/proximidad/SegPubF.jpeg'
     ];
-
-    indexLeft = 0;
-    indexRight = this.imagesRight.length - 1;
-    directionLeft = 1;
-    directionRight = -1;
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.startAutoplay();
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        clearInterval(this.intervalId);
-    }
-
-    startAutoplay() {
-      this.intervalId = setInterval(() => {
-
-        // carrusel izquierdo (A → C → A)
-        this.indexLeft += this.directionLeft;
-        if (
-          this.indexLeft === this.imagesLeft.length - 1 ||
-          this.indexLeft === 0
-        ) {
-          this.directionLeft *= -1;
-        }
-
-        // carrusel derecho (D → F → D)
-        this.indexRight += this.directionRight;
-        if (
-          this.indexRight === this.imagesRight.length - 1 ||
-          this.indexRight === 0
-        ) {
-          this.directionRight *= -1;
-        }
-
-        this.updateCarousel();
-
-      }, 2000);
-    }
-
-    updateCarousel() {
-      const left = this.renderRoot.querySelector('.carousel-left');
-      const right = this.renderRoot.querySelector('.carousel-right');
-
-      left.style.transform = `translateX(-${this.indexLeft * 100}%)`;
-      right.style.transform = `translateX(-${this.indexRight * 100}%)`;
-    }
-
-    goToPreregistro(e) {
-      e?.preventDefault?.();
-
-      const origen = globalThis.location.pathname;
-      console.log('GUARDANDO ORIGEN:', origen);
-
-      sessionStorage.setItem('origen_convocatoria', origen);
-
-      // verificación inmediata
-      console.log(
-        'ORIGEN GUARDADO:',
-        sessionStorage.getItem('origen_convocatoria')
-      );
-
-      globalThis.location.href = '/preregistro';
-    }
 
   /* ========================================= HTML ======================================== */
   render() {
@@ -412,9 +284,10 @@ static styles = css`
 
       <main>
         <section class="hero">
-          <div class="poster">
-            <img class="convocatoria-img" src="/src/assets/policia/ConvocatoriaPolicia.jpg" @click=${() => window.open('/src/assets/policia/ConvocatoriaPolicia.jpg', '_blank')}/>
-          </div>
+          <!-- --------------- PDF DE CONVOCATORIA, ESCOGER RUTA CORRECTA. --------------- -->
+          <pdf-zoom-viewer 
+            pdfUrl="/convocatoria/convocatoria-proximidad.pdf"
+          ></pdf-zoom-viewer>
 
           <div class="content">
             <h1 class="title">
@@ -451,25 +324,10 @@ static styles = css`
 
         </section>
 
-        <div class="carousels-wrapper">
-          <!-- Carrusel A–C -->
-          <div class="carousel">
-            <div class="carousel-track carousel-left">
-              ${this.imagesLeft.map(
-                img => html`<img src=${img} class="carousel-image" />`
-              )}
-            </div>
-          </div>
-
-          <!-- Carrusel D–F -->
-          <div class="carousel">
-            <div class="carousel-track carousel-right">
-              ${this.imagesRight.map(
-                img => html`<img src=${img} class="carousel-image" />`
-              )}
-            </div>
-          </div>
-        </div>
+        <double-image-carousel
+          .imagesLeft=${this.imagesLeft}
+          .imagesRight=${this.imagesRight}
+        ></double-image-carousel>
 
         <div class="consulta-folio">
           <span>¿Ya has iniciado tu proceso? </span>

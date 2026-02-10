@@ -1,9 +1,9 @@
 import { LitElement, html, css } from 'lit';
+import './pdf-zoom-viewer.js'; 
+import '../components/image-carousel.js';
 
 export class ConvocatoriaGuardiaAuxiliar extends LitElement {
   static styles = css`
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
-
     :host {
       display: block;
       min-height: 100vh;
@@ -140,43 +140,7 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
       gap: 0.8rem;
     }
 
-    /* =========================== IMAGES =========================== */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin: 4rem 0;
-    }
-
-    .gallery img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 16px;
-    }
-
-    .convocatoria-img {
-    cursor: zoom-in;
-      transition: transform 0.3s ease;
-    }
-
-    .poster img {
-      width: 100%;
-      max-width: 456px;
-      border-radius: 16px;
-
-      touch-action: pinch-zoom;
-    }
-
-    .gallery {
-        transition: transform 0.3s ease;
-    }
-
-    .gallery:hover {
-        transform: scale(1.05);
-    }
-
-    /* ===== FOOTER TEXT ===== */
+/* ============================== CONSULTA FOLIO ============================== */
     .consulta-folio {
       text-align: center;
       font-size: 1.2rem;
@@ -193,31 +157,6 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
       color: #0d6fff;
       font-weight: 800;
       cursor: pointer;
-    }
-    
-    /* ===================== CARRUSEL DE FOTOS ================== */
-    .carousel {
-        position: relative;
-        width: 100%;
-        max-width: 820px; 
-        height: 320px;     
-        margin: 3rem auto 0;
-        overflow: hidden;
-        border-radius: 18px;
-    }
-
-    .carousel-track {
-        display: flex;
-        height: 100%;
-        transition: transform 0.6s ease-in-out; /* movimiento suave */
-    }
-
-    .carousel-image {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-        object-fit: cover;
-        border-radius: 18px;
     }
 
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
@@ -301,6 +240,8 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
   `;
 
   /* ============================================= JAVASCRIPT ============================================= */
+  
+    /* ============== NAVEGACIÓN A PREREGISTRO Y ATRÁS ============== */
     navigate(path) {
         history.pushState({}, '', path);
         globalThis.dispatchEvent(new PopStateEvent('popstate'));
@@ -310,54 +251,21 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
         globalThis.location.href = '/perfiles-guardias';
     }
 
-    // ---------- CARRUSEL DE FOTOS. ----------
-    images = [
-        '/src/assets/guardia/AuxiliarA.jpg',
-        '/src/assets/guardia/AuxiliarB.jpg',
-        '/src/assets/guardia/AuxiliarC.jpg',
-        '/src/assets/guardia/AuxiliarD.jpg',
-    ];
-
-    index = 0;
-    intervalId;
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.startAutoplay();
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        clearInterval(this.intervalId);
-    }
-
-    startAutoplay() {
-        this.intervalId = setInterval(() => {
-        this.index = (this.index + 1) % this.images.length;
-        this.updateCarousel();
-    }, 2000); // ⏱️ velocidad (3.5s)
-    }
-
-    updateCarousel() {
-        const track = this.renderRoot.querySelector('.carousel-track');
-        track.style.transform = `translateX(-${this.index * 100}%)`;
-    }
-
     goToPreregistro(e) {
       e?.preventDefault?.();
-
       const origen = globalThis.location.pathname;
-      console.log('GUARDANDO ORIGEN:', origen);
-
       sessionStorage.setItem('origen_convocatoria', origen);
-
-      // verificación inmediata
-      console.log(
-        'ORIGEN GUARDADO:',
-        sessionStorage.getItem('origen_convocatoria')
-      );
-
       globalThis.location.href = '/preregistro';
+    }
+
+    /* ============== CARRUSEL DE IMÁGENES ============== */
+    get carouselImages() {
+      return [
+        '/src/assets/guardia/AuxiliarA.jpg',
+          '/src/assets/guardia/AuxiliarB.jpg',
+          '/src/assets/guardia/AuxiliarC.jpg',
+          '/src/assets/guardia/AuxiliarD.jpg',
+      ];
     }
 
   /* ========================================= HTML ======================================== */
@@ -375,9 +283,10 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
 
       <main>
         <section class="hero">
-          <div class="poster">
-            <img class="convocatoria-img" src="/src/assets/policia/ConvocatoriaPolicia.jpg" @click=${() => window.open('/src/assets/policia/ConvocatoriaPolicia.jpg', '_blank')}/>
-          </div>
+          <!-- --------------- PDF DE CONVOCATORIA, ESCOGER RUTA CORRECTA. --------------- -->
+          <pdf-zoom-viewer 
+            pdfUrl="/convocatoria/convocatoria-guardia.pdf"
+          ></pdf-zoom-viewer>
 
           <div class="content">
             <h1 class="title">
@@ -407,16 +316,10 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
                 </button>
             </div>
           </div>
-
         </section>
 
-        <div class="carousel">
-            <div class="carousel-track">
-                ${this.images.map(
-                img => html`<img src=${img} class="carousel-image" />`
-                )}
-            </div>
-        </div>
+        <!-- --------------- CARRULSEL DE FOTO INFERIOR, EL ERROR NO AFECTA EL FUNCIONAMIENTO (SONAR QUBE). --------------- -->
+        <image-carousel .images=${this.carouselImages}></image-carousel>
 
         <div class="consulta-folio">
           <span>¿Ya has iniciado tu proceso? </span>

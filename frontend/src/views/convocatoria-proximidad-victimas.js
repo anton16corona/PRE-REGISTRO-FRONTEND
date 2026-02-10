@@ -1,4 +1,6 @@
 import { LitElement, html, css } from 'lit';
+import './pdf-zoom-viewer.js'; 
+import '../components/image-carousel.js';
 
 export class ConvocatoriaProximidadVictimas extends LitElement {
   static styles = css`
@@ -52,20 +54,6 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       align-items: center;
     }
 
-    .poster {
-      background: #201e39;
-      border-radius: 20px;
-      padding: 1rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .poster img {
-      width: 100%;
-      max-width: 456px;
-      border-radius: 16px;
-    }
-
     .content {
       text-align: center;
     }
@@ -113,11 +101,12 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       font-weight: 600;
       border: none;
       cursor: pointer;
-
-      /* -------- FUENTE --------- */
+      color: white;
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: #635f8f;
     }
 
     .btn-volver {
@@ -128,11 +117,12 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       font-weight: 600;
       border: none;
       cursor: pointer;
-
-      /* -------- FUENTE --------- */
+      color: white;
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
+    }
+
+    .btn-volver:hover {
+      background: #b8a640;
     }
 
     .acciones {
@@ -142,41 +132,9 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       gap: 0.8rem;
     }
 
-    /* =========================== IMAGES =========================== */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin: 4rem 0;
-    }
-
-    .gallery img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 16px;
-    }
-
-    .convocatoria-img {
-      cursor: zoom-in;
-      transition: transform 0.3s ease;
-    }
-
-    .convocatoria-img.zoom {
-      transform: scale(1.8);
-      cursor: zoom-out;
-    }
-
-    .gallery {
-      transition: transform 0.3s ease;
-    }
-
-    .gallery:hover {
-     transform: scale(1.05);
-    }
-
-    /* ===== FOOTER TEXT ===== */
+    /* ============================== CONSULTA FOLIO ============================== */
     .consulta-folio {
+      margin-top:1rem;
       text-align: center;
       font-size: 1.2rem;
       margin-bottom: 3rem;
@@ -193,29 +151,8 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       cursor: pointer;
     }
 
-    /* ===================== CARRUSEL DE FOTOS ================== */
-    .carousel {
-        position: relative;
-        width: 100%;
-        max-width: 820px; 
-        height: 320px;     
-        margin: 3rem auto 0;
-        overflow: hidden;
-        border-radius: 18px;
-    }
-
-    .carousel-track {
-        display: flex;
-        height: 100%;
-        transition: transform 0.6s ease-in-out; /* movimiento suave */
-    }
-
-    .carousel-image {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-        object-fit: cover;
-        border-radius: 18px;
+    .consulta-folio span:last-child:hover {
+      text-decoration: underline;
     }
 
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
@@ -225,22 +162,10 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       .hero {
         grid-template-columns: 1fr;
       }
-
-      .gallery {
-        grid-template-columns: repeat(2, 1fr);
-      }
     }
 
     /* ------------- 768 PX -------------*/
     @media (max-width: 768px) {
-      .poster {
-        padding: 0;
-      }
-
-      .poster img {
-        max-width: 100%;
-      }
-
       .hero {
         grid-template-columns: 1fr;
         text-align: center;
@@ -255,10 +180,6 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
     @media (max-width: 640px) {
       header {
         text-align: center;
-      }
-
-      .gallery {
-        grid-template-columns: 1fr;
       }
 
       .ipes {
@@ -299,70 +220,35 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
   `;
 
   /* ============================================= JAVASCRIPT ============================================= */
-    navigate(path) {
-        history.pushState({}, '', path);
-        globalThis.dispatchEvent(new PopStateEvent('popstate'));
-    }
+  
+  /* ============== NAVEGACIÓN A PREREGISTRO Y ATRÁS ============== */
+  navigate(path) {
+    history.pushState({}, '', path);
+    globalThis.dispatchEvent(new PopStateEvent('popstate'));
+  }
 
-    toggleZoom(e) {
-        e.target.classList.toggle('zoom');
-    }
+  goBack() {
+    globalThis.location.href = '/perfiles-proximidad';
+  }
 
-    goBack() {
-        globalThis.location.href = '/perfiles-proximidad';
-    }
+  goToPreregistro(e) {
+    e?.preventDefault?.();
+    const origen = globalThis.location.pathname;
+    sessionStorage.setItem('origen_convocatoria', origen);
+    globalThis.location.href = '/preregistro';
+  }
 
-    // ---------- CARRUSEL DE FOTOS. ----------
-    images = [
-        '/src/assets/proximidad/VictimasA.jpg',
-        '/src/assets/proximidad/VictimasB.jpg',
-        '/src/assets/proximidad/VictimasC.jpg',
-        '/src/assets/proximidad/VictimasD.jpg',
-        '/src/assets/proximidad/VictimasE.jpg',
-        '/src/assets/proximidad/VictimasF.jpg',
+  /* ============== CARRUSEL DE IMÁGENES ============== */
+  get carouselImages() {
+    return [
+      '/src/assets/proximidad/VictimasA.jpg',
+      '/src/assets/proximidad/VictimasB.jpg',
+      '/src/assets/proximidad/VictimasC.jpg',
+      '/src/assets/proximidad/VictimasD.jpg',
+      '/src/assets/proximidad/VictimasE.jpg',
+      '/src/assets/proximidad/VictimasF.jpg'
     ];
-
-    index = 0;
-    intervalId;
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.startAutoplay();
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        clearInterval(this.intervalId);
-    }
-
-    startAutoplay() {
-        this.intervalId = setInterval(() => {
-        this.index = (this.index + 1) % this.images.length;
-        this.updateCarousel();
-    }, 1500); // ⏱️ velocidad (3.5s)
-    }
-
-    updateCarousel() {
-        const track = this.renderRoot.querySelector('.carousel-track');
-        track.style.transform = `translateX(-${this.index * 100}%)`;
-    }
-
-    goToPreregistro(e) {
-      e?.preventDefault?.();
-
-      const origen = globalThis.location.pathname;
-      console.log('GUARDANDO ORIGEN:', origen);
-
-      sessionStorage.setItem('origen_convocatoria', origen);
-
-      // verificación inmediata
-      console.log(
-        'ORIGEN GUARDADO:',
-        sessionStorage.getItem('origen_convocatoria')
-      );
-
-      globalThis.location.href = '/preregistro';
-    }
+  }
 
   /* ========================================= HTML ======================================== */
   render() {
@@ -379,9 +265,10 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
 
       <main>
         <section class="hero">
-          <div class="poster">
-            <img class="convocatoria-img" src="/src/assets/policia/ConvocatoriaPolicia.jpg" @click=${this.toggleZoom} />
-          </div>
+          <!-- --------------- PDF DE CONVOCATORIA, ESCOGER RUTA CORRECTA. --------------- -->
+          <pdf-zoom-viewer 
+            pdfUrl="/convocatoria/convocatoria-proximidad.pdf"
+          ></pdf-zoom-viewer>
 
           <div class="content">
             <h1 class="title">
@@ -416,17 +303,11 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
                 </button>
             </div>
           </div>
-
         </section>
 
-        <div class="carousel">
-            <div class="carousel-track">
-                ${this.images.map(
-                img => html`<img src=${img} class="carousel-image" />`
-                )}
-            </div>
-        </div>
-        
+        <!-- --------------- CARRULSEL DE FOTO INFERIOR, EL ERROR NO AFECTA EL FUNCIONAMIENTO (SONAR QUBE). --------------- -->
+        <image-carousel .images=${this.carouselImages}></image-carousel>
+
         <div class="consulta-folio">
           <span>¿Ya has iniciado tu proceso? </span>
           <span @click=${() => this.navigate('/consulta-folio')}>
@@ -437,5 +318,4 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
     `;
   }
 }
-
 customElements.define('convocatoria-proximidad-victimas', ConvocatoriaProximidadVictimas);

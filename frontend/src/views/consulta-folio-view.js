@@ -140,7 +140,11 @@ export class ConsultaFolioView extends LitElement {
     convocatoria: { type: String },
     consecutivo: { type: String },
     mostrarAlerta: { type: Boolean },
-    alertaConfig: { type: Object }
+    alertaConfig: { type: Object },
+    
+    /* Para restricción con código temporal. */
+    pasoCodigo: { type: Boolean },
+    codigoIngresado: { type: String }
   };
 
   constructor() {
@@ -150,6 +154,9 @@ export class ConsultaFolioView extends LitElement {
     this.consecutivo = '';
     this.mostrarAlerta = false;
     this.alertaConfig = {};
+
+    this.pasoCodigo = false;
+    this.codigoIngresado = '';
   }
 
   get folioCompleto() {
@@ -185,12 +192,40 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // 3️⃣ Folio válido
+    // 3️⃣ Folio válido → pedir código
+    this.pasoCodigo = true;
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'info',
+      titulo: 'Verificación de seguridad',
+      mensaje:
+        'Para proteger tu información, enviamos un código de verificación a tu correo electrónico.',
+      extra:
+        'Ingresa el código para continuar.',
+      boton: 'VALIDAR CÓDIGO'
+    };
+  }
+
+  validarCodigo() {
+    if (this.codigoIngresado !== '1234567') {
+      this.pasoCodigo = false; // 🔴 CLAVE
+      this.alertaConfig = {
+        tipo: 'error',
+        titulo: 'Código incorrecto',
+        mensaje: 'El código ingresado no es válido o ha expirado.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    // Código correcto
+    this.mostrarAlerta = false;
+    this.pasoCodigo = false;
+
     sessionStorage.setItem('folio_consulta', this.folioCompleto);
     globalThis.history.pushState({}, '', '/progreso-folio');
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
-
 
   cerrarAlerta() {
     this.mostrarAlerta = false;
@@ -252,8 +287,30 @@ export class ConsultaFolioView extends LitElement {
           .mensaje=${this.alertaConfig.mensaje}
           .extra=${this.alertaConfig.extra}
           .boton=${this.alertaConfig.boton}
-          @aceptar=${this.cerrarAlerta}
-        ></alerta-view>
+          @aceptar=${this.pasoCodigo ? this.validarCodigo : this.cerrarAlerta}
+        >
+
+          ${this.pasoCodigo ? html`
+            <input
+              type="text"
+              placeholder="Código de verificación"
+              maxlength="8"
+              style="
+                margin-top: 1rem;
+                width: 220px;
+                padding: 10px;
+                font-size: 1.1rem;
+                text-align: center;
+                border-radius: 12px;
+                border: 1px solid #ccc;
+              "
+              @input=${e =>
+                this.codigoIngresado = e.target.value.replaceAll(/\D/g,'')
+              }
+            />
+          ` : ''}
+
+        </alerta-view>
       ` : ''}
 
       <header>
