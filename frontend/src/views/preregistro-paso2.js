@@ -289,6 +289,17 @@ export class PreregistroPaso2 extends LitElement {
       }
     }
 
+    /* ================= AUTOFILL FIX ================= */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill {
+      -webkit-text-fill-color: #000; /* color del texto */
+      -webkit-box-shadow: 0 0 0px 1000px #8fa6c1 inset; /* COLOR DE FONDO */
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 1024 PX -------------*/

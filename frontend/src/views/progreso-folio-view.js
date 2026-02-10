@@ -56,10 +56,12 @@ export class ProgresoFolioView extends LitElement {
 
     h2 {
       text-align: center;
-      font-size: 2rem;
       font-weight: 900;
       margin-bottom: 2rem;
       color: #2e3032;
+
+      font-size: clamp(1.4rem, 4.5vw, 2rem);
+      line-height: 1.25;
     }
 
     .folio-title {
@@ -70,12 +72,18 @@ export class ProgresoFolioView extends LitElement {
       font-size: 2rem;
       font-weight: 900;
       color: #2e3032;
+
+      flex-wrap: wrap;
+      text-align: center;
     }
 
     .folio {
       color: #465f9a;
       font-weight: 900;
       letter-spacing: 1px;
+
+      word-break: break-all;
+      font-size: clamp(1.2rem, 4vw, 2rem);
     }
 
     /* ===== PROGRESO ===== */
@@ -196,13 +204,68 @@ export class ProgresoFolioView extends LitElement {
       }
     }
 
+    /* ======================================= RESPONSIVE ======================================= */
+    /* ============ AJUSTES DE TAMAÑO PARA DIVERSOS DISPOSITIVOS MÓVILES COMPATIBILIDAD ========== */
+
+    /* ================= PARA 900 PX ================== */
     @media (max-width: 900px) {
       .info {
         grid-template-columns: 1fr;
       }
     }
+
+    /* ================= PARA 768 PX ================== */    
+    @media (max-width: 768px) {
+      .card {
+        padding: 2rem 1.5rem;
+      }
+
+      .progress {
+        gap: 0.5rem;
+      }
+
+      .circle {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+      }
+
+      .label {
+        font-size: 0.65rem;
+        line-height: 1.2;
+      }
+
+      .box {
+        padding: 1.2rem;
+      }
+
+      .box h4 {
+        font-size: 1rem;
+      }
+
+      .box p {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* ================= PARA 480 PX ================== */
+    @media (max-width: 480px) {
+      .btn {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+
+    /* ================= PARA 420 PX ================== */
+    @media (max-width: 420px) {
+      .card {
+        padding: 1.5rem 1rem;
+      }
+    }
+
   `;
 
+  /* ========================================= JAVASCRIPT ======================================== */
   static properties = {
     folio: { type: String },
     paso: { type: Number }
@@ -226,6 +289,7 @@ export class ProgresoFolioView extends LitElement {
     globalThis.location.href = '/consulta-folio';
   }
 
+  /* ========================================= HTML ======================================== */
   render() {
     const progreso = ((this.paso - 1) / (this.pasos.length - 1)) * 100;
 

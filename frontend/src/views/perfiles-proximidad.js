@@ -8,9 +8,11 @@ export class PerfilesProximidad extends LitElement {
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
+      width: 100%;
+      overflow-x: hidden;
     }
 
-    /* ===== HEADER ===== */
+    /* ================= HEADER ================= */
     header {
       background: #0a0f24;
       color: #d1cfcd;
@@ -32,8 +34,6 @@ export class PerfilesProximidad extends LitElement {
       font-weight: 900;
       font-size: clamp(1.2rem, 3vw, 2.5rem);
       line-height: 1.2;
-
-      max-width: 100%;
       white-space: normal;
     }
 

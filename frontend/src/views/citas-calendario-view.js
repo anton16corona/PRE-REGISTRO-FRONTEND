@@ -133,6 +133,7 @@ export class CitasCalendarioView extends LitElement {
       background: #baa065;
       border-radius: 999px;
       display: flex;
+      text-align:center;
       justify-content: center;
       align-items: center;
       font-weight: 600;
@@ -141,8 +142,55 @@ export class CitasCalendarioView extends LitElement {
 
     .btn.sec { background: #ccc; }
 
+    /* ===== SIMBOLOGÍA ===== */
+    .leyenda {
+      background: #f7f7f7;
+      border-radius: 16px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      color: #2e3032;
+    }
+
+    .leyenda h4 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+
+    .leyenda-item {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .color-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+    }
+
+    .color-rojo { background: #f26d6d; }
+    .color-amarillo { background: #ffe680; }
+    .color-verde { background: #b6f36b; }
+
+    .leyenda strong {
+      font-weight: 700;
+    }
+
+    /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
+
+    /* ------------- 768 PX -------------*/
     @media (max-width: 768px) {
-      .contenido { grid-template-columns: 1fr; }
+      .leyenda {
+        margin-top: 1.5rem;
+      }
+      .contenido { 
+        grid-template-columns: 1fr; 
+      }
     }
   `;
 
@@ -266,6 +314,28 @@ export class CitasCalendarioView extends LitElement {
                         </div>
                       `
                 )}
+              </div>
+            </div>
+
+            <div class="leyenda">
+              <h4>Disponibilidad</h4>
+
+              <div class="leyenda-item">
+                <div class="color-box color-rojo"></div>
+                <div>Día inhábil</div>
+                <strong>0%</strong>
+              </div>
+
+              <div class="leyenda-item">
+                <div class="color-box color-amarillo"></div>
+                <div>Disponibilidad parcial</div>
+                <strong>70% o menos</strong>
+              </div>
+
+              <div class="leyenda-item">
+                <div class="color-box color-verde"></div>
+                <div>Con disponibilidad</div>
+                <strong>71% – 100%</strong>
               </div>
             </div>
 

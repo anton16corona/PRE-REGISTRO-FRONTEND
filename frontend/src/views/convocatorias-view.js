@@ -8,6 +8,8 @@ export class ConvocatoriasView extends LitElement {
       width: 100%;
       background: #f1eee8;
       font-family: 'Montserrat', sans-serif;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ===== HEADER ===== */
@@ -36,10 +38,11 @@ export class ConvocatoriasView extends LitElement {
     /* ===== TITLE ===== */
     .title {
       text-align: center;
-      font-size: 3rem;
+      font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 500;
       margin: 2.5rem 1rem;
       color: #2e3032;
+      line-height: 1.2;
     }
 
     /* ===== CARDS ===== */
@@ -205,7 +208,10 @@ export class ConvocatoriasView extends LitElement {
             REGÍSTRATE
           </button>
 
-          <button class="btn consulta">
+          <button
+            class="btn consulta"
+            @click=${() => this.navigate('/consulta-folio')}
+          >
             CONSULTA FOLIO
           </button>
         </article>

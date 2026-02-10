@@ -8,6 +8,8 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ================= HEADER ================= */
@@ -17,18 +19,22 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      padding: 1.5rem 2.5rem;
+      gap: 1rem;
+      padding: 1rem 2rem;
     }
 
     header img {
-      width: 90px;
+      width: clamp(55px, 8vw, 90px);
+      height: auto;
+      flex-shrink: 0;
     }
 
     .ipes {
       text-align: center;
       font-weight: 900;
-      font-size: 2.5rem;
+      font-size: clamp(1.2rem, 3vw, 2.5rem);
       line-height: 1.2;
+      white-space: normal;
     }
 
     /* ================= MAIN ================= */
@@ -212,22 +218,6 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
         border-radius: 18px;
     }
 
-    .nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        color: white;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0 12px;
-        border-radius: 50%;
-    }
-
-    .nav.left { left: 10px; }
-    .nav.right { right: 10px; }
-
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 1024 PX -------------*/
@@ -263,6 +253,10 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
 
     /* ------------- 640 PX -------------*/
     @media (max-width: 640px) {
+      header {
+        text-align: center;
+      }
+
       .gallery {
         grid-template-columns: 1fr;
       }
@@ -300,15 +294,6 @@ export class ConvocatoriaProximidadVictimas extends LitElement {
       .btn-volver {
         width: 100%;
         font-size: 1.15rem;
-      }
-
-      header {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      header img {
-        margin: 0 auto;
       }
     }
   `;

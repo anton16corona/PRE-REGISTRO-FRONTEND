@@ -8,6 +8,8 @@ export class ConsultaFolioView extends LitElement {
       min-height: 100vh;
       font-family: 'Montserrat', sans-serif;
       background: #0a0f24;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     header {
@@ -130,22 +132,6 @@ export class ConsultaFolioView extends LitElement {
         object-fit: cover;
         border-radius: 18px;
     }
-
-    .nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        color: white;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0 12px;
-        border-radius: 50%;
-    }
-
-    .nav.left { left: 10px; }
-    .nav.right { right: 10px; }
   `;
 
   /* ============================================= JAVASCRIPT ============================================= */
@@ -199,11 +185,11 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-  // 3️⃣ Folio válido
-  sessionStorage.setItem('folio_consulta', this.folioCompleto);
-  globalThis.history.pushState({}, '', '/progreso-folio');
-  globalThis.dispatchEvent(new PopStateEvent('popstate'));
-}
+    // 3️⃣ Folio válido
+    sessionStorage.setItem('folio_consulta', this.folioCompleto);
+    globalThis.history.pushState({}, '', '/progreso-folio');
+    globalThis.dispatchEvent(new PopStateEvent('popstate'));
+  }
 
 
   cerrarAlerta() {
@@ -222,6 +208,7 @@ export class ConsultaFolioView extends LitElement {
     ];
 
     index = 0;
+    direction = 1; // 1 = adelante, -1 = atrás
     intervalId;
 
     connectedCallback() {
@@ -235,17 +222,26 @@ export class ConsultaFolioView extends LitElement {
     }
 
     startAutoplay() {
-        this.intervalId = setInterval(() => {
-        this.index = (this.index + 1) % this.images.length;
+      this.intervalId = setInterval(() => {
+        // cambiar dirección si llega a los extremos
+        if (this.index === this.images.length - 1) {
+          this.direction = -1;
+        } else if (this.index === 0) {
+          this.direction = 1;
+        }
+
+        this.index += this.direction;
         this.updateCarousel();
-    }, 1500); //Para una velocidad (1.5s).
+      }, 1500);
     }
 
-    updateCarousel() {
-        const track = this.renderRoot.querySelector('.carousel-track');
-        track.style.transform = `translateX(-${this.index * 100}%)`;
-    }
+  updateCarousel() {
+    const track = this.renderRoot.querySelector('.carousel-track');
+    if (!track) return;
+    track.style.transform = `translateX(-${this.index * 100}%)`;
+  }
 
+/* ========================================= HTML ======================================== */
   render() {
     return html`
       ${this.mostrarAlerta ? html`

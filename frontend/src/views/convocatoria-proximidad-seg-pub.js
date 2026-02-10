@@ -10,6 +10,8 @@ static styles = css`
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ================= HEADER ================= */
@@ -26,6 +28,7 @@ static styles = css`
     header img {
       width: clamp(55px, 8vw, 90px);
       height: auto;
+      flex-shrink: 0;
     }
 
     .ipes {
@@ -33,6 +36,7 @@ static styles = css`
       font-weight: 900;
       font-size: clamp(1.2rem, 3vw, 2.5rem);
       line-height: 1.2;
+      white-space: normal;
     }
 
     /* ================= MAIN ================= */
@@ -223,22 +227,6 @@ static styles = css`
       flex-wrap: wrap;
     }
 
-    .nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        color: white;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0 12px;
-        border-radius: 50%;
-    }
-
-    .nav.left { left: 10px; }
-    .nav.right { right: 10px; }
-
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 1024 PX -------------*/
@@ -274,6 +262,10 @@ static styles = css`
 
     /* ------------- 640 PX -------------*/
     @media (max-width: 640px) {
+      header {
+        text-align: center;
+      }
+
       .gallery {
         grid-template-columns: 1fr;
       }
@@ -311,15 +303,6 @@ static styles = css`
       .btn-volver {
         width: 100%;
         font-size: 1.15rem;
-      }
-
-      header {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      header img {
-        margin: 0 auto;
       }
     }
   `;

@@ -8,6 +8,8 @@ export class PerfilesGuardias extends LitElement {
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ===== HEADER ===== */
@@ -140,22 +142,6 @@ export class PerfilesGuardias extends LitElement {
     .auxiliar-registro { background: #158cc5; color: #fff; }
     .auxiliar-consulta { background: #6bb5d2; }
 
-    .nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        color: white;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        padding: 0 12px;
-        border-radius: 50%;
-    }
-
-    .nav.left { left: 10px; }
-    .nav.right { right: 10px; }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .cards {
@@ -188,6 +174,7 @@ export class PerfilesGuardias extends LitElement {
     }
   `;
 
+/* ========================================= JAVASCRIPT ======================================== */
   navigate(path) {
     history.pushState({}, '', path);
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
@@ -227,6 +214,7 @@ export class PerfilesGuardias extends LitElement {
     `;
   }
   
+  /* ========================================= HTML ======================================== */
   render() {
     return html`
       <header>

@@ -184,6 +184,108 @@ export class PreregistroPasoCorreo extends LitElement {
         color: #000;
     }
 
+    /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
+    /* ====== LINKS DE TÉRMINOS ====== */
+    .legal-text {
+      margin-top: 24px;
+      font-size: 16px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .legal-text input {
+      width: 20px;
+      height: 20px;
+    }
+
+    .legal-link {
+      color: #0a58ff;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    /* ====== BOTÓN ENVIAR ====== */
+    .send-code-btn {
+      margin: 40px auto 0;
+      padding: 16px 48px;
+      border-radius: 999px;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .send-code-btn:disabled {
+      background: #cfdde8;
+      color: #ffffff;
+    }
+
+    .send-code-btn:not(:disabled) {
+      background: #0a0f24;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    /* ====== MODAL ====== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 15, 36, 0.65);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-container {
+      background: #ffffff;
+      width: 90%;
+      max-width: 640px;
+      border-radius: 20px;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-container h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: #0a0f24;
+      text-align: center;
+    }
+
+    /* CONTENIDO CON SCROLL */
+    .modal-content {
+      margin: 20px 0;
+      max-height: 320px;
+      overflow-y: auto;
+      font-size: 15px;
+      line-height: 1.6;
+      padding-right: 8px;
+      color: #333;
+    }
+
+    /* BOTÓN ACEPTAR */
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .modal-actions button {
+      padding: 14px 40px;
+      border-radius: 999px;
+      border: none;
+      background: #0a0f24;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
     .codigo-wrapper input:focus {
       border-bottom: 2px solid #131c49;
       color: #717173;
@@ -299,7 +401,12 @@ export class PreregistroPasoCorreo extends LitElement {
     codigoEnviado: { state: true },
     codigo: { state: true },
     mostrarAlerta: { state: true },
-    alertaConfig: { state: true }
+    alertaConfig: { state: true },
+
+    termsAccepted: { state: true },
+    privacyAccepted: { state: true },
+    showTermsModal: { state: true },
+    showPrivacyModal: { state: true }
   };
 
   constructor() {
@@ -310,6 +417,12 @@ export class PreregistroPasoCorreo extends LitElement {
     this.codigo = '';
     this.mostrarAlerta = false;
     this.alertaConfig = {};
+
+    this.termsAccepted = false;
+    this.privacyAccepted = false;
+    this.showTermsModal = false;
+    this.showPrivacyModal = false;
+
   }
 
   get formValido() {
@@ -366,6 +479,72 @@ export class PreregistroPasoCorreo extends LitElement {
     this.mostrarAlerta = false;
   }
 
+  /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
+  get allAccepted() {
+    return this.termsAccepted && this.privacyAccepted;
+  }
+
+  acceptLegal(type) {
+    if (type === 'terms') {
+      this.termsAccepted = true;
+      this.showTermsModal = false;
+    }
+
+    if (type === 'privacy') {
+      this.privacyAccepted = true;
+      this.showPrivacyModal = false;
+    }
+
+    this.requestUpdate();
+  }
+
+  loremContent() {
+    return html`
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <p>
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat.
+      </p>
+      <p>
+        Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur.
+      </p>
+      <p>
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+        officia deserunt mollit anim id est laborum.
+      </p>
+    `;
+  }
+
+/* ============================================= HTML ============================================= */
+  renderLegalModal(type) {
+    const title =
+      type === 'terms'
+        ? 'Términos y Condiciones'
+        : 'Aviso de Privacidad';
+
+    return html`
+      <div class="modal-overlay">
+        <div class="modal-container">
+          <h2>${title}</h2>
+
+          <div class="modal-content">
+            ${this.loremContent()}
+          </div>
+
+          <div class="modal-actions">
+            <button @click=${() => this.acceptLegal(type)}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   render() {
     return html`
       ${this.mostrarAlerta ? html`
@@ -403,11 +582,33 @@ export class PreregistroPasoCorreo extends LitElement {
           </div>
 
           <div class="terms">
-            <input type="checkbox" @change=${this.onToggleTerminos} />
-            <span>He leído y acepto los</span>
-            <a>Términos y Condiciones</a>
-            <span>y</span>
-            <a>Aviso de Privacidad</a>
+          <!-- TÉRMINOS Y AVISO -->
+            <div class="legal-text">
+              <input
+                type="checkbox"
+                .checked=${this.allAccepted}
+                disabled
+              />
+
+              He leído y acepto los
+              <span
+                class="legal-link"
+                @click=${() => (this.showTermsModal = true)}
+              >
+                Términos y Condiciones
+              </span>
+              y el
+              <span
+                class="legal-link"
+                @click=${() => (this.showPrivacyModal = true)}
+              >
+                Aviso de Privacidad
+              </span>
+            </div>
+
+            <!-- MODALES -->
+            ${this.showTermsModal ? this.renderLegalModal('terms') : ''}
+            ${this.showPrivacyModal ? this.renderLegalModal('privacy') : ''}
           </div>
 
           <p class="info">
@@ -415,7 +616,10 @@ export class PreregistroPasoCorreo extends LitElement {
           </p>
 
           <div class="actions">
-            <button ?disabled=${!this.formValido} @click=${this.enviarCodigo}>
+            <button
+              ?disabled=${!(this.medio !== '' && this.allAccepted)}
+              @click=${this.enviarCodigo}
+            >
               ENVIAR CÓDIGO
             </button>
           </div>

@@ -204,7 +204,7 @@ export class AlertaView extends LitElement {
     }
 
     .inexistente-folio .btn:hover {
-      background: #701010;
+      background: #d23636;
     }
 
     /* 🟢 SUCCESS */

@@ -10,6 +10,8 @@ export class ConvocatoriaAuxiliar extends LitElement {
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
+      width: 100%;
+      overflow-x: hidden;
     }
 
     /* ================= HEADER ================= */
@@ -26,6 +28,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
     header img {
       width: clamp(55px, 8vw, 90px);
       height: auto;
+      flex-shrink: 0;
     }
 
     .ipes {
@@ -33,6 +36,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
       font-weight: 900;
       font-size: clamp(1.2rem, 3vw, 2.5rem);
       line-height: 1.2;
+      white-space: normal;
     }
 
     /* ================= MAIN ================= */
@@ -223,60 +227,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
         border-radius: 18px;
     }
 
-    /* ================= MODAL PDF ================= */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    .modal {
-      background: #fff;
-      width: 90%;
-      max-width: 900px;
-      height: 85vh;
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      background: #0a0f24;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      flex: 1;
-    }
-
-    /* Visor PDF */
-    .modal-body iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-
-      /* zoom / pellizco */
-      touch-action: pinch-zoom;
-    }
-
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 1024 PX -------------*/
@@ -312,12 +262,16 @@ export class ConvocatoriaAuxiliar extends LitElement {
 
     /* ------------- 640 PX -------------*/
     @media (max-width: 640px) {
+      header {
+        text-align: center;
+      }
+
       .gallery {
         grid-template-columns: 1fr;
       }
 
       .ipes {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
       }
 
       .title {
@@ -349,15 +303,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
       .btn-volver {
         width: 100%;
         font-size: 1.15rem;
-      }
-
-      header {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      header img {
-        margin: 0 auto;
       }
     }
   `;
@@ -461,16 +406,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
       globalThis.location.href = '/preregistro';
     }
 
-    showPdfModal = false;
-
-    openPdf() {
-      this.showPdfModal = true;
-    }
-
-    closePdf() {
-      this.showPdfModal = false;
-    }
-
   /* ========================================= HTML ======================================== */
   render() {
     return html`
@@ -487,12 +422,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
       <main>
         <section class="hero">
           <div class="poster">
-            <img
-              class="convocatoria-img"
-              src="/src/assets/policia/ConvocatoriaPolicia.jpg"
-              alt="Convocatoria Policía Auxiliar"
-              @click=${this.openPdf}
-            />
+            <img class="convocatoria-img" src="/src/assets/policia/ConvocatoriaPolicia.jpg" @click=${() => window.open('/src/assets/policia/ConvocatoriaPolicia.jpg', '_blank')}/>
           </div>
 
           <div class="content">
@@ -557,27 +487,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
           </span>
         </div>
       </main>
-
-      ${this.showPdfModal ? html`
-        <div class="modal-backdrop" @click=${this.closePdf}>
-          <div class="modal" @click=${e => e.stopPropagation()}>
-            
-            <div class="modal-header">
-              <span>Convocatoria Policía Auxiliar</span>
-              <button class="modal-close" @click=${this.closePdf}>✕</button>
-            </div>
-
-            <div class="modal-body">
-              <iframe
-                src="/src/assets/convocatoria/convocatoria-pa.pdf"
-                title="Convocatoria Policía Auxiliar">
-              </iframe>
-            </div>
-
-          </div>
-        </div>
-      ` : null}
-
     `;
   }
 }
