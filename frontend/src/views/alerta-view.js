@@ -17,6 +17,9 @@ export class AlertaView extends LitElement {
       justify-content: center;
       z-index: 1000;
       animation: fade 0.25s ease;
+
+      padding: 1rem;              /* evita que choque con bordes */
+      overflow-y: auto;           /* permite scroll en pantallas pequeñas */
     }
 
     @keyframes fade {
@@ -25,9 +28,9 @@ export class AlertaView extends LitElement {
     }
 
     .modal {
-      width: 92%;
-      max-width: 900px;
-      pointer-events: auto;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
     }
 
     /* ===== ALERTA ===== */
@@ -39,6 +42,9 @@ export class AlertaView extends LitElement {
       gap: 2rem;
       align-items: center;
       animation: aparecer 0.35s ease;
+      width: 100%;
+      max-width: 1200px;
+      box-sizing: border-box;
     }
 
     @keyframes aparecer {
@@ -253,36 +259,127 @@ export class AlertaView extends LitElement {
     }
 
     /* ======================= CAMBIO DE PERFIL EN CONVOCATORIA ======================= */
+    /* Panel principal, el grande del de cambio de convocatoria. */
     .warning-redireccion {
       background: #aab4c1;
       color: #2e3032;
+      width: 100%;
+      max-width: 1000px;
+      height: 700px;
+      min-height: 70vh;
+      grid-template-columns: 1fr;
+      padding: 2rem;
+    }
+
+    .warning-redireccion .icono {
+      display: none;
     }
 
     .warning-redireccion h2 {
       text-align: center;
       font-size: 2rem;
       font-weight: 900;
+      margin-bottom: 0.75rem;
+      color: #2e3032;
     }
 
-    .warning-redireccion p,
+    .warning-redireccion p {
+      text-align: center;
+      font-size: 1.05rem;
+      margin: 0.5rem 0;
+      line-height: 1.5;
+    }
+
     .warning-redireccion .extra {
       text-align: center;
-      font-size: 1.1rem;
-      margin-top: 0.8rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-top: 0.6rem;
+      margin-bottom: 0rem;
+    }
+
+    .cards-container {
+      margin-top: 0rem;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.5rem;
+    }
+
+    /* Estilos para el scrollbar */
+    .cards-container::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .cards-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    .cards-container::-webkit-scrollbar-thumb {
+      background: #2e3032;
+      border-radius: 5px;
+    }
+
+    .cards-container::-webkit-scrollbar-thumb:hover {
+      background: #1a1d1f;
     }
 
     .cards {
-      margin-top: 2rem;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2rem;
-      width: 100%;
+      grid-template-columns: repeat(auto-fill, 300px);
+      grid-template-rows: repeat(1fr, 3);
+      grid-auto-flow: column;
+      gap: 2.5rem;
+      margin-top: 1.5rem;
+      margin-left: 0.25rem;
+      padding-bottom: 0.25rem;
+      padding: 1.5rem 1rem;
+      min-width: min-content;
     }
 
-    .alerta {
+    .card {
+      background: #869bb1;
+      border-radius: 18px;
+      padding: 0.75rem;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      align-items: center;
+      width: 300px;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      margin: 0.5rem 0 0.8rem 0;
+      text-transform: uppercase;
+    }
+
+    .card .btn-revisar {
+      background: #0d1b3d;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .card .btn-revisar:hover {
+      background: #1a2850;
+      transform: translateY(-2px);
     }
 
     .btn-salir {
@@ -290,63 +387,107 @@ export class AlertaView extends LitElement {
       background: transparent;
       border: 2px solid #2e3032;
       color: #2e3032;
-      padding: 0.6rem 2.5rem;
+      padding: 0.7rem 2.5rem;
       border-radius: 999px;
       font-weight: 700;
       cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      align-self: center;
     }
 
     .btn-salir:hover {
       background: rgba(0,0,0,0.08);
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 24px;
-      margin-top: 30px;
+    /* ======================================= RESPONSIVE ======================================= */
+    /* ============ AJUSTES DE TAMAÑO PARA DIVERSOS DISPOSITIVOS MÓVILES COMPATIBILIDAD ========== */
+
+    /* ================= PARA 768 PX ================== */
+    @media (max-width: 768px) {
+      .cards {
+        grid-template-columns: repeat(auto-fill, 260px);
+        grid-template-rows: auto;
+        grid-auto-flow: row;
+        gap: 1.2rem;
+      }
+
+      .card {
+        width: 260px;
+      }
+
+      .card img {
+        height: 180px;
+      }
+      
+      .warning-redireccion .alerta {
+        padding: 2rem 1.5rem;
+      }
+
+      .alerta {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 2rem 1.5rem;
+      }
+
+      .icono {
+        margin: 0 auto;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      p, .extra {
+        font-size: 0.95rem;
+      }
+
+      .acciones {
+        margin-top: 1.2rem;
+      }
+
+      .warning-redireccion {
+        min-height: auto;
+        padding: 1.5rem;
+      }
     }
 
-    .card {
-      background: #9faab6;
-      border-radius: 18px;
-      padding: 16px;
-      text-align: center;
-    }
+    /* ================= PARA 480 PX ================== */
+    @media (max-width: 480px) {
+      .card {
+        width: 220px;
+        padding: 16px;
+      }
 
-    .card img {
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-      border-radius: 14px;
-    }
+      .cards {
+        grid-template-columns: repeat(auto-fill, 220px);
+      }
 
-    .card-title {
-      margin: 16px 0;
-      font-size: 20px;
-      font-weight: bold;
-      color: white;
-    }
+      .card img {
+        height: 160px;
+      }
 
-    .card button {
-      background: #0d1b3d;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
+      .card-title {
+        font-size: 1rem;
+      }
 
-    .card button:hover {
-      opacity: 0.9;
-    }
+      .alerta {
+        padding: 1.6rem 1.2rem;
+        border-radius: 22px;
+      }
 
-    .salir {
-      margin-top: 30px;
-      padding: 10px 28px;
-      border-radius: 20px;
-      border: 2px solid #333;
-      background: transparent;
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.8rem;
+      }
     }
   `;
 
@@ -405,7 +546,9 @@ export class AlertaView extends LitElement {
   render() {
     const contenido = html`
       <div class="alerta ${this.tipo}">
-        <div class="icono">!</div>
+        ${this.tipo !== 'warning-redireccion' ? html`
+          <div class="icono">!</div>
+        ` : ''}
 
         <div>
           <h2>${this.titulo}</h2>
@@ -417,7 +560,7 @@ export class AlertaView extends LitElement {
 
         <slot></slot>
 
-        ${this.boton ? html`
+        ${this.boton && this.tipo !== 'warning-redireccion' ? html`
           <div class="acciones">
             <div class="btn" @click=${this.aceptar}>
               ${this.boton}
@@ -426,15 +569,18 @@ export class AlertaView extends LitElement {
         ` : ''}
 
         ${this.alternativas?.length ? html`
-          <div class="cards">
-            ${this.alternativas.map(item => html`
-              <perfil-card
-                .titulo=${item.nombre}
-                .imagen=${item.imagen}
-                .botonTexto=${'REVISAR CONVOCATORIA'}
-                @click=${() => this.redirigir(item.path)}
-              ></perfil-card>
-            `)}
+          <div class="cards-container">
+            <div class="cards">
+              ${this.alternativas.map(item => html`
+                <div class="card">
+                  <img src="${item.imagen}" alt="${item.nombre}">
+                  <div class="card-title">${item.nombre}</div>
+                  <button class="btn-revisar" @click=${() => this.redirigir(item.path)}>
+                    REVISAR CONVOCATORIA
+                  </button>
+                </div>
+              `)}
+            </div>
           </div>
         ` : ''}
 

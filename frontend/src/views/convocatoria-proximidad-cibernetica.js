@@ -159,6 +159,52 @@ static styles = css`
       cursor: pointer;
     }
 
+    .pdf-wrapper {
+      position: relative;
+    }
+
+    .pdf-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 15, 36, 0.85);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+    }
+
+    .overlay-content {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .overlay-content h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #10262b;
+    }
+
+    .overlay-content p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #4f5a61;
+    }
+
+    .overlay-content button {
+      background: #45677c;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 1024 PX -------------*/
@@ -240,6 +286,20 @@ static styles = css`
   `;
 
   /* ============================================= JAVASCRIPT ============================================= */
+  static properties = {
+    convocatoriaActiva: { type: Boolean },
+    overlayAceptado: { type: Boolean }
+  };
+
+  constructor() {
+    super();
+    this.convocatoriaActiva = false; // ← AQUÍ defines si está cerrada
+    this.overlayAceptado = false;
+  }
+
+  aceptarConvocatoriaCerrada() {
+    this.overlayAceptado = true;
+  }
 
   /* ============== NAVEGACIÓN A PREREGISTRO Y ATRÁS ============== */
   navigate(path) {
@@ -283,9 +343,27 @@ static styles = css`
       <main>
         <section class="hero">
           <!-- --------------- PDF DE CONVOCATORIA, ESCOGER RUTA CORRECTA. --------------- -->
-          <pdf-zoom-viewer 
-            pdfUrl="/convocatoria/convocatoria-proximidad.pdf"
-          ></pdf-zoom-viewer>
+          <div class="pdf-wrapper">
+            <pdf-zoom-viewer 
+              pdfUrl="/convocatoria/convocatoria-proximidad.pdf"
+            ></pdf-zoom-viewer>
+
+            ${!this.convocatoriaActiva && !this.overlayAceptado ? html`
+              <div class="pdf-overlay">
+                <div class="overlay-content">
+                  <h3>Convocatoria no disponible</h3>
+                  <p>
+                    Por el momento no hay una convocatoria abierta.
+                    Puedes consultar la última publicada para conocer
+                    los requisitos y perfil requerido.
+                  </p>
+                  <button @click=${this.aceptarConvocatoriaCerrada}>
+                    Aceptar
+                  </button>
+                </div>
+              </div>
+            ` : null}
+          </div>
 
           <div class="content">
             <h1 class="title">
@@ -310,13 +388,20 @@ static styles = css`
             </div>
 
             <div class="acciones">
+              ${this.convocatoriaActiva ? html`
                 <button class="btn" type="button" @click=${this.goToPreregistro}>
                   INICIAR PRE-REGISTRO
                 </button>
+              ` : html`
+                <p class="info" style="text-align:center;">
+                  Por el momento no existe un registro activo de precandidatos.
+                  Mantente atento a la próxima convocatoria.
+                </p>
+              `}
 
-                <button class="btn-volver" @click=${this.goBack}>
-                    VOLVER
-                </button>
+              <button class="btn-volver" @click=${this.goBack}>
+                VOLVER
+              </button>
             </div>
           </div>
         </section>

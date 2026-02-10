@@ -181,6 +181,10 @@ export class CitasCalendarioView extends LitElement {
       font-weight: 700;
     }
 
+    .dia.seleccionado {
+      outline: 3px solid #0a0f24;
+    }
+
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
 
     /* ------------- 768 PX -------------*/
@@ -198,7 +202,10 @@ export class CitasCalendarioView extends LitElement {
   static properties = {
     showHorarios: { type: Boolean },
     horaSeleccionada: { type: String },
-    mostrarAlerta: { type: Boolean }
+    mostrarAlerta: { type: Boolean },
+    
+    diaSeleccionado: { type: Number },
+    tipoDisponibilidad: { type: String }
   };
 
   constructor() {
@@ -206,16 +213,33 @@ export class CitasCalendarioView extends LitElement {
     this.showHorarios = false;
     this.horaSeleccionada = null;
     this.mostrarAlerta = false;
+
+      // NUEVO
+    this.diaSeleccionado = sessionStorage.getItem('cita_dia')
+      ? Number(sessionStorage.getItem('cita_dia'))
+      : null;
+
+    this.tipoDisponibilidad = sessionStorage.getItem('cita_tipo');
+    this.horaSeleccionada = sessionStorage.getItem('cita_hora');
+    this.showHorarios = !!this.diaSeleccionado;
   }
 
-  seleccionarDia(tipo) {
+  seleccionarDia(dia, tipo) {
     if (tipo === 'rojo') return;
+
+    this.diaSeleccionado = dia;
+    this.tipoDisponibilidad = tipo;
     this.showHorarios = true;
     this.horaSeleccionada = null;
+
+    sessionStorage.setItem('cita_dia', dia);
+    sessionStorage.setItem('cita_tipo', tipo);
+    sessionStorage.removeItem('cita_hora');
   }
 
   seleccionarHora(h) {
     this.horaSeleccionada = h;
+    sessionStorage.setItem('cita_hora', h);
   }
 
   confirmar() {
@@ -307,8 +331,8 @@ export class CitasCalendarioView extends LitElement {
                     ? html`<div class="dia vacio"></div>`
                     : html`
                         <div
-                          class="dia ${d.tipo}"
-                          @click=${() => this.seleccionarDia(d.tipo)}
+                          class="dia ${d.tipo} ${this.diaSeleccionado === d.dia ? 'seleccionado' : ''}"
+                          @click=${() => this.seleccionarDia(d.dia, d.tipo)}
                         >
                           ${d.dia}
                         </div>
@@ -353,8 +377,29 @@ export class CitasCalendarioView extends LitElement {
             ` : ''}
           </div>
 
+          ${this.diaSeleccionado ? html`
+            <div style="margin-top:1.5rem; text-align:center; font-size:0.9rem; color:#2e3032;">
+              <strong>Día seleccionado:</strong> ${this.diaSeleccionado}<br>
+
+              <strong>Disponibilidad:</strong>
+              ${this.tipoDisponibilidad === 'verde'
+                ? 'Alta disponibilidad'
+                : 'Disponibilidad parcial'}<br>
+
+              <strong>Hora:</strong>
+              ${this.horaSeleccionada ?? 'No seleccionada'}
+            </div>
+          ` : ''}
+
           <div class="acciones">
-            <div class="btn sec" @click=${() => history.back()}>REGRESAR</div>
+            <div class="btn sec" @click=${() => {
+              sessionStorage.removeItem('cita_dia');
+              sessionStorage.removeItem('cita_tipo');
+              sessionStorage.removeItem('cita_hora');
+              history.back();
+            }}>
+              REGRESAR
+            </div>
             <div class="btn" @click=${this.confirmar}>GENERAR CITA</div>
           </div>
         </div>

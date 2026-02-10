@@ -1,5 +1,74 @@
 import { LitElement, html, css } from 'lit';
 
+// ============ CONFIGURACIÓN DE CONVOCATORIAS CON REQUISITOS DE ESTUDIOS ============
+const CONVOCATORIAS = {
+  '/convocatoria-guardia-civica': {
+    nombre: 'GUARDIA CÍVICA',
+    edadMin: 21,
+    edadMax: 50,
+    nivelEstudiosMin: 'SECUNDARIA',
+    imagen: '/src/assets/GC.jpg'
+  },
+  '/convocatoria-guardia-vial': {
+    nombre: 'GUARDIA VIAL',
+    edadMin: 21,
+    edadMax: 50,
+    nivelEstudiosMin: 'SECUNDARIA',
+    imagen: '/src/assets/GV.jpg'
+  },
+  '/convocatoria-guardia-auxiliar': {
+    nombre: 'GUARDIA AUXILIAR',
+    edadMin: 18,
+    edadMax: 50,
+    nivelEstudiosMin: 'SECUNDARIA',
+    imagen: '/src/assets/GA.jpg'
+  },
+  '/convocatoria-auxiliar': {
+    nombre: 'POLICÍA AUXILIAR',
+    edadMin: 18,
+    edadMax: 42,
+    nivelEstudiosMin: 'SECUNDARIA',
+    imagen: '/src/assets/policia/AuxiliarL.jpeg'
+  },
+  '/convocatoria-proximidad': {
+    nombre: 'POLICÍA DE PROXIMIDAD',
+    edadMin: 18,
+    edadMax: 35,
+    nivelEstudiosMin: 'BACHILLERATO',
+    imagen: '/src/assets/proximidad/Proximidad.jpg'
+  },
+  '/convocatoria-proximidad-cibernetica': {
+    nombre: 'POLICÍA ESPECIALIZADA - CIBERNÉTICA',
+    edadMin: 18,
+    edadMax: 35,
+    nivelEstudiosMin: 'LICENCIATURA',
+    imagen: '/src/assets/proximidad/Cibernetica.jpg'
+  },
+  '/convocatoria-proximidad-seg-pub': {
+    nombre: 'POLICÍA ESPECIALIZADA - ANÁLISIS',
+    edadMin: 18,
+    edadMax: 35,
+    nivelEstudiosMin: 'LICENCIATURA',
+    imagen: '/src/assets/proximidad/SegPub.jpeg'
+  },
+  '/convocatoria-proximidad-victimas': {
+    nombre: 'POLICÍA ESPECIALIZADA - VÍCTIMAS',
+    edadMin: 18,
+    edadMax: 35,
+    nivelEstudiosMin: 'LICENCIATURA',
+    imagen: '/src/assets/proximidad/Victimas.jpg'
+  }
+};
+
+// Jerarquía de niveles de estudios (de menor a mayor)
+const NIVELES_ESTUDIOS = {
+  'SECUNDARIA': 1,
+  'BACHILLERATO': 2,
+  'LICENCIATURA': 3,
+  'MAESTRIA': 4,
+  'DOCTORADO': 5
+};
+
 export class PreregistroPaso2 extends LitElement {
   static styles = css`
     :host {
@@ -100,66 +169,65 @@ export class PreregistroPaso2 extends LitElement {
       max-width: 530px;
     }
 
-    /* ===== LABELS ===== */
+    /* ================= INPUT Y SELECTS ================= */
     label {
       font-weight: 500;
-      font-size: 0.95rem;
     }
 
-    /* ===== INPUT UNDERLINE ===== */
-    input {
+    .required {
+      color: #455f9a;
+      margin-right: 4px;
+    }
+
+    input, select {
       background: transparent;
       border: none;
       border-bottom: 1px solid #000;
       padding: 6px 2px;
       outline: none;
-
-      // ----- FUENTE DE LOS INPUT ------
+      width: 100%;
       font-family: 'Roboto', sans-serif;
       font-size: 16px;
       color: #000;
     }
 
     input::placeholder {
-      color: #6b7280;
+      color: #717173;
     }
 
     select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(0,0,0,0.25);
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(3px);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      outline: none;
       cursor: pointer;
+      padding: 8px 2px;
     }
 
-    select:focus {
-      border-color: #7aa7c8;
+    /* ================= RADIO GROUPS ================= */
+    .radio-section {
+      margin: 2rem 0;
     }
 
-    /* ===== RADIO LINE ===== */
+    .radio-title {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
     .radio-line {
       display: flex;
-      gap: 4rem;
-      align-items: center;
+      gap: 3rem;
       flex-wrap: wrap;
     }
 
     .radio-group {
       display: flex;
-      align-items: center;
       gap: 0.8rem;
+      align-items: center;
     }
 
     .radio-label {
       font-weight: 600;
       margin-right: 0.5rem;
     }
+
     .radio-group label {
       display: flex;
       align-items: center;
@@ -178,88 +246,42 @@ export class PreregistroPaso2 extends LitElement {
       background: rgba(19, 28, 73, 0.1);
     }
 
-    .radio-section {
-      margin-top: 3rem;
-    }
-
-    .radio-title {
-      display: block;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-    }
-
-    /* ================= CARGA DE DOCUMENTOS (SOLO INE POR EL MOMENTO) ================= */
+    /* ================= DOCS (INE) ================= */
     .docs {
       display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 2rem;
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
-    .doc-box {
-      width: 260px;
-      height: 150px;
-      background: #e5e5e5;
-      border-radius: 8px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .doc-box input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
+    input[type="file"] {
+      border: 2px dashed #7aa7c8;
+      padding: 1rem;
+      border-radius: 12px;
+      background: #f8f9fa;
       cursor: pointer;
+      flex: 1;
     }
 
-    .doc-label {
-      text-align: center;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
+    input[type="file"]:hover {
+      background: #e9ecef;
     }
 
-    /* ================= SECCIÓN DE BOTONES ================= */
-    .actions {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    button {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    /* ----------- FORMATO DE LOS BOTONES ------------- */
-    button {
-      font-family: 'Montserrat', sans-serif;
-    }
-
+    /* ================= BOTONES ================= */
     .form-actions {
       display: flex;
       justify-content: center;
       gap: 2rem;
-      margin-top: 1rem;
-
-      /* ----------- FUENTE ------------- */
+      margin-top: 3rem;
       font-family: 'Montserrat', sans-serif;
-      font-weight:600;
+      font-weight: 600;
+    }
+
+    button {
+      font-family: 'Montserrat', sans-serif;
     }
 
     .btn-secundario {
       background: #d7a23f;
-      border: none;
-      border-radius: 28px;
-      padding: 0.8rem 3rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-cancelar {
-      background: #d73f3f;
       border: none;
       border-radius: 28px;
       padding: 0.8rem 3rem;
@@ -278,10 +300,26 @@ export class PreregistroPaso2 extends LitElement {
       cursor: pointer;
     }
 
+    .btn-cancelar {
+      background: #d73f3f;
+      border: none;
+      border-radius: 28px;
+      padding: 0.8rem 3rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ================= ANIMACIÓN ================= */
     @keyframes slideUpFade {
       from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -289,118 +327,77 @@ export class PreregistroPaso2 extends LitElement {
       }
     }
 
-    /* ================= AUTOFILL FIX ================= */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill,
-    select:-webkit-autofill {
-      -webkit-text-fill-color: #000; /* color del texto */
-      -webkit-box-shadow: 0 0 0px 1000px #8fa6c1 inset; /* COLOR DE FONDO */
-      transition: background-color 5000s ease-in-out 0s;
-    }
-
-    /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
-
-    /* ------------- 1024 PX -------------*/
-    @media (max-width: 1024px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-      }
-    }
-
-    /* ------------- 900 PX -------------*/
+    /* ================= RESPONSIVE ================= */
     @media (max-width: 900px) {
       .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    /* ------------- 768 PX -------------*/
-    @media (max-width: 768px) {
-      .radio-line {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.5rem;
-      }
-
-      .radio-group {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-    }
-
-    /* ------------- 640 PX -------------*/
     @media (max-width: 640px) {
       .grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
       }
 
-      input {
-        font-size: 1.05rem;
-        padding: 8px 2px;
+      .card {
+        padding: 1.5rem;
       }
 
-      select {
-        font-size: 1.05rem;
-        padding: 12px;
-      }
-
-      label {
-        font-size: 1rem;
-      }
-
-      .docs {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .doc-box {
-        width: 90%;
-        max-width: 280px;
+      h1 {
+        font-size: 1.8rem;
       }
 
       .form-actions {
         flex-direction: column;
-        gap: 1rem;
       }
 
       .btn-primario,
-      .btn-secundario {
+      .btn-secundario,
+      .btn-cancelar {
         width: 100%;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+      }
+
+      .radio-line {
+        flex-direction: column;
+        gap: 1rem;
       }
     }
   `;
 
-  /* ============================================= JAVASCRIPT ============================================= */
   static properties = {
     form: { state: true },
     formValido: { state: true },
+    ine: { state: true },
     ineFrenteCargado: { state: true },
     ineReversoCargado: { state: true },
-    nombreAlterno: { type: String },
-    telefonoAlterno: { type: String },
-    ine: { type: String }
+    mostrarAlerta: { type: Boolean },
+    alertaConfig: { type: Object },
+    nivelEstudiosValido: { state: true }
   };
 
   constructor() {
     super();
     this.form = {};
     this.formValido = false;
+    this.ine = 'no';
     this.ineFrenteCargado = false;
     this.ineReversoCargado = false;
-    this.nombreAlterno = '';
-    this.telefonoAlterno = '';
-    this.ine = 'no';
+    this.mostrarAlerta = false;
+    this.alertaConfig = {};
+    this.nivelEstudiosValido = false;
   }
 
   /* ================== UTILIDADES ================== */
 
   updateField(e) {
     this.form[e.target.name] = e.target.value;
+    
+    // Si el campo actualizado es nivelEstudios, validar
+    if (e.target.name === 'nivelEstudios') {
+      this.validarNivelEstudios(e.target.value);
+    }
+    
     this.validateForm();
   }
 
@@ -430,17 +427,94 @@ export class PreregistroPaso2 extends LitElement {
     this.updateField(e);
   }
 
+  /* ================== VALIDACIÓN DE NIVEL DE ESTUDIOS ================== */
+
+  validarNivelEstudios(nivelSeleccionado) {
+    if (!nivelSeleccionado) {
+      this.nivelEstudiosValido = false;
+      return;
+    }
+
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    const convocatoria = CONVOCATORIAS[origen];
+
+    if (!convocatoria) {
+      console.warn('No se encontró la convocatoria de origen');
+      this.nivelEstudiosValido = true;
+      return;
+    }
+
+    const nivelRequerido = convocatoria.nivelEstudiosMin;
+    const nivelUsuario = nivelSeleccionado;
+
+    // Comparar niveles usando la jerarquía
+    const jerarquiaRequerida = NIVELES_ESTUDIOS[nivelRequerido];
+    const jerarquiaUsuario = NIVELES_ESTUDIOS[nivelUsuario];
+
+    // El usuario debe tener al menos el nivel requerido
+    if (jerarquiaUsuario < jerarquiaRequerida) {
+      // 🔴 NO CUMPLE con el nivel de estudios
+      const alternativas = this.getConvocatoriasCompatiblesEstudios(nivelUsuario)
+        .filter(c => c.path !== origen);
+
+      if (alternativas.length > 0) {
+        // Hay convocatorias alternativas
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'warning-redireccion',
+          titulo: 'ESTIMADO USUARIO',
+          mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con el nivel de estudios mínimo requerido para la convocatoria seleccionada.',
+          extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil académico proporcionado.',
+          alternativas: alternativas
+        };
+      } else {
+        // No hay convocatorias compatibles
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'error',
+          titulo: 'Nivel de estudios insuficiente',
+          mensaje: `Se requiere al menos ${nivelRequerido} para esta convocatoria.`,
+          extra: 'Actualmente no existe ninguna convocatoria compatible con su nivel de estudios.',
+          boton: 'ENTENDIDO'
+        };
+      }
+      this.nivelEstudiosValido = false;
+    } else {
+      // ✅ SÍ CUMPLE con el nivel de estudios
+      this.nivelEstudiosValido = true;
+      this.mostrarAlerta = false;
+    }
+  }
+
+  getConvocatoriasCompatiblesEstudios(nivelUsuario) {
+    const jerarquiaUsuario = NIVELES_ESTUDIOS[nivelUsuario];
+    
+    return Object.entries(CONVOCATORIAS)
+      .map(([path, data]) => ({
+        path,
+        nombre: data.nombre,
+        nivelEstudiosMin: data.nivelEstudiosMin,
+        imagen: data.imagen || '/assets/default-convocatoria.jpg'
+      }))
+      .filter(c => {
+        const jerarquiaRequerida = NIVELES_ESTUDIOS[c.nivelEstudiosMin];
+        return jerarquiaUsuario >= jerarquiaRequerida;
+      });
+  }
+
   /* ================== INE ================== */
 
   handleIneFrente(e) {
     if (e.target.files && e.target.files.length > 0) {
       this.ineFrenteCargado = true;
+      this.validateForm();
     }
   }
 
   handleIneReverso(e) {
     if (e.target.files && e.target.files.length > 0) {
       this.ineReversoCargado = true;
+      this.validateForm();
     }
   }
 
@@ -462,7 +536,8 @@ export class PreregistroPaso2 extends LitElement {
       f.nivelEstudios &&
       f.contactoAlterno &&
       f.telAlterno?.length === 10 &&
-      this.ineValido;
+      this.ineValido &&
+      this.nivelEstudiosValido; // 🔑 Nueva validación
   }
 
   /* ================== NAVEGACIÓN ================== */
@@ -478,13 +553,37 @@ export class PreregistroPaso2 extends LitElement {
 
   /* ================== BOTÓN DE CANCELACIÓN ================== */
   cancelar() {
+    const origen = sessionStorage.getItem('origen_convocatoria');
     sessionStorage.clear();
-    globalThis.location.href = '/convocatoria';
+    globalThis.location.href = origen || '/convocatorias-view';
+  }
+
+  /* ================== CONTROL DE ALERTA ================== */
+  cerrarAlerta() {
+    this.mostrarAlerta = false;
+  }
+
+  handleAlertaAceptar() {
+    this.mostrarAlerta = false;
   }
 
   /* ========================================= HTML ======================================== */
   render() {
     return html`
+      ${this.mostrarAlerta ? html`
+        <alerta-view
+          modal
+          .tipo=${this.alertaConfig.tipo}
+          .titulo=${this.alertaConfig.titulo}
+          .mensaje=${this.alertaConfig.mensaje}
+          .extra=${this.alertaConfig.extra}
+          .boton=${this.alertaConfig.boton}
+          .alternativas=${this.alertaConfig.alternativas || []}
+          @cerrar=${this.cerrarAlerta}
+          @aceptar=${this.handleAlertaAceptar}
+        ></alerta-view>
+      ` : ''}
+
       <header>
         <img src="/src/assets/SSPlogo.png" />
         <div class="ipes">INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES</div>
@@ -499,40 +598,25 @@ export class PreregistroPaso2 extends LitElement {
           <h2>CONTACTO ALTERNO</h2>
           <div class="grid">
             <div>
-              <label>* Nombre del contacto alterno: </label>
-              <input name="contactoAlterno" placeholder="NOMBRE CONTACTO ALTERNO"
-                @input=${this.normalizeText}>
+              <label><span class="required">*</span> Nombre Completo: </label>
+              <input name="contactoAlterno" placeholder="NOMBRE DEL CONTACTO" @input=${this.normalizeText} />
             </div>
 
             <div>
-              <label>* Teléfono alterno: </label>
-              <input name="telAlterno" maxlength="10"
-                placeholder="(442) 123 4567"
-                @input=${e => this.onlyNumbers(e, 10)}>
+              <label><span class="required">*</span> No. Teléfono: </label>
+              <input name="telAlterno" placeholder="(55) 1234-5678" maxlength="10" @input=${e => this.onlyNumbers(e,10)} />
             </div>
           </div>
 
-          <h2>DATOS PERSONALES COMPLEMENTARIOS</h2>
-
-          <div class="section-title">LUGAR DE RESIDENCIA ACTUAL</div>
-
+          <h2>DOMICILIO</h2>
           <div class="grid">
             <div>
               <label><span class="required">*</span> Municipio: </label>
-              <select name="municipio" @change=${this.updateField}>
-                <option value="">Selecciona un municipio: </option>
-                ${[
-                  'AMEALCO','ARROYO SECO','CADEREYTA','COLÓN','CORREGIDORA',
-                  'EL MARQUÉS','EZEQUIEL MONTES','HUIMILPAN','JALPAN',
-                  'LANDA DE MATAMOROS','PEDRO ESCOBEDO','PEÑAMILLER',
-                  'PINAL DE AMOLES','QUERÉTARO','SAN JOAQUÍN',
-                  'SAN JUAN DEL RÍO','TEQUISQUIAPAN','TOLIMÁN'
-                ].map(m => html`<option>${m}</option>`)}
-              </select>
+              <input name="municipio" placeholder="QUERÉTARO" @input=${this.normalizeText} />
             </div>
 
             <div class="short">
-              <label><span class="required">*</span> C.P. : </label>
+              <label><span class="required">*</span> C.P.: </label>
               <input name="cp" placeholder="76000" maxlength="5" @input=${e => this.onlyNumbers(e,5)} />
             </div>
 
@@ -553,23 +637,20 @@ export class PreregistroPaso2 extends LitElement {
 
             <div class="short">
               <label>No. Interior: </label>
-              <input placeholder="A-1"
-                maxlength="5"
-                @input=${this.interiorFormat} />
+              <input name="interior" placeholder="A-1" maxlength="5" @input=${this.interiorFormat} />
             </div>
           </div>
 
           <h2>DOCUMENTACIÓN</h2>
           <div>
-            <label>* Último nivel de estudios concluidos</label>
+            <label><span class="required">*</span> Último nivel de estudios concluidos</label>
             <select name="nivelEstudios" @change=${this.updateField}>
               <option value="">Selecciona una opción</option>
-              <option>SIN ESTUDIOS</option>
-              <option>PRIMARIA</option>
               <option>SECUNDARIA</option>
-              <option>MEDIA SUPERIOR</option>
-              <option>EDUCACIÓN SUPERIOR</option>
-              <option>POSGRADO</option>
+              <option>BACHILLERATO</option>
+              <option>LICENCIATURA</option>
+              <option>MAESTRIA</option>
+              <option>DOCTORADO</option>
             </select>
           </div>
 
@@ -594,8 +675,8 @@ export class PreregistroPaso2 extends LitElement {
 
               <div class="radio-group">
                 <span class="radio-label">INE:</span>
-                <label><input type="radio" name="ine" @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; }}><span>Sí</span></label>
-                <label><input type="radio" name="ine" checked @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false;}}><span>No</span></label>
+                <label><input type="radio" name="ine" @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>Sí</span></label>
+                <label><input type="radio" name="ine" checked @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>No</span></label>
               </div>
             </div>
           </div>
@@ -608,19 +689,19 @@ export class PreregistroPaso2 extends LitElement {
           <!-- INE -->
           ${this.ine === 'si' ? html`
             <div class="docs">
-              <input type="file" accept="image/*" @change=${this.handleIneFrente}>
-              <input type="file" accept="image/*" @change=${this.handleIneReverso}>
+              <input type="file" accept="image/*" @change=${this.handleIneFrente} placeholder="Frente INE">
+              <input type="file" accept="image/*" @change=${this.handleIneReverso} placeholder="Reverso INE">
             </div>
           ` : ''}
-            <div class="form-actions">
-              <button class="btn-secundario" @click=${this.goBack}>VOLVER</button>
-                <button class="btn-cancelar" @click=${this.cancelar}>CANCELAR</button>
-              <button class="btn-primario"
-                ?disabled=${!this.formValido}
-                @click=${this.irACorreo}>
-                CONTINUAR
-              </button>
-            </div>
+
+          <div class="form-actions">
+            <button class="btn-secundario" @click=${this.goBack}>VOLVER</button>
+            <button class="btn-cancelar" @click=${this.cancelar}>CANCELAR</button>
+            <button class="btn-primario"
+              ?disabled=${!this.formValido}
+              @click=${this.irACorreo}>
+              CONTINUAR
+            </button>
           </div>
         </div>
       </main>

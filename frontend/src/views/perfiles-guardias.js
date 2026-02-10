@@ -126,6 +126,7 @@ export class PerfilesGuardias extends LitElement {
       border: none;
       cursor: pointer;
       margin-bottom:0.5rem;
+      color:#fff;
 
       /* -------- FUENTE --------- */
       font-family: 'Montserrat', sans-serif;

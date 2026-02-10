@@ -2,44 +2,52 @@ import { LitElement, html, css } from 'lit';
 
 const CONVOCATORIAS = {
       '/convocatoria-guardia-civica': {
-        nombre: 'GUARDIA CÍVICO Y VIAL',
+        nombre: 'GUARDIA CÍVICA',
         edadMin: 21,
-        edadMax: 50
+        edadMax: 50,
+        imagen: '/src/assets/GC.jpg'
       },
       '/convocatoria-guardia-vial': {
-        nombre: 'GUARDIA CÍVICO Y VIAL',
+        nombre: 'GUARDIA VIAL',
         edadMin: 21,
-        edadMax: 50
+        edadMax: 50,
+        imagen: '/src/assets/GV.jpg'
       },
       '/convocatoria-guardia-auxiliar': {
         nombre: 'GUARDIA AUXILIAR',
         edadMin: 18,
-        edadMax: 50
+        edadMax: 50,
+        imagen: '/src/assets/GA.jpg'
       },
       '/convocatoria-auxiliar': {
         nombre: 'POLICÍA AUXILIAR',
         edadMin: 18,
-        edadMax: 42
+        edadMax: 42,
+        imagen: '/src/assets/policia/AuxiliarJ.jpeg'
       },
       '/convocatoria-proximidad': {
         nombre: 'POLICÍA DE PROXIMIDAD',
         edadMin: 18,
-        edadMax: 35
+        edadMax: 35,
+        imagen: '/src/assets/proximidad/Proximidad.jpg'
       },
       '/convocatoria-proximidad-cibernetica': {
-        nombre: 'POLICÍA DE PROXIMIDAD',
+        nombre: 'PROXIMIDAD CIBERNÉTICA',
         edadMin: 18,
-        edadMax: 35
+        edadMax: 35,
+        imagen: '/src/assets/proximidad/Cibernetica.jpg'
       },
       '/convocatoria-proximidad-seg-pub': {
-        nombre: 'POLICÍA DE PROXIMIDAD',
+        nombre: 'ANÁLISIS EN SEGURIDAD PÚBLICA',
         edadMin: 18,
-        edadMax: 35
+        edadMax: 35,
+        imagen: '/src/assets/proximidad/SegPub.jpeg'
       },
       '/convocatoria-proximidad-victimas': {
-        nombre: 'POLICÍA DE PROXIMIDAD',
+        nombre: 'ATENCIÓN A VÍCTIMAS',
         edadMin: 18,
-        edadMax: 35
+        edadMax: 35,
+        imagen: '/src/assets/proximidad/Victimas.jpg'
       }
     };
 
@@ -526,23 +534,7 @@ export class PreregistroView extends LitElement {
               'De acuerdo a la información proporcionada, usted NO cumple con los requisitos necesarios para la convocatoria seleccionada.',
             extra:
               'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil proporcionado.',
-            convocatorias: [
-                {
-                  id: 'auxiliar',
-                  nombre: 'Guardia Auxiliar',
-                  imagen: '/assets/guardia-auxiliar.jpg'
-                },
-                {
-                  id: 'vial',
-                  nombre: 'Guardia Vial',
-                  imagen: '/assets/guardia-vial.jpg'
-                },
-                {
-                  id: 'proximidad',
-                  nombre: 'Policía Proximidad',
-                  imagen: '/assets/policia-proximidad.jpg'
-                }
-              ]
+            alternativas: alternativas // 🔑 Pasar las alternativas aquí
           };
           return;
         }
@@ -753,7 +745,7 @@ export class PreregistroView extends LitElement {
           nombre: data.nombre,
           edadMin: data.edadMin,
           edadMax: data.edadMax,
-          imagen: data.imagen
+          imagen: data.imagen || '/assets/default-convocatoria.jpg' // Fallback en caso de que no tenga imagen
         }))
         .filter(c => edad >= c.edadMin && edad <= c.edadMax);
     }
@@ -772,7 +764,7 @@ export class PreregistroView extends LitElement {
     }
 
     resetFormulario() {
-      this.formData = {
+      this.form = {
         nombre: '',
         apellido1: '',
         apellido2: '',
@@ -780,10 +772,13 @@ export class PreregistroView extends LitElement {
         email2: '',
         tel: '',
         tel2: '',
-        fechaNacimiento: ''
+        fechaNacimiento: '',
+        curp: '',
+        rfc: ''
       };
-      this.edad = null;
+      this.edad = '';
       this.edadValidaConvocatoria = false;
+      this.requestUpdate();
     }
 
 /* ========================================= HTML ======================================== */
@@ -797,7 +792,7 @@ export class PreregistroView extends LitElement {
           .mensaje=${this.alertaConfig.mensaje}
           .extra=${this.alertaConfig.extra}
           .boton=${this.alertaConfig.boton}
-          .alternativas=${this.alertaConfig.alternativas}
+          .alternativas=${this.alertaConfig.alternativas || []}
           @cerrar=${this.cerrarAlerta}
           @aceptar=${this.handleAlertaAceptar}
         ></alerta-view>
@@ -826,6 +821,7 @@ export class PreregistroView extends LitElement {
             <div>
               <label><span class="required">*</span>CURP: </label>
               <input name="curp" placeholder="ABCD000000EFGHI00" maxlength="18"
+                .value=${this.curp}
                 @input=${e => {
                   this.curp = e.target.value.toUpperCase();
                   this.form.curp = this.curp;
@@ -836,22 +832,23 @@ export class PreregistroView extends LitElement {
 
             <div>
               <label><span class="required">*</span>Nombre(s): </label>
-              <input name="nombre" placeholder="INGRESA TU NOMBRE"  @input=${this.normalizeText} />
+              <input name="nombre" placeholder="INGRESA TU NOMBRE" .value=${this.form.nombre || ''} @input=${this.normalizeText} />
             </div>
 
             <div>
               <label><span class="required">*</span>Primer Apellido: </label>
-              <input name="apellido1" placeholder="APELLIDO" @input=${this.normalizeText} />
+              <input name="apellido1" placeholder="APELLIDO" .value=${this.form.apellido1 || ''} @input=${this.normalizeText} />
             </div>
 
             <div>
               <label><span class="required">*</span>Segundo Apellido: </label>
-              <input name="apellido2" placeholder="APELLIDO" @input=${this.normalizeText} />
+              <input name="apellido2" placeholder="APELLIDO" .value=${this.form.apellido2 || ''} @input=${this.normalizeText} />
             </div>
 
             <div>
               <label><span class="required">*</span>RFC: </label>  
               <input name="rfc" placeholder="ABCD000000ABC" maxlength="13"
+                .value=${this.rfc}
                 @input=${e => {
                   this.rfc = e.target.value.toUpperCase();
                   this.form.rfc = this.rfc;
@@ -862,7 +859,7 @@ export class PreregistroView extends LitElement {
 
             <div>
               <label><span class="required">*</span>Fecha de Nacimiento: </label>
-              <input type="date" name="fechaNacimiento" required @blur=${this.updateEdad}/>
+              <input type="date" name="fechaNacimiento" .value=${this.form.fechaNacimiento || ''} required @blur=${this.updateEdad}/>
             </div>
 
             <div>
@@ -898,6 +895,7 @@ export class PreregistroView extends LitElement {
               <input
                 name="email"
                 placeholder="alguien@example.com"
+                .value=${this.form.email || ''}
                 @blur=${this.validateEmailBlur}
                 @input=${this.updateField}
                 required
@@ -917,6 +915,7 @@ export class PreregistroView extends LitElement {
               <input
                 name="email2"
                 placeholder="alguien@example.com"
+                .value=${this.form.email2 || ''}
                 @blur=${this.validateEmail2Blur}
                 @input=${this.updateField}
                 required
@@ -934,12 +933,12 @@ export class PreregistroView extends LitElement {
             <!-- > ------------------- TELEFONOS ------------------- <!--> 
             <div>
               <label><span class="required">*</span>No. Teléfono: </label>
-              <input name="tel" placeholder="(55) 1234-5678" maxlength="10" @input=${this.onlyPhone}/>
+              <input name="tel" placeholder="(55) 1234-5678" maxlength="10" .value=${this.form.tel || ''} @input=${this.onlyPhone}/>
             </div>
 
             <div>
               <label><span class="required">*</span>Confirmar Teléfono: </label>
-              <input name="tel2" placeholder="(55) 1234-5678" maxlength="10" @input=${this.onlyPhone}/>
+              <input name="tel2" placeholder="(55) 1234-5678" maxlength="10" .value=${this.form.tel2 || ''} @input=${this.onlyPhone}/>
             </div>
           </div>
             <div class="form-actions">
