@@ -182,22 +182,28 @@ export class PreregistroPaso2 extends LitElement {
     input, select {
       background: transparent;
       border: none;
-      border-bottom: 1px solid #000;
-      padding: 6px 2px;
+      border-bottom: 2px solid #131c49;
+      padding: 8px 4px;
       outline: none;
       width: 100%;
-      font-family: 'Roboto', sans-serif;
-      font-size: 16px;
-      color: #000;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      color: #131c49;
+      transition: border-color 0.3s ease;
+      margin-bottom: 1.5rem;
     }
 
-    input::placeholder {
-      color: #717173;
+    input:focus, select:focus {
+      border-bottom: 2px solid #7aa7c8;
     }
 
     select {
       cursor: pointer;
-      padding: 8px 2px;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23131c49' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 5px center;
+      background-size: 18px;
     }
 
     /* ================= RADIO GROUPS ================= */
@@ -373,7 +379,9 @@ export class PreregistroPaso2 extends LitElement {
     ineReversoCargado: { state: true },
     mostrarAlerta: { type: Boolean },
     alertaConfig: { type: Object },
-    nivelEstudiosValido: { state: true }
+    nivelEstudiosValido: { state: true },
+    licencia: { state: true },
+    cartilla: { state: true }
   };
 
   constructor() {
@@ -386,6 +394,8 @@ export class PreregistroPaso2 extends LitElement {
     this.mostrarAlerta = false;
     this.alertaConfig = {};
     this.nivelEstudiosValido = false;
+    this.licencia = '';
+    this.cartilla = '';
   }
 
   /* ================== UTILIDADES ================== */
@@ -422,6 +432,28 @@ export class PreregistroPaso2 extends LitElement {
     e.target.value = e.target.value
       .toUpperCase()
       .replaceAll(/[^A-Z0-9-]/g, '')
+      .slice(0, 5);
+
+    this.updateField(e);
+  }
+
+  handleMunicipioChange(e) {
+    const municipio = e.target.value;
+    this.form.municipio = municipio;
+
+    if (municipio === 'QUERÉTARO') {
+      this.form.cp = '76000';
+    } else {
+      this.form.cp = '';
+    }
+
+    this.validateForm();
+  }
+
+  exteriorInteriorFormat(e) {
+    e.target.value = e.target.value
+      .toUpperCase()
+      .replaceAll(/[^A-Z0-9\-/]/g, '') // solo letras, números, - y /
       .slice(0, 5);
 
     this.updateField(e);
@@ -523,22 +555,27 @@ export class PreregistroPaso2 extends LitElement {
   }
 
   /* ================== VALIDACIÓN GENERAL ================== */
-
   validateForm() {
-    const f = this.form;
+      const f = this.form;
 
-    this.formValido =
-      f.municipio &&
-      f.cp?.length === 5 &&
-      f.colonia &&
-      f.calle &&
-      f.exterior &&
-      f.nivelEstudios &&
-      f.contactoAlterno &&
-      f.telAlterno?.length === 10 &&
-      this.ineValido &&
-      this.nivelEstudiosValido; // 🔑 Nueva validación
-  }
+      const documentosValidos =
+        this.licencia === 'si' &&   //Obligatorio que sea SI
+        this.cartilla === 'si' &&   //Obligatorio que sea SI
+        this.ine &&                 //Obligatorio seleccionar
+        this.ineValido;             //Si dijo sí, debe subir archivos
+
+      this.formValido =
+        f.municipio &&
+        f.cp?.length === 5 &&
+        f.colonia &&
+        f.calle &&
+        f.exterior &&
+        f.nivelEstudios &&
+        f.contactoAlterno &&
+        f.telAlterno?.length === 10 &&
+        documentosValidos &&
+        this.nivelEstudiosValido;
+    }
 
   /* ================== NAVEGACIÓN ================== */
 
@@ -612,17 +649,58 @@ export class PreregistroPaso2 extends LitElement {
           <div class="grid">
             <div>
               <label><span class="required">*</span> Municipio: </label>
-              <input name="municipio" placeholder="QUERÉTARO" @input=${this.normalizeText} />
+              <select name="municipio" @change=${this.handleMunicipioChange}>
+                <option value="">Selecciona un municipio</option>
+                <option>AMEALCO DE BONFIL</option>
+                <option>ARROYO SECO</option>
+                <option>CADEREYTA DE MONTES</option>
+                <option>COLÓN</option>
+                <option>CORREGIDORA</option>
+                <option>EL MARQUÉS</option>
+                <option>EZEQUIEL MONTES</option>
+                <option>HUIMILPAN</option>
+                <option>JALPAN DE SERRA</option>
+                <option>LANDA DE MATAMOROS</option>
+                <option>PEDRO ESCOBEDO</option>
+                <option>PEÑAMILLER</option>
+                <option>PINAL DE AMOLES</option>
+                <option>QUERÉTARO</option>
+                <option>SAN JOAQUÍN</option>
+                <option>SAN JUAN DEL RÍO</option>
+                <option>TEQUISQUIAPAN</option>
+                <option>TOLIMÁN</option>
+              </select>
             </div>
 
             <div class="short">
               <label><span class="required">*</span> C.P.: </label>
-              <input name="cp" placeholder="76000" maxlength="5" @input=${e => this.onlyNumbers(e,5)} />
+              <input 
+                name="cp"
+                placeholder="76000"
+                maxlength="5"
+                .value=${this.form.cp || ''}
+                ?disabled=${this.form.municipio === 'QUERÉTARO'}
+                @input=${e => this.onlyNumbers(e,5)} />
             </div>
 
             <div>
               <label><span class="required">*</span> Colonia: </label>
-              <input name="colonia" placeholder="CENTRO" @input=${this.normalizeText} />
+
+              ${this.form.municipio === 'QUERÉTARO' ? html`
+                <select name="colonia" @change=${this.updateField}>
+                  <option value="">Selecciona una colonia</option>
+                  <option>JURICA</option>
+                  <option>EL REFUGIO</option>
+                  <option>CENTRO</option>
+                  <option>MILENIO</option>
+                  <option>LA PRADERA</option>
+                </select>
+              ` : html`
+                <input 
+                  name="colonia" 
+                  placeholder="CENTRO"
+                  @input=${this.normalizeText} />
+              `}
             </div>
 
             <div>
@@ -632,12 +710,12 @@ export class PreregistroPaso2 extends LitElement {
 
             <div class="short">
               <label><span class="required">*</span> No. Exterior: </label>
-              <input name="exterior" placeholder="123" maxlength="5" @input=${e => this.onlyNumbers(e,5)} />
+              <input name="exterior" placeholder="123-A" maxlength="5" @input=${this.exteriorInteriorFormat} />
             </div>
 
             <div class="short">
               <label>No. Interior: </label>
-              <input name="interior" placeholder="A-1" maxlength="5" @input=${this.interiorFormat} />
+              <input name="interior" placeholder="A-1" maxlength="5" @input=${this.exteriorInteriorFormat} />
             </div>
           </div>
 
@@ -654,30 +732,84 @@ export class PreregistroPaso2 extends LitElement {
             </select>
           </div>
 
-          <div class="radio-section">
-            <label class="radio-title">
-              <span class="required">*</span>
-              ¿Cuenta con los siguientes documentos oficiales?
-            </label>
+          <div class="radio-line">
+            <!-- LICENCIA -->
+            <div class="radio-group">
+              <span class="radio-label">Licencia de Conducir:</span>
+              <label>
+                <input type="radio"
+                  name="licencia"
+                  value="si"
+                  @change=${e => {
+                    this.licencia = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>Sí</span>
+              </label>
+              <label>
+                <input type="radio"
+                  name="licencia"
+                  value="no"
+                  @change=${e => {
+                    this.licencia = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>No</span>
+              </label>
+            </div>
 
-            <div class="radio-line">
-              <div class="radio-group">
-                <span class="radio-label">Licencia:</span>
-                <label><input type="radio" name="licencia"><span>Sí</span></label>
-                <label><input type="radio" name="licencia"><span>No</span></label>
-              </div>
+            <!-- CARTILLA -->
+            <div class="radio-group">
+              <span class="radio-label">Cartilla Servicio Militar:</span>
+              <label>
+                <input type="radio"
+                  name="cartilla"
+                  value="si"
+                  @change=${e => {
+                    this.cartilla = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>Sí</span>
+              </label>
+              <label>
+                <input type="radio"
+                  name="cartilla"
+                  value="no"
+                  @change=${e => {
+                    this.cartilla = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>No</span>
+              </label>
+            </div>
 
-              <div class="radio-group">
-                <span class="radio-label">Cartilla:</span>
-                <label><input type="radio" name="cartilla"><span>Sí</span></label>
-                <label><input type="radio" name="cartilla"><span>No</span></label>
-              </div>
-
-              <div class="radio-group">
-                <span class="radio-label">INE:</span>
-                <label><input type="radio" name="ine" @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>Sí</span></label>
-                <label><input type="radio" name="ine" checked @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>No</span></label>
-              </div>
+            <!-- INE -->
+            <div class="radio-group">
+              <span class="radio-label">INE:</span>
+              <label>
+                <input type="radio"
+                  name="ine"
+                  value="si"
+                  @change=${() => {
+                    this.ine = 'si';
+                    this.ineFrenteCargado = false;
+                    this.ineReversoCargado = false;
+                    this.validateForm();
+                  }}>
+                <span>Sí</span>
+              </label>
+              <label>
+                <input type="radio"
+                  name="ine"
+                  value="no"
+                  @change=${() => {
+                    this.ine = 'no';
+                    this.ineFrenteCargado = false;
+                    this.ineReversoCargado = false;
+                    this.validateForm();
+                  }}>
+                <span>No</span>
+              </label>
             </div>
           </div>
 

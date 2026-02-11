@@ -204,6 +204,7 @@ export class PreregistroView extends LitElement {
 
     .btn-secundario {
       background: #d7a23f;
+      color: #fff;
       border: none;
       border-radius: 28px;
       padding: 0.8rem 3rem;
@@ -214,6 +215,7 @@ export class PreregistroView extends LitElement {
 
     .btn-primario {
       background: #7aa7c8;
+      color: #fff;
       border: none;
       border-radius: 28px;
       padding: 0.8rem 3rem;
@@ -224,6 +226,7 @@ export class PreregistroView extends LitElement {
 
     .btn-cancelar {
       background: #d73f3f;
+      color: #fff;
       border: none;
       border-radius: 28px;
       padding: 0.8rem 3rem;
@@ -274,11 +277,24 @@ export class PreregistroView extends LitElement {
       background: rgba(19, 28, 73, 0.1);
     }
 
-    /* ----------- MENSAJE DE ERROR PARA LOS CORREOS ------------- */
-    .error {
+    /* ----------- MENSAJE DE ERROR PARA LOS CORREOS ------------- */ 
+    .msg {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;      /* más grande */
+      font-weight: 600;     /* más grueso */
+    }
+
+    .msg-gray {
+      color: #757575;
+    }
+
+    .msg-orange {
+      color: #f57c00;
+    }
+
+    .msg-red {
       color: #d32f2f;
-      font-size: 12px;
-      margin-top: 4px;
     }
 
     /* ================= AUTOFILL FIX ================= */
@@ -414,6 +430,7 @@ export class PreregistroView extends LitElement {
         emailTouched: { state: true },
         email2Touched: { state: true },
         formValido: { state: true },
+        civil: { type:String },
         sexo: { type: String },
         curp: { type: String },
         rfc: { type: String },
@@ -435,6 +452,7 @@ export class PreregistroView extends LitElement {
       this.formValido = false;
       this.sexo = '';
       this.curp = '';
+      this.civil = '';
       this.rfc = '';
       this.mostrarAlerta = false;
       this.alertaConfig = {};
@@ -445,7 +463,7 @@ export class PreregistroView extends LitElement {
     const f = this.form;
 
     const curpCompleta = f.curp?.length === 18;
-    const rfcCompleto = f.rfc?.length === 13;
+    const rfcCompleto = this.validarRFC(f.rfc || '');
 
     this.formValido =
       curpCompleta &&
@@ -455,13 +473,15 @@ export class PreregistroView extends LitElement {
       f.email &&
       f.email2 &&
       f.email === f.email2 &&
+      f.sexo &&
+      f.civil &&
       f.tel &&
       f.tel2 &&
       f.tel === f.tel2 &&
       this.edadValidaConvocatoria && // 🔴 CLAVE
       !this.emailError &&
-      !this.emailMatchError &&
-      !this.phoneMatchError;
+      !this.email2Error &&
+      !this.emailMatchError;
     }
 
     /* --------------- FORMATO A LOS CAMPOS DE SOLAMENTE MAYÚSCULAS Y SIN ACENTOS. ------------ */
@@ -602,7 +622,7 @@ export class PreregistroView extends LitElement {
 
     validateEmail(e) {
       const value = e.target.value.trim();
-      const regex = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\.(com|mx)$/;
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
 
       this.emailError = value && !regex.test(value);
       this.updateField(e);
@@ -612,34 +632,58 @@ export class PreregistroView extends LitElement {
 
     validateEmailBlur(e) {
       const value = e.target.value.trim();
-      const regex = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\.(com|mx)$/;
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
 
       this.emailTouched = true;
-      this.emailError = value !== '' && !regex.test(value);
+
+      if (!value) {
+        this.emailError = 'required';
+      } else if (regex.test(value)) {
+        this.emailError = null;
+      } else {
+        this.emailError = 'format';
+      }
 
       this.updateField(e);
+      this.checkEmailMatch();
+      this.validateForm();
     }
 
     validateEmail2Blur(e) {
       const value = e.target.value.trim();
-      const regex = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|hotmail)\.(com|mx)$/;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
       this.email2Touched = true;
-      this.email2Error = value !== '' && !regex.test(value);
+
+      if (!value) {
+        this.email2Error = 'required';
+      } else if (regex.test(value)) {
+        this.email2Error = null;
+      } else {
+        this.email2Error = 'format';
+      }
 
       this.updateField(e);
-
-      this.emailMatchError =
-        this.form.email &&
-        this.form.email2 &&
-        this.form.email !== this.form.email2;
+      this.checkEmailMatch();
+      this.validateForm();
     }
 
     checkEmailMatch() {
-      this.emailMatchError =
+      if (
         this.form.email &&
         this.form.email2 &&
-        this.form.email !== this.form.email2;
+        this.form.email === this.form.email2
+      ) {
+        this.emailMatchError = false;
+      } else if (
+        this.form.email &&
+        this.form.email2 &&
+        this.form.email !== this.form.email2
+      ) {
+        this.emailMatchError = true;
+      } else {
+        this.emailMatchError = false;
+      }
     }
 
     submitForm() {
@@ -683,7 +727,7 @@ export class PreregistroView extends LitElement {
     }
 
     validarRFC(rfc) {
-      const regexRFC =
+      const regexRFC = 
         /^[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}$/;
       return regexRFC.test(rfc);
     }
@@ -701,7 +745,7 @@ export class PreregistroView extends LitElement {
         return;
       }
 
-      if (!this.validarCURP(this.curp)) {
+      if (!this.validarCURP(this.form.curp)) {
         this.mostrarAlerta = true;
         this.alertaConfig = {
           tipo: 'warning-yellow',
@@ -713,7 +757,7 @@ export class PreregistroView extends LitElement {
         return;
       }
 
-      if (!this.validarRFC(this.rfc)) {
+      if (!this.validarRFC(this.form.rfc)) {
         this.mostrarAlerta = true;
         this.alertaConfig = {
           tipo: 'warning',
@@ -847,14 +891,19 @@ export class PreregistroView extends LitElement {
 
             <div>
               <label><span class="required">*</span>RFC: </label>  
-              <input name="rfc" placeholder="ABCD000000ABC" maxlength="13"
-                .value=${this.rfc}
-                @input=${e => {
-                  this.rfc = e.target.value.toUpperCase();
-                  this.form.rfc = this.rfc;
-                  this.validateForm();
-                }}
-              />
+              <input name="rfc" placeholder="ABCD000000ABC" maxlength="13" .value=${this.form.rfc || ''}
+                  @input=${e => {
+                    e.target.value = e.target.value
+                      .toUpperCase()
+                      .replaceAll(/[^A-ZÑ&0-9]/g, '');
+                    this.updateField(e);
+                  }}
+                />
+                ${this.form.rfc && !this.validarRFC(this.form.rfc) ? html`
+                  <small class="msg msg-orange">
+                    RFC con formato inválido
+                  </small>
+                ` : ''}
             </div>
 
             <div>
@@ -867,18 +916,54 @@ export class PreregistroView extends LitElement {
               <input class="edad" .value=${this.edad} disabled>
               <label><span class="required">*</span>Sexo</label>
               <div class="radio-group">
-                <label> <input type="radio" name="sexo"/><span>Hombre</span></label>
-                <label> <input type="radio" name="sexo"/><span>Mujer</span></label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name="sexo"
+                    value="H"
+                    .checked=${this.form.sexo === 'H'}
+                    @change=${e => {
+                      this.form.sexo = e.target.value;
+                      this.validateForm();
+                    }}
+                  />
+                  <span>Hombre</span>
+                </label>
+
+                <label>
+                  <input 
+                    type="radio" 
+                    name="sexo"
+                    value="M"
+                    .checked=${this.form.sexo === 'M'}
+                    @change=${e => {
+                      this.form.sexo = e.target.value;
+                      this.validateForm();
+                    }}
+                  />
+                  <span>Mujer</span>
+                </label>
               </div>
             </div>
 
             <div>
               <label><span class="required">*</span>Estado Civil: </label>
               <div class="radio-group">
-                <label><input type="radio" name="civil" /><span>Soltero</span></label>
-                <label><input type="radio" name="civil"><span>Casado</span></label>
-                <label><input type="radio" name="civil"><span>Divorciado</span></label>
-                <label><input type="radio" name="civil"><span>Viudo</span></label>
+                ${['Soltero', 'Casado', 'Divorciado', 'Viudo'].map(opcion => html`
+                  <label>
+                    <input 
+                      type="radio"
+                      name="civil"
+                      value="${opcion}"
+                      .checked=${this.form.civil === opcion}
+                      @change=${e => {
+                        this.form.civil = e.target.value;
+                        this.validateForm();
+                      }}
+                    />
+                    <span>${opcion}</span>
+                  </label>
+                `)}
               </div>
             </div>
           </div>
@@ -901,8 +986,12 @@ export class PreregistroView extends LitElement {
                 required
               />
 
-              ${this.emailTouched && this.emailError ? html`
-                <small class="error">Dominio no permitido</small>
+              ${this.emailTouched && this.emailError == 'required' ? html`
+                <small class="msg msg-gray">Campo obligatorio</small>
+              ` : ''}
+
+              ${this.emailTouched && this.emailError == 'format' ? html`
+                <small class="msg msg-orange">Estructura de correo inválida</small>
               ` : ''}
             </div>
 
@@ -921,12 +1010,16 @@ export class PreregistroView extends LitElement {
                 required
               />
 
-              ${this.email2Touched && this.email2Error ? html`
-                <small class="error">Dominio no permitido</small>
+              ${this.email2Touched && this.email2Error == 'required' ? html`
+                <small class="msg msg-gray">Campo obligatorio</small>
+              ` : ''}
+
+              ${this.email2Touched && this.email2Error == 'format' ? html`
+                <small class="msg msg-orange">Estructura de correo inválida</small>
               ` : ''}
 
               ${this.email2Touched && !this.email2Error && this.emailMatchError ? html`
-                <small class="error">Los correos no coinciden</small>
+                <small class="msg msg-red">Los correos no coinciden</small>
               ` : ''}
             </div>
 
