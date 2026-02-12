@@ -101,10 +101,13 @@ export class PreregistroPasoCorreo extends LitElement {
     }
 
     .code {
-      display: block;
-      font-size: 1.5rem;
-      font-style: italic;
-      color: #444;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;           /* grueso ancho */
+      font-size: 1.6rem;
+      text-align: center;
+      width: 100%;
+      color: #0a0f24;
+      letter-spacing: 1px;
     }
 
     /* ===== TERMINOS ===== */
@@ -156,12 +159,12 @@ export class PreregistroPasoCorreo extends LitElement {
     /* ===== CÓDIGO ===== */
     .codigo-wrapper {
       max-width: 400px;
-      margin: 3rem auto 0;
+      margin: 1rem auto 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
-      text-align:center;
+      gap: 1rem;
+      text-align: center;
     }
 
     .codigo-wrapper label {
@@ -205,6 +208,22 @@ export class PreregistroPasoCorreo extends LitElement {
       cursor: pointer;
       text-decoration: underline;
       font-weight: 500;
+    }
+
+    .legal-text input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: #7aa7c8; /* color base */
+      transition: all 0.3s ease;
+    }
+
+    .legal-text input[type="checkbox"]:checked {
+      accent-color: #0a0f24; /* azul institucional */
+    }
+
+    .legal-text.active {
+      font-weight: 600;
+      color: #0a0f24;
     }
 
     /* ====== BOTÓN ENVIAR ====== */
@@ -406,7 +425,8 @@ export class PreregistroPasoCorreo extends LitElement {
     termsAccepted: { state: true },
     privacyAccepted: { state: true },
     showTermsModal: { state: true },
-    showPrivacyModal: { state: true }
+    showPrivacyModal: { state: true },
+    showCodigoModal: { state: true }
   };
 
   constructor() {
@@ -422,7 +442,7 @@ export class PreregistroPasoCorreo extends LitElement {
     this.privacyAccepted = false;
     this.showTermsModal = false;
     this.showPrivacyModal = false;
-
+    this.showCodigoModal = false;
   }
 
   get formValido() {
@@ -446,7 +466,7 @@ export class PreregistroPasoCorreo extends LitElement {
   }
 
   enviarCodigo() {
-    this.codigoEnviado = true;
+    this.showCodigoModal = true;
   }
 
   onlyNumbers(e) {
@@ -477,6 +497,12 @@ export class PreregistroPasoCorreo extends LitElement {
 
   cerrarAlerta() {
     this.mostrarAlerta = false;
+
+    // si fue error de código, reabrimos modal
+    if (this.alertaConfig?.titulo === 'Código no válido') {
+      this.codigo = '';
+      this.showCodigoModal = true;
+    }
   }
 
   /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
@@ -498,9 +524,49 @@ export class PreregistroPasoCorreo extends LitElement {
     this.requestUpdate();
   }
 
+  validarDesdeModal() {
+    if (this.codigo === '000000') {
+      // 🔴 En vez de abrir otra alerta,
+      // transformamos la actual
+      this.alertaConfig = {
+        tipo: 'info',
+        titulo: 'Código no válido',
+        mensaje: 'El código ingresado no coincide con el enviado.',
+        extra: 'Verifica el código enviado a tu correo.',
+        boton: 'INTENTAR DE NUEVO'
+      };
+
+      this.showCodigoModal = false;
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    this.showCodigoModal = false;
+
+    sessionStorage.setItem('preregistro_completado', 'true');
+    sessionStorage.setItem('folio_preregistro', 'GC-012345');
+    globalThis.location.href = '/preregistro-completado';
+  }
+
   loremContent() {
     return html`
       <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <p>
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat.
+      </p>
+      <p>
+        Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur.
+      </p>
+      <p>
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+        officia deserunt mollit anim id est laborum.
+      </p>
+            <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </p>
@@ -559,6 +625,37 @@ export class PreregistroPasoCorreo extends LitElement {
         ></alerta-view>
       ` : ''}
 
+      ${this.showCodigoModal ? html`
+        <alerta-view
+          modal
+          tipo="info"
+          titulo="Validación de correo"
+          mensaje="Ingresa el código de 6 dígitos enviado a tu correo electrónico."
+          boton=""
+          @aceptar=${() => {}}
+        >
+
+          <div class="codigo-wrapper">
+            <label class="code">CÓDIGO</label>
+
+            <input
+              maxlength="6"
+              .value=${this.codigo}
+              @input=${this.handleCodigo}
+            />
+
+            <button
+              class="btn-primario"
+              ?disabled=${!this.codigoValido}
+              @click=${this.validarDesdeModal}
+            >
+              VALIDAR Y CONTINUAR
+            </button>
+          </div>
+
+        </alerta-view>
+      ` : ''}
+
       <header>
         <img src="/src/assets/SSPlogo.png" />
         <div class="ipes">INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES</div>
@@ -583,7 +680,7 @@ export class PreregistroPasoCorreo extends LitElement {
 
           <div class="terms">
           <!-- TÉRMINOS Y AVISO -->
-            <div class="legal-text">
+            <div class="legal-text ${this.allAccepted ? 'active' : ''}">
               <input
                 type="checkbox"
                 .checked=${this.allAccepted}
@@ -623,17 +720,6 @@ export class PreregistroPasoCorreo extends LitElement {
               ENVIAR CÓDIGO
             </button>
           </div>
-
-          ${this.codigoEnviado ? html`
-            <div class="codigo-wrapper">
-              <label class="code">Código</label>
-                <input class="input-linea" maxlength="6" .value=${this.codigo} @input=${this.handleCodigo}/>
-
-                <button class="btn-primario" ?disabled=${!this.codigoValido} @click=${this.finalizar}>
-                  VALIDAR Y CONTINUAR
-                </button>
-            </div>
-          ` : ''}
         </section>
       </main>
     `;
