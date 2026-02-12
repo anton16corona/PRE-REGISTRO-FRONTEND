@@ -221,17 +221,19 @@ export class PreregistroPaso2 extends LitElement {
       display: flex;
       gap: 3rem;
       flex-wrap: wrap;
+      align-items: center; /* 🔴 clave */
     }
 
     .radio-group {
       display: flex;
-      gap: 0.8rem;
       align-items: center;
+      gap: 1rem;
     }
 
     .radio-label {
       font-weight: 600;
-      margin-right: 0.5rem;
+      margin-right: 0.8rem;
+      white-space: nowrap;
     }
 
     .radio-group label {
@@ -239,7 +241,7 @@ export class PreregistroPaso2 extends LitElement {
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      padding: 4px 10px;
+      padding: 4px 8px;
       border-radius: 12px;
       transition: background 0.25s ease;
     }
@@ -250,6 +252,12 @@ export class PreregistroPaso2 extends LitElement {
 
     .radio-group label:has(input:checked) {
       background: rgba(19, 28, 73, 0.1);
+    }
+
+    .radio-group input[type="radio"] {
+      margin: 0;
+      vertical-align: middle;
+      transform: translateY(1px); /* micro ajuste fino */
     }
 
     /* ================= DOCS (INE) ================= */
@@ -284,6 +292,7 @@ export class PreregistroPaso2 extends LitElement {
 
     button {
       font-family: 'Montserrat', sans-serif;
+      color: #fff;
     }
 
     .btn-secundario {
@@ -439,14 +448,15 @@ export class PreregistroPaso2 extends LitElement {
 
   handleMunicipioChange(e) {
     const municipio = e.target.value;
-    this.form.municipio = municipio;
 
-    if (municipio === 'QUERÉTARO') {
-      this.form.cp = '76000';
-    } else {
-      this.form.cp = '';
-    }
+    this.form = {
+      ...this.form,
+      municipio: municipio,
+      colonia: '', // 🔴 importante limpiar colonia
+      cp: municipio === 'QUERÉTARO' ? '76000' : ''
+    };
 
+    this.requestUpdate(); // 🔴 forzar render
     this.validateForm();
   }
 
@@ -674,13 +684,15 @@ export class PreregistroPaso2 extends LitElement {
 
             <div class="short">
               <label><span class="required">*</span> C.P.: </label>
-              <input 
-                name="cp"
-                placeholder="76000"
-                maxlength="5"
-                .value=${this.form.cp || ''}
-                ?disabled=${this.form.municipio === 'QUERÉTARO'}
-                @input=${e => this.onlyNumbers(e,5)} />
+                <input 
+                  type="text"
+                  name="cp"
+                  .value=${this.form.cp}
+                  @input=${this.handleChange}
+                  maxlength="5"
+                  ?disabled=${!this.form.municipio || this.form.municipio === 'QUERÉTARO'}
+                  placeholder="Ingrese código postal"
+                />
             </div>
 
             <div>
@@ -829,11 +841,11 @@ export class PreregistroPaso2 extends LitElement {
           <div class="form-actions">
             <button class="btn-secundario" @click=${this.goBack}>VOLVER</button>
             <button class="btn-cancelar" @click=${this.cancelar}>CANCELAR</button>
-            <button class="btn-primario"
-              ?disabled=${!this.formValido}
-              @click=${this.irACorreo}>
-              CONTINUAR
-            </button>
+            ${this.formValido ? html`
+              <button class="btn-primario" @click=${this.irACorreo}>
+                CONTINUAR
+              </button>
+            ` : ''}
           </div>
         </div>
       </main>
