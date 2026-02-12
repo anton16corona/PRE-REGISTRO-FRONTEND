@@ -105,6 +105,7 @@ export class ConvocatoriaGuardiaAuxiliar extends LitElement {
     /* =============== BOTONES ================ */
     button {
       font-family: 'Montserrat', sans-serif;
+      color: #fff;
     }
 
     .btn {

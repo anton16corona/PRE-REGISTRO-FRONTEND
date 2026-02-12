@@ -105,8 +105,9 @@ export class ConvocatoriaAuxiliar extends LitElement {
     /* =============== BOTONES ================ */
     button {
       font-family: 'Montserrat', sans-serif;
+      color: #fff;
     }
-
+    
     .btn {
       background: #37446f;
       border-radius: 10px;

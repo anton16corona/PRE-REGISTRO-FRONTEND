@@ -105,6 +105,7 @@ static styles = css`
     /* =============== BOTONES ================ */
     button {
       font-family: 'Montserrat', sans-serif;
+      color: #fff;
     }
 
     .btn {
@@ -295,11 +296,11 @@ static styles = css`
 
           <div class="content">
             <h1 class="title">
-              Guardia Civica.
+              Guardia Cívica.
             </h1>
 
             <p class="phrase">
-              ¡Forma parte de nuestro cuerpo de Guardia Civica!
+              ¡Forma parte de nuestro cuerpo de Guardia Cívica!
             </p>
 
             <p class="info">

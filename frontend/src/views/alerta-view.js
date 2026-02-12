@@ -48,13 +48,7 @@ export class AlertaView extends LitElement {
       box-sizing: border-box;
     }
 
-    .alerta > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 100%;
-    }
+
 
     slot {
       grid-column: 1 / -1;
