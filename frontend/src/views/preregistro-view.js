@@ -436,7 +436,11 @@ export class PreregistroView extends LitElement {
         rfc: { type: String },
         mostrarAlerta: { type: Boolean },
         edadValidaConvocatoria: { state: true },
-        alertaConfig: { type: Object }
+        alertaConfig: { type: Object },
+        telTouched: { state: true },
+        tel2Touched: { state: true },
+        telError: { state: true },
+        tel2Error: { state: true }
     };
 
     constructor() {
@@ -457,6 +461,10 @@ export class PreregistroView extends LitElement {
       this.mostrarAlerta = false;
       this.alertaConfig = {};
       this.edadValidaConvocatoria = false;
+      this.telTouched = false;
+      this.tel2Touched = false;
+      this.telError = null;
+      this.tel2Error = null;
     }
 
     validateForm() {
@@ -607,11 +615,6 @@ export class PreregistroView extends LitElement {
     onlyPhone(e) {
       e.target.value = e.target.value.replaceAll(/\D/g, '').slice(0,10);
       this.updateField(e);
-      this.phoneMatchError =
-        this.form.tel &&
-        this.form.tel2 &&
-        this.form.tel !== this.form.tel2;
-        this.validateForm();
     }
 
     onlyUpper(e) {
@@ -683,6 +686,58 @@ export class PreregistroView extends LitElement {
         this.emailMatchError = true;
       } else {
         this.emailMatchError = false;
+      }
+    }
+
+    validateTelBlur(e) {
+      const value = e.target.value.trim();
+      this.telTouched = true;
+
+      if (!value) {
+        this.telError = 'required';
+      } else if (value.length === 10) {
+        this.telError = null;
+      } else {
+        this.telError = 'format';
+      }
+
+      this.updateField(e);
+      this.checkPhoneMatch();
+      this.validateForm();
+    }
+
+    validateTel2Blur(e) {
+      const value = e.target.value.trim();
+      this.tel2Touched = true;
+
+      if (!value) {
+        this.tel2Error = 'required';
+      } else if (value.length === 10) {
+        this.tel2Error = null;
+      } else {
+        this.tel2Error = 'format';
+      }
+
+      this.updateField(e);
+      this.checkPhoneMatch();
+      this.validateForm();
+    }
+
+    checkPhoneMatch() {
+      if (
+        this.form.tel &&
+        this.form.tel2 &&
+        this.form.tel === this.form.tel2
+      ) {
+        this.phoneMatchError = false;
+      } else if (
+        this.form.tel &&
+        this.form.tel2 &&
+        this.form.tel !== this.form.tel2
+      ) {
+        this.phoneMatchError = true;
+      } else {
+        this.phoneMatchError = false;
       }
     }
 
@@ -1026,13 +1081,29 @@ export class PreregistroView extends LitElement {
             <!-- > ------------------- TELEFONOS ------------------- <!--> 
             <div>
               <label><span class="required">*</span>No. Teléfono: </label>
-              <input name="tel" placeholder="(55) 1234-5678" maxlength="10" .value=${this.form.tel || ''} @input=${this.onlyPhone}/>
+              <input name="tel" placeholder="4421234567" maxlength="10" .value=${this.form.tel || ''} @input=${this.onlyPhone} @blur=${this.validateTelBlur}/>
+
+              ${this.telTouched && this.telError == 'required' ? html`
+              <small class="msg msg-gray">Campo obligatorio</small>` : ''}
+
+              ${this.telTouched && this.telError == 'format' ? html`
+                <small class="msg msg-orange">Número inválido</small>` : ''}
             </div>
 
             <div>
               <label><span class="required">*</span>Confirmar Teléfono: </label>
-              <input name="tel2" placeholder="(55) 1234-5678" maxlength="10" .value=${this.form.tel2 || ''} @input=${this.onlyPhone}/>
+              <input name="tel2" placeholder="4421234567" maxlength="10" .value=${this.form.tel2 || ''} @input=${this.onlyPhone} @blur=${this.validateTel2Blur}/>
+
+              ${this.tel2Touched && this.tel2Error == 'required' ? html`
+              <small class="msg msg-gray">Campo obligatorio</small>` : ''}
+
+              ${this.tel2Touched && this.tel2Error == 'format' ? html`
+              <small class="msg msg-orange">Número inválido</small> ` : ''}
+
+              ${this.tel2Touched && !this.tel2Error && this.phoneMatchError ? html`
+              <small class="msg msg-red">Los teléfonos no coinciden</small>` : ''}
             </div>
+
           </div>
             <div class="form-actions">
               <button

@@ -93,6 +93,30 @@ export class ConsultaFolioView extends LitElement {
       color: #2e3032;
     }
 
+    .form-actions {
+      margin-top: 1rem;
+
+      /* ----------- FUENTE ------------- */
+      font-family: 'Montserrat', sans-serif;
+      font-weight:600;
+    }
+
+    button {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .btn-secundario {
+      background: #d7a23f;
+      color: #fff;
+      border: none;
+      border-radius: 28px;
+      padding: 0.8rem 3rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
     .btn {
       width: 260px;
       height: 48px;
@@ -162,6 +186,17 @@ export class ConsultaFolioView extends LitElement {
   get folioCompleto() {
     if (!this.convocatoria || !this.consecutivo) return '';
     return `SSPMQ/IPES/${this.perfil}/${this.convocatoria}-${this.consecutivo}`;
+  }
+
+  goBack() {
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    console.log('Origen guardado:', origen);
+
+    if (origen) {
+      globalThis.location.href = origen;
+    } else {
+      globalThis.location.href = '/convocatorias-view';
+    }
   }
 
   consultar() {
@@ -347,18 +382,31 @@ export class ConsultaFolioView extends LitElement {
               @input=${e => this.consecutivo = e.target.value.replaceAll(/\D/g,'')} />
           </div>
 
-          <div class="btn" @click=${this.consultar}>
-            CONSULTAR ESTATUS
+          <div class="form-actions">
+            <div class="btn" @click=${this.consultar}>
+              CONSULTAR ESTATUS
+            </div>
+
+            <button
+              type="button"
+              class="btn-secundario"
+              @click=${this.goBack}
+            >
+              VOLVER
+            </button>
           </div>
 
           <div class="carousel">
-              <div class="carousel-track">
+            <div class="carousel-track">
                   ${this.images.map(
                   img => html`<img src=${img} class="carousel-image" />`
                   )}
               </div>
+            </div>
           </div>
         </div>
+
+
       </div>
     `;
   }
