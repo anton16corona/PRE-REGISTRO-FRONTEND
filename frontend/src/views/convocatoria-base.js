@@ -1,9 +1,14 @@
 import { LitElement, html, css } from 'lit';
-import './pdf-zoom-viewer.js'; 
+import './pdf-zoom-viewer.js';
+import '../components/image-carousel.js';
 import '../components/double-image-carousel.js';
 import '../components/ipes-header.js';
 
-export class ConvocatoriaAuxiliar extends LitElement {
+/**
+ * Componente base reutilizable para todas las convocatorias de Guardia
+ * Permite personalizar colores, textos, imágenes y tipo de carrusel
+ */
+export class ConvocatoriaBase extends LitElement {
   static styles = css`
     :host {
       display: block;
@@ -11,7 +16,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
       width: 100%;
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
-      width: 100%;
       overflow-x: hidden;
     }
 
@@ -48,19 +52,19 @@ export class ConvocatoriaAuxiliar extends LitElement {
       text-align: center;
     }
 
-    /* ================= TITULOS CONVOCATORIAS ================= */
+    /* ================= TÍTULOS CONVOCATORIAS ================= */
     .title {
       font-size: 2.3rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: #2e3032;
+      color: var(--color-titulo, #2d5080);
     }
 
     .phrase {
       font-size: 1.4rem;
       margin-bottom: 1.5rem;
-      font-weight:500;
-      color: #2e3032;
+      font-weight: 500;
+      color: var(--color-frase, #20395b);
     }
 
     .info {
@@ -81,33 +85,40 @@ export class ConvocatoriaAuxiliar extends LitElement {
     /* =============== BOTONES ================ */
     button {
       font-family: 'Montserrat', sans-serif;
-      color: #fff;
+      color: var(--color-texto-btn-primario, #fff);
     }
-    
+
     .btn {
-      background: #37446f;
+      background: var(--color-btn-primario, #467ec9);
       border-radius: 10px;
       padding: 1rem 2rem;
       border: none;
       cursor: pointer;
-
-      /* -------- FUENTE --------- */
       font-family: 'Montserrat', sans-serif;
       font-size: 1.2rem;
       font-weight: 600;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
     }
 
     .btn-volver {
-      background: #865836;
+      background: var(--color-btn-secundario, #4b5057);
       border-radius: 10px;
       padding: 1rem 2rem;
       border: none;
       cursor: pointer;
-
-      /* -------- FUENTE --------- */
       font-family: 'Montserrat', sans-serif;
       font-size: 1.2rem;
       font-weight: 600;
+      color: #fff;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-volver:hover {
+      opacity: 0.9;
     }
 
     .acciones {
@@ -117,7 +128,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
       gap: 0.8rem;
     }
 
-    /* ============================== CONSULTA FOLIO ============================== */    
+    /* ============================== CONSULTA FOLIO ============================== */
     .consulta-folio {
       text-align: center;
       font-size: 1.2rem;
@@ -134,6 +145,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
       color: #0d6fff;
       font-weight: 800;
       cursor: pointer;
+      text-decoration: underline;
     }
 
     /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
@@ -199,7 +211,7 @@ export class ConvocatoriaAuxiliar extends LitElement {
       .cta-title {
         font-size: 1.3rem;
       }
-      
+
       .carousel {
         height: 220px;
       }
@@ -216,16 +228,80 @@ export class ConvocatoriaAuxiliar extends LitElement {
     }
   `;
 
-  /* ============================================= JAVASCRIPT ============================================= */
+  static properties = {
+    // Configuración de contenido
+    titulo: { type: String },
+    frase: { type: String },
+    descripcion: { type: String },
+    pdfUrl: { type: String },
+    backRoute: { type: String },
 
-  /* ============== NAVEGACIÓN A PREREGISTRO Y ATRÁS ============== */
+    // Configuración de colores (CSS Custom Properties)
+    colorTitulo: { type: String },
+    colorFrase: { type: String },
+    colorBtnPrimario: { type: String },
+    colorTextoBtnPrimario: { type: String },
+    colorBtnSecundario: { type: String },
+
+    // Configuración de carrusel
+    tipoCarrusel: { type: String }, // 'simple' o 'doble'
+    carouselImages: { type: Array },
+    carouselImagesLeft: { type: Array },
+    carouselImagesRight: { type: Array }
+  };
+
+  constructor() {
+    super();
+    // Valores por defecto
+    this.titulo = '';
+    this.frase = '';
+    this.descripcion = '';
+    this.pdfUrl = '/convocatoria/convocatoria-guardia.pdf';
+    this.backRoute = '/perfiles-guardias';
+
+    // Colores por defecto
+    this.colorTitulo = '#2d5080';
+    this.colorFrase = '#20395b';
+    this.colorBtnPrimario = '#467ec9';
+    this.colorTextoBtnPrimario = '#fff';
+    this.colorBtnSecundario = '#4b5057';
+
+    // Carrusel
+    this.tipoCarrusel = 'simple';
+    this.carouselImages = [];
+    this.carouselImagesLeft = [];
+    this.carouselImagesRight = [];
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    
+    // Aplicar CSS Custom Properties para los colores
+    if (changedProperties.has('colorTitulo')) {
+      this.style.setProperty('--color-titulo', this.colorTitulo);
+    }
+    if (changedProperties.has('colorFrase')) {
+      this.style.setProperty('--color-frase', this.colorFrase);
+    }
+    if (changedProperties.has('colorBtnPrimario')) {
+      this.style.setProperty('--color-btn-primario', this.colorBtnPrimario);
+    }
+    if (changedProperties.has('colorTextoBtnPrimario')) {
+      this.style.setProperty('--color-texto-btn-primario', this.colorTextoBtnPrimario);
+    }
+    if (changedProperties.has('colorBtnSecundario')) {
+      this.style.setProperty('--color-btn-secundario', this.colorBtnSecundario);
+    }
+  }
+
+  /* ============== NAVEGACIÓN ============== */
   navigate(path) {
     history.pushState({}, '', path);
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
 
   goBack() {
-    globalThis.location.href = '/convocatorias-view';
+    globalThis.location.href = this.backRoute;
   }
 
   goToPreregistro(e) {
@@ -235,27 +311,6 @@ export class ConvocatoriaAuxiliar extends LitElement {
     globalThis.location.href = '/preregistro';
   }
 
-    // ---------- CARRUSEL DE FOTOS. ----------
-    imagesLeft = [
-      '/src/assets/policia/AuxiliarA.jpeg',
-      '/src/assets/policia/AuxiliarB.jpeg',
-      '/src/assets/policia/AuxiliarC.jpg',
-      '/src/assets/policia/AuxiliarD.jpg',
-      '/src/assets/policia/AuxiliarE.jpg',
-      '/src/assets/policia/AuxiliarF.jpg',
-      '/src/assets/policia/AuxiliarG.jpg'
-    ];
-
-    imagesRight = [
-      '/src/assets/policia/AuxiliarI.jpeg',
-      '/src/assets/policia/AuxiliarJ.jpeg',
-      '/src/assets/policia/AuxiliarK.jpeg',
-      '/src/assets/policia/AuxiliarL.jpeg',
-      '/src/assets/policia/AuxiliarM.jpg',
-      '/src/assets/policia/AuxiliarN.jpg',
-      '/src/assets/policia/AuxiliarO.jpg'
-    ];
-
   /* ========================================= HTML ======================================== */
   render() {
     return html`
@@ -263,50 +318,41 @@ export class ConvocatoriaAuxiliar extends LitElement {
 
       <main>
         <section class="hero">
-          <!-- --------------- PDF DE CONVOCATORIA, ESCOGER RUTA CORRECTA. --------------- -->
-          <pdf-zoom-viewer 
-            pdfUrl="/convocatoria/convocatoria-auxiliar.pdf"
-          ></pdf-zoom-viewer>
+          <!-- PDF DE CONVOCATORIA -->
+          <pdf-zoom-viewer pdfUrl="${this.pdfUrl}"></pdf-zoom-viewer>
 
           <div class="content">
-            <h1 class="title">
-              Policía Auxiliar.
-            </h1>
+            <h1 class="title">${this.titulo}</h1>
 
-            <p class="phrase">
-              ¡Forma parte de nuestro cuerpo de Policía Auxiliar!
-            </p>
+            <p class="phrase">${this.frase}</p>
 
-            <p class="info">
-              Salvaguardar la integridad y derechos de las personas, así como preservar la libertad, el orden y la 
-              paz pública dentro del municipio de Querétaro a través de la ejecución de acciones policiales 
-              tendientes a la investigación, prevención y persecución de delitos y faltas administrativas en 
-              coordinación con las Instituciones competentes, bajo los principios constitucionales de legalidad, 
-              objetividad, eficiencia, profesionalismo, honradez, respeto a los derechos humanos y perspectiva 
-              de género.
-            </p>
+            <p class="info">${this.descripcion}</p>
 
             <div class="cta-title">
               Consulta la convocatoria completa
             </div>
 
             <div class="acciones">
-                <button class="btn" type="button" @click=${this.goToPreregistro}>
-                  INICIAR PRE-REGISTRO
-                </button>
+              <button class="btn" type="button" @click=${this.goToPreregistro}>
+                INICIAR PRE-REGISTRO
+              </button>
 
-                <button class="btn-volver" @click=${this.goBack}>
-                    VOLVER
-                </button>
+              <button class="btn-volver" @click=${this.goBack}>
+                VOLVER
+              </button>
             </div>
           </div>
-
         </section>
 
-        <double-image-carousel
-          .imagesLeft=${this.imagesLeft}
-          .imagesRight=${this.imagesRight}
-        ></double-image-carousel>
+        <!-- CARRUSEL DE IMÁGENES -->
+        ${this.tipoCarrusel === 'doble' ? html`
+          <double-image-carousel
+            .imagesLeft=${this.carouselImagesLeft}
+            .imagesRight=${this.carouselImagesRight}
+          ></double-image-carousel>
+        ` : html`
+          <image-carousel .images=${this.carouselImages}></image-carousel>
+        `}
 
         <div class="consulta-folio">
           <span>¿Ya has iniciado tu proceso? </span>
@@ -319,4 +365,4 @@ export class ConvocatoriaAuxiliar extends LitElement {
   }
 }
 
-customElements.define('convocatoria-auxiliar', ConvocatoriaAuxiliar);
+customElements.define('convocatoria-base', ConvocatoriaBase);

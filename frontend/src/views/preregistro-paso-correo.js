@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import '../components/ipes-header.js';
 
 export class PreregistroPasoCorreo extends LitElement {
   static styles = css`
@@ -8,28 +9,6 @@ export class PreregistroPasoCorreo extends LitElement {
       font-family: 'Montserrat', sans-serif;
       background: #f1eee8;
     }
-
-    /* ===== HEADER ===== */
-    header {
-      background: #0a0f24;
-      color: #d1cfcd;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 2rem;
-    }
-
-    header img {
-      width: clamp(60px, 8vw, 120px);
-    }
-
-    .ipes {
-      text-align: center;
-      font-weight: 900;
-      font-size: clamp(1.3rem, 3vw, 2.5rem);
-    }
-
 
     /* ===== MAIN ===== */
     main {
@@ -656,11 +635,7 @@ export class PreregistroPasoCorreo extends LitElement {
         </alerta-view>
       ` : ''}
 
-      <header>
-        <img src="/src/assets/SSPlogo.png" />
-        <div class="ipes">INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES</div>
-        <img src="/src/assets/IPESlogo.png" />
-      </header>
+      <ipes-header></ipes-header>
 
       <main>
         <section class="panel">

@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import '../components/ipes-header.js';
 
 // ============ CONFIGURACIÓN DE CONVOCATORIAS CON REQUISITOS DE ESTUDIOS ============
 const CONVOCATORIAS = {
@@ -77,26 +78,6 @@ export class PreregistroPaso2 extends LitElement {
       background: #f1eee8;
       font-family: 'Montserrat', sans-serif;
       color: #2e3032;
-    }
-
-    /* ================= HEADER ================= */
-    header {
-      background: #0a0f24;
-      color: #d1cfcd;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      padding: 1rem 2rem;
-    }
-
-    header img {
-      width: clamp(55px, 8vw, 90px);
-    }
-
-    .ipes {
-      text-align: center;
-      font-weight: 900;
-      font-size: clamp(1.2rem, 3vw, 2.5rem);
     }
 
     /* ================= MAIN ================= */
@@ -631,11 +612,7 @@ export class PreregistroPaso2 extends LitElement {
         ></alerta-view>
       ` : ''}
 
-      <header>
-        <img src="/src/assets/SSPlogo.png" />
-        <div class="ipes">INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES</div>
-        <img src="/src/assets/IPESlogo.png" />
-      </header>
+      <ipes-header></ipes-header>
 
       <main>
         <div class="card">

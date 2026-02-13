@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import '../components/ipes-header.js';
 
 export class PerfilesProximidad extends LitElement {
   static styles = css`
@@ -10,31 +11,6 @@ export class PerfilesProximidad extends LitElement {
       background: #f1eee8;
       width: 100%;
       overflow-x: hidden;
-    }
-
-    /* ================= HEADER ================= */
-    header {
-      background: #0a0f24;
-      color: #d1cfcd;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 2rem;
-    }
-
-    header img {
-      width: clamp(55px, 8vw, 90px);
-      height: auto;
-      flex-shrink: 0;
-    }
-
-    .ipes {
-      text-align: center;
-      font-weight: 900;
-      font-size: clamp(1.2rem, 3vw, 2.5rem);
-      line-height: 1.2;
-      white-space: normal;
     }
 
     /* ===== TITLES ===== */
@@ -241,15 +217,7 @@ export class PerfilesProximidad extends LitElement {
   
   render() {
     return html`
-      <header>
-        <img class="logo-left" src="/src/assets/SSPlogo.png" alt="SSP" />
-
-        <div class="ipes">
-          INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES
-        </div>
-
-        <img class="logo-right" src="/src/assets/IPESlogo.png" alt="IPES" />
-      </header>
+      <ipes-header></ipes-header>
 
       <section class="titles">
         <h1 class="title">POLICÍA DE PROXIMIDAD</h1>

@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import '../components/ipes-header.js';
 
 export class ConvocatoriasView extends LitElement {
   static styles = css`
@@ -10,29 +11,6 @@ export class ConvocatoriasView extends LitElement {
       font-family: 'Montserrat', sans-serif;
       width: 100%;
       overflow-x: hidden;
-    }
-
-    /* ===== HEADER ===== */
-    header {
-      background: #0a0f24;
-      color: #d1cfcd;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      padding: 1.5rem 2.5rem;
-    }
-
-    .logo-left,
-    .logo-right {
-      width: 90px;
-      height: auto;
-    }
-
-    .ipes {
-      text-align: center;
-      font-weight: 900;
-      font-size: 2.5rem;
-      line-height: 1.2;
     }
 
     /* ===== TITLE ===== */
@@ -171,15 +149,7 @@ export class ConvocatoriasView extends LitElement {
 
   render() {
     return html`
-      <header>
-        <img class="logo-left" src="/src/assets/SSPlogo.png" alt="SSP" />
-
-        <div class="ipes">
-          INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES
-        </div>
-
-        <img class="logo-right" src="/src/assets/IPESlogo.png" alt="IPES" />
-      </header>
+      <ipes-header></ipes-header>
 
       <h1 class="title">CONSULTA TU CONVOCATORIA</h1>
 
