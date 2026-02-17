@@ -424,6 +424,41 @@ export class PreregistroPasoCorreo extends LitElement {
     this.showCodigoModal = false;
   }
 
+  getSiglasConvocatoria(origen) {
+    if (!origen) return 'GC';
+
+    if (origen.includes('guardia-civica')) return 'GC';
+    if (origen.includes('guardia-vial')) return 'GV';
+    if (origen.includes('guardia-auxiliar')) return 'GA';
+    if (origen.includes('auxiliar')) return 'PA';
+    if (origen.includes('proximidad-cibernetica')) return 'PC';
+    if (origen.includes('proximidad-victimas')) return 'AV';
+    if (origen.includes('proximidad-seg-pub')) return 'UA';
+    if (origen.includes('proximidad')) return 'PP';
+
+    return 'GC';
+  }
+
+  async generarFolio(siglas) {
+
+    const resp = await fetch(`http://localhost:3000/preregistros?siglas=${siglas}`);
+    const registros = await resp.json();
+
+    const siguiente = registros.length + 1;
+
+    const consecutivo = String(siguiente).padStart(3, '0');
+
+    return `SSPMQ/IPES/${siglas}/6-${consecutivo}`;
+  }
+
+  async validarCURPExistente(curp) {
+
+    const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`);
+    const data = await resp.json();
+
+    return data.length > 0;
+  }
+
   get formValido() {
     return this.medio !== '' && this.aceptaTerminos;
   }
@@ -468,10 +503,47 @@ export class PreregistroPasoCorreo extends LitElement {
       return;
     }
 
-    // ✅ Código correcto (simulado)
+    // 1️⃣ Leer objeto maestro
+    const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
+
+    // 2️⃣ Agregar paso 3
+    data.paso3 = {
+      medio: this.medio,
+      fechaEnvio: new Date().toISOString()
+    };
+
+    // 3️⃣ Construir objeto final limpio
+    const preregistroFinal = {
+      ...data.paso1,
+      ...data.paso2,
+      ...data.paso3,
+      estatus: 'PENDIENTE'
+    };
+
+    // 4️⃣ Guardar JSON final (temporalmente)
+    sessionStorage.setItem(
+      'preregistro_final',
+      JSON.stringify(preregistroFinal)
+    );
+
+    // 5️⃣ Simular folio dinámico
+    const folio = `GC-${Math.floor(100000 + Math.random() * 900000)}`;
+
     sessionStorage.setItem('preregistro_completado', 'true');
-    sessionStorage.setItem('folio_preregistro', 'GC-012345');
+    sessionStorage.setItem('folio_preregistro', folio);
+
+    // 6️⃣ Redirigir
     globalThis.location.href = '/preregistro-completado';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    const data = sessionStorage.getItem('preregistro_data');
+
+    if (!data) {
+      globalThis.location.href = '/preregistro';
+    }
   }
 
   cerrarAlerta() {
@@ -503,10 +575,10 @@ export class PreregistroPasoCorreo extends LitElement {
     this.requestUpdate();
   }
 
-  validarDesdeModal() {
+  async validarDesdeModal() 
+  {
     if (this.codigo === '000000') {
-      // 🔴 En vez de abrir otra alerta,
-      // transformamos la actual
+
       this.alertaConfig = {
         tipo: 'info',
         titulo: 'Código no válido',
@@ -522,8 +594,61 @@ export class PreregistroPasoCorreo extends LitElement {
 
     this.showCodigoModal = false;
 
+    const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
+
+    data.paso3 = {
+      medio: this.medio,
+      fechaEnvio: new Date().toISOString()
+    };
+
+    const curp = data.paso1.curp;
+
+    // 🔴 VALIDAR CURP DUPLICADA
+    const existe = await this.validarCURPExistente(curp);
+
+    if (existe) {
+
+      this.alertaConfig = {
+        tipo: 'info',
+        titulo: 'CURP ya registrada',
+        mensaje: 'Ya existe un preregistro con esta CURP.',
+        extra: 'No es posible realizar más de un preregistro.',
+        boton: 'ENTENDIDO'
+      };
+
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    // 🟢 OBTENER CONVOCATORIA
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    const siglas = this.getSiglasConvocatoria(origen);
+
+    // 🟢 GENERAR FOLIO
+    const folio = await this.generarFolio(siglas);
+
+    const preregistroFinal = {
+      ...data.paso1,
+      ...data.paso2,
+      ...data.paso3,
+      siglas: siglas,
+      folio: folio,
+      estatus: 'PENDIENTE',
+      fechaRegistro: new Date().toISOString()
+    };
+
+    // 🟢 GUARDAR
+    await fetch('http://localhost:3000/preregistros', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(preregistroFinal)
+    });
+
     sessionStorage.setItem('preregistro_completado', 'true');
-    sessionStorage.setItem('folio_preregistro', 'GC-012345');
+    sessionStorage.setItem('folio_preregistro', folio);
+
     globalThis.location.href = '/preregistro-completado';
   }
 

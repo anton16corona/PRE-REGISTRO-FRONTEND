@@ -14,16 +14,9 @@ export class PreregistroCompletado extends LitElement {
 
   constructor() {
     super();
-    this.folio = this._generarFolio();
-    sessionStorage.setItem('folio_preregistro', this.folio);
-  }
 
-  _generarFolio() {
-    const perfil = sessionStorage.getItem('perfil_preregistro') || 'GC';
-    const convocatoria = '6';
-    const consecutivo = '001'; // simulado por ahora
-
-    return `SSPMQ/IPES/${perfil}/${convocatoria}-${consecutivo}`;
+    // 🔥 Leer el folio real generado en el paso 3
+    this.folio = sessionStorage.getItem('folio_preregistro') || 'SIN FOLIO';
   }
 
   consultarCita() {

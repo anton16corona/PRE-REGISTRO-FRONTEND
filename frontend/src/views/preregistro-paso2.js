@@ -386,6 +386,11 @@ export class PreregistroPaso2 extends LitElement {
     this.nivelEstudiosValido = false;
     this.licencia = '';
     this.cartilla = '';
+
+    const guardado = sessionStorage.getItem('paso2_data');
+    if (guardado) {
+      this.form = JSON.parse(guardado);
+    }
   }
 
   /* ================== UTILIDADES ================== */
@@ -399,6 +404,7 @@ export class PreregistroPaso2 extends LitElement {
     }
     
     this.validateForm();
+    sessionStorage.setItem('paso2_data', JSON.stringify(this.form));
   }
 
   normalizeText(e) {
@@ -550,10 +556,10 @@ export class PreregistroPaso2 extends LitElement {
       const f = this.form;
 
       const documentosValidos =
-        this.licencia === 'si' &&   //Obligatorio que sea SI
-        this.cartilla === 'si' &&   //Obligatorio que sea SI
-        this.ine &&                 //Obligatorio seleccionar
-        this.ineValido;             //Si dijo sí, debe subir archivos
+        this.licencia &&            //Obligatorio seleccionar.
+        this.cartilla &&            //Obligatorio seleccionar.
+        this.ine &&                 //Obligatorio seleccionar.
+        this.ineValido;             //Si dijo sí, debe subir archivos.
 
       this.formValido =
         f.municipio &&
@@ -575,7 +581,25 @@ export class PreregistroPaso2 extends LitElement {
   }
 
   irACorreo() {
-    sessionStorage.setItem('preregistro_parte2', JSON.stringify(this.form));
+
+    // 1️⃣ Leer el objeto maestro creado en Paso 1
+    const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
+
+    // 2️⃣ Inyectar la información del Paso 2
+    data.paso2 = {
+      ...this.form,
+      licencia: this.licencia,
+      cartilla: this.cartilla,
+      ine: this.ine
+    };
+
+    // 3️⃣ Guardar nuevamente el objeto completo
+    sessionStorage.setItem(
+      'preregistro_data',
+      JSON.stringify(data)
+    );
+
+    // 4️⃣ Navegar al Paso 3
     globalThis.location.href = '/preregistro-envio';
   }
 
@@ -593,6 +617,16 @@ export class PreregistroPaso2 extends LitElement {
 
   handleAlertaAceptar() {
     this.mostrarAlerta = false;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    const data = sessionStorage.getItem('preregistro_data');
+
+    if (!data) {
+      globalThis.location.href = '/preregistro';
+    }
   }
 
   /* ========================================= HTML ======================================== */

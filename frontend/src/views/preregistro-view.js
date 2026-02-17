@@ -439,6 +439,11 @@ export class PreregistroView extends LitElement {
       this.tel2Touched = false;
       this.telError = null;
       this.tel2Error = null;
+
+      const guardado = sessionStorage.getItem('paso1_data');
+      if (guardado) {
+        this.form = JSON.parse(guardado);
+      }
     }
 
     validateForm() {
@@ -499,6 +504,7 @@ export class PreregistroView extends LitElement {
       }
 
       this.edad = edad;
+      this.form.edad = edad;   // 🔥 ESTA ES LA CLAVE
       this.edadValidaConvocatoria = false;
 
       const convocatoria = this.getConvocatoriaConfig();
@@ -563,6 +569,7 @@ export class PreregistroView extends LitElement {
         this.form[e.target.name] = e.target.value;
         this.validate();
         this.validateForm();
+        sessionStorage.setItem('paso1_data', JSON.stringify(this.form));
     }
 
     validate() {
@@ -716,9 +723,16 @@ export class PreregistroView extends LitElement {
     }
 
     submitForm() {
+
+      const preregistroCompleto = {
+        paso1: this.form,
+        paso2: {},
+        paso3: {}
+      };
+
       sessionStorage.setItem(
-        'preregistro_parte1',
-        JSON.stringify(this.form)
+        'preregistro_data',
+        JSON.stringify(preregistroCompleto)
       );
 
       globalThis.location.href = '/preregistro-continuacion';
@@ -929,7 +943,7 @@ export class PreregistroView extends LitElement {
 
             <div>
               <label><span class="required">*</span>Fecha de Nacimiento: </label>
-              <input type="date" name="fechaNacimiento" .value=${this.form.fechaNacimiento || ''} required @blur=${this.updateEdad}/>
+              <input type="date" name="fechaNacimiento" .value=${this.form.fechaNacimiento || ''} required @input=${this.updateField} @blur=${this.updateEdad}/>
             </div>
 
             <div>
