@@ -123,6 +123,896 @@
       "folio": "SSPMQ/IPES/UA/6-001",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-02-17T20:26:05.444Z"
+    },
+    {
+      "id": "187d",
+      "curp": "HEPG040229HZSRRBA8",
+      "nombre": "GABRIEL",
+      "apellido1": "HERNANDEZ",
+      "apellido2": "PARRA",
+      "rfc": "HEPG040229W3W",
+      "fechaNacimiento": "2004-02-29",
+      "edad": 21,
+      "civil": "Soltero",
+      "sexo": "H",
+      "email": "parragabo@gmail.com",
+      "email2": "parragabo@gmail.com",
+      "tel": "4421001010",
+      "tel2": "4421001010",
+      "contactoAlterno": "HECTOR CABRERA",
+      "telAlterno": "5523698745",
+      "municipio": "QUERÉTARO",
+      "colonia": "JURICA",
+      "cp": "76000",
+      "calle": "AV DE LAS CIENCIAS",
+      "exterior": "90-B",
+      "interior": "A-1",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "si",
+      "cartilla": "si",
+      "ine": "no",
+      "medio": "tv",
+      "fechaEnvio": "2026-02-18T17:10:51.418Z",
+      "siglas": "UA",
+      "folio": "SSPMQ/IPES/UA/6-002",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-02-18T17:10:51.461Z"
+    },
+    {
+      "id": "72e2",
+      "curp": "PESG910822HQTRLB05",
+      "nombre": "GABRIEL",
+      "apellido1": "HERNANDEZ",
+      "apellido2": "PARRA",
+      "rfc": "HEPG040229W3W",
+      "fechaNacimiento": "2000-02-29",
+      "edad": 25,
+      "civil": "Soltero",
+      "sexo": "H",
+      "email": "parragabo@gmail.com",
+      "email2": "parragabo@gmail.com",
+      "tel": "4421001010",
+      "tel2": "4421001010",
+      "contactoAlterno": "JUANES",
+      "telAlterno": "4421564747",
+      "municipio": "QUERÉTARO",
+      "colonia": "EL REFUGIO",
+      "cp": "76000",
+      "calle": "AV PIRINEOS",
+      "exterior": "12-A",
+      "interior": "A-1",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "si",
+      "cartilla": "si",
+      "ine": "no",
+      "medio": "redes",
+      "fechaEnvio": "2026-02-18T17:41:30.480Z",
+      "siglas": "AV",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-02-18T17:41:30.491Z"
+    },
+    {
+      "id": "8d14",
+      "curp": "GOOS970707HYNMRL01",
+      "nombre": "SAUL EDUARDO",
+      "apellido1": "GOMEZ",
+      "apellido2": "ORDAZ",
+      "rfc": "GOOS970707LPO",
+      "fechaNacimiento": "1997-07-07",
+      "edad": 28,
+      "civil": "Soltero",
+      "sexo": "H",
+      "email": "goosgos@hotmail.com.mx",
+      "email2": "goosgos@hotmail.com.mx",
+      "tel2": "4428995799",
+      "tel": "4428995799",
+      "contactoAlterno": "JUANES",
+      "telAlterno": "4425632563",
+      "municipio": "QUERÉTARO",
+      "colonia": "MILENIO",
+      "cp": "76000",
+      "calle": "MONTE ATLAS",
+      "exterior": "80",
+      "nivelEstudios": "LICENCIATURA",
+      "interior": "5",
+      "licencia": "si",
+      "cartilla": "si",
+      "ine": "no",
+      "medio": "tv",
+      "fechaEnvio": "2026-02-19T18:19:10.341Z",
+      "siglas": "PP",
+      "folio": "SSPMQ/IPES/PP/6-001",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-02-19T18:19:10.369Z"
+    }
+  ],
+  "citas": [
+    {
+      "id": "940a",
+      "folio": "SSPMQ/IPES/UA/6-002",
+      "fecha": "2026-02-04",
+      "hora": "13:30"
+    },
+    {
+      "id": "5a84",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "3210",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "6039",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "a301",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "38e8",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "2d1a",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "febe",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "4cc8",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "6158",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "5684",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "9:00"
+    },
+    {
+      "id": "8edf",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-05",
+      "hora": "09:00"
+    },
+    {
+      "id": "c68d",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "c6c6",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "fc3f",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "0e95",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "da11",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "8fac",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "7973",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "dd30",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "7353",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "be1e",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "09:00"
+    },
+    {
+      "id": "2993",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "832f",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "a7aa",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "5beb",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "ae3f",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "b74a",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "a841",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "e502",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "b9dd",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "eb88",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "12:00"
+    },
+    {
+      "id": "fa43",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "15:00"
+    },
+    {
+      "id": "761a",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "15:00"
+    },
+    {
+      "id": "5206",
+      "folio": "SSPMQ/IPES/AV/6-001",
+      "fecha": "2026-02-07",
+      "hora": "15:00"
+    },
+    {
+      "id": "334f",
+      "folio": "SSPMQ/IPES/PP/6-001",
+      "fecha": "2026-04-03",
+      "hora": "09:00"
+    }
+  ],
+  "agenda": [
+    {
+      "id": "e5f7",
+      "fecha": "2026-02-02",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "3cea",
+      "fecha": "2026-02-03",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "8d60",
+      "fecha": "2026-02-04",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "dc62",
+      "fecha": "2026-02-05",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 1,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "ff94",
+      "fecha": "2026-02-06",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "78cf",
+      "fecha": "2026-02-07",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 10,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 10,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 3,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "dd3f",
+      "fecha": "2026-02-10",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "7525",
+      "fecha": "2026-02-11",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "5d12",
+      "fecha": "2026-02-14",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "4789",
+      "fecha": "2026-02-20",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "89bc",
+      "fecha": "2026-02-21",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "893a",
+      "fecha": "2026-02-28",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "21c8",
+      "fecha": "2026-02-13",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "d1bd",
+      "fecha": "2026-02-26",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "d612",
+      "fecha": "2026-02-19",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "e01d",
+      "fecha": "2026-02-23",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "81c6",
+      "fecha": "2026-04-03",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 1,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "d88b",
+      "fecha": "2026-03-05",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "489c",
+      "fecha": "2026-03-19",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "07f8",
+      "fecha": "2026-03-18",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "e064",
+      "fecha": "2026-03-07",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 6
+        },
+        {
+          "hora": "11:00",
+          "ocupados": 0,
+          "capacidad": 6
+        }
+      ]
+    },
+    {
+      "id": "1003",
+      "fecha": "2026-03-28",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 6
+        },
+        {
+          "hora": "11:00",
+          "ocupados": 0,
+          "capacidad": 6
+        }
+      ]
+    },
+    {
+      "id": "e1fa",
+      "fecha": "2026-03-27",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "d3bb",
+      "fecha": "2026-03-25",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "15c3",
+      "fecha": "2026-03-23",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "34b0",
+      "fecha": "2026-04-30",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "2bd6",
+      "fecha": "2026-04-25",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 6
+        },
+        {
+          "hora": "11:00",
+          "ocupados": 0,
+          "capacidad": 6
+        }
+      ]
+    },
+    {
+      "id": "d2c4",
+      "fecha": "2026-04-04",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 6
+        },
+        {
+          "hora": "11:00",
+          "ocupados": 0,
+          "capacidad": 6
+        }
+      ]
     }
   ]
 }

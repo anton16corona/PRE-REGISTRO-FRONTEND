@@ -556,10 +556,10 @@ export class PreregistroPaso2 extends LitElement {
       const f = this.form;
 
       const documentosValidos =
-        this.licencia &&            //Obligatorio seleccionar.
-        this.cartilla &&            //Obligatorio seleccionar.
-        this.ine &&                 //Obligatorio seleccionar.
-        this.ineValido;             //Si dijo sí, debe subir archivos.
+        (this.licencia !== '') &&     // Obligatorio seleccionar.
+        (this.cartilla !== '') &&     // Obligatorio seleccionar.
+        (this.ine !== '') &&          // Obligatorio seleccionar.
+        this.ineValido;               // Si dijo sí, debe subir archivos.
 
       this.formValido =
         f.municipio &&
