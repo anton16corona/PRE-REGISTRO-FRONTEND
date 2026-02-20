@@ -160,6 +160,30 @@ export const progresoFolioStyles = css`
     cursor: pointer;
   }
 
+  .step.en-proceso .circle
+  {
+    background:#5da9ff;
+    transform:scale(1.2);
+  }
+
+  .step.aprobado .circle
+  {
+    background:#80c87a;
+    color:white;
+  }
+
+  .step.bloqueado
+  {
+    opacity:0.4;
+    pointer-events:auto;
+  }
+
+  .box.bloqueado
+  {
+    background:#e0e0e0;
+    color:#999;
+  }
+
   @keyframes slideUpFade {
     from {
       opacity: 0;

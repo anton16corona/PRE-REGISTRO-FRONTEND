@@ -371,7 +371,8 @@ export class PreregistroPaso2 extends LitElement {
     alertaConfig: { type: Object },
     nivelEstudiosValido: { state: true },
     licencia: { state: true },
-    cartilla: { state: true }
+    cartilla: { state: true },
+    certificadoSecundaria: { state: true }
   };
 
   constructor() {
@@ -386,6 +387,7 @@ export class PreregistroPaso2 extends LitElement {
     this.nivelEstudiosValido = false;
     this.licencia = '';
     this.cartilla = '';
+    this.certificadoSecundaria = '';
 
     const guardado = sessionStorage.getItem('paso2_data');
     if (guardado) {
@@ -531,6 +533,19 @@ export class PreregistroPaso2 extends LitElement {
       });
   }
 
+  get requiereCertificadoSecundaria() 
+  {
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    const convocatoria = CONVOCATORIAS[origen];
+
+    if (!convocatoria) return false;
+
+    return (
+      convocatoria.nivelEstudiosMin === 'SECUNDARIA' &&
+      this.form.nivelEstudios === 'SECUNDARIA'
+    );
+  }
+
   /* ================== INE ================== */
 
   handleIneFrente(e) {
@@ -555,11 +570,16 @@ export class PreregistroPaso2 extends LitElement {
   validateForm() {
       const f = this.form;
 
+      const certificadoValido =
+        !this.requiereCertificadoSecundaria ||
+        (this.requiereCertificadoSecundaria && this.certificadoSecundaria !== '');
+
       const documentosValidos =
         (this.licencia !== '') &&     // Obligatorio seleccionar.
         (this.cartilla !== '') &&     // Obligatorio seleccionar.
         (this.ine !== '') &&          // Obligatorio seleccionar.
-        this.ineValido;               // Si dijo sí, debe subir archivos.
+        this.ineValido &&             // Si dijo sí, debe subir archivos.
+        certificadoValido;            
 
       this.formValido =
         f.municipio &&
@@ -754,6 +774,38 @@ export class PreregistroPaso2 extends LitElement {
               <option>DOCTORADO</option>
             </select>
           </div>
+
+          ${this.requiereCertificadoSecundaria ? html`
+            <div class="radio-group">
+              <span class="radio-label">
+                Certificado de Secundaria:
+              </span>
+
+              <label>
+                <input
+                  type="radio"
+                  name="certificadoSecundaria"
+                  value="si"
+                  @change=${e => {
+                    this.certificadoSecundaria = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>Sí</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="certificadoSecundaria"
+                  value="no"
+                  @change=${e => {
+                    this.certificadoSecundaria = e.target.value;
+                    this.validateForm();
+                  }}>
+                <span>No</span>
+              </label>
+            </div>
+          ` : ''}
 
           <div class="radio-line">
             <!-- LICENCIA -->

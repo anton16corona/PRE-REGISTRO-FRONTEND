@@ -16,11 +16,9 @@ export class CitasGeneradaView extends LitElement {
   constructor() {
     super();
 
-    const perfil = sessionStorage.getItem('perfil_codigo') || 'GC';
-    const convocatoria = 6;
-    const consecutivo = '001';
+    const folioGuardado = sessionStorage.getItem('folio_preregistro');
 
-    this.folio = `SSPMQ/IPES/${perfil}/${convocatoria}-${consecutivo}`;
+    this.folio = folioGuardado || '---';
 
     this.mostrarAlerta = false;
     this.alertaConfig = {};
@@ -33,7 +31,7 @@ export class CitasGeneradaView extends LitElement {
       titulo: 'Cita registrada exitosamente',
       mensaje:
         'La información de tu cita fue enviada correctamente al correo electrónico proporcionado.',
-      extra: `Folio: ${this.folio}`,
+      extra: `Tu folio de seguimiento es: ${this.folio}`,
       boton: 'ENTENDIDO'
     };
   }

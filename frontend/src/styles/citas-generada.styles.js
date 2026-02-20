@@ -22,10 +22,10 @@ export const citasGeneradaStyles = css`
 
   .card {
     background: #fff;
-    max-width: 1200px;
+    max-width: 900px;
     width: 100%;
     border-radius: 28px;
-    padding: 4rem 2.5rem;
+    padding: 4.5rem 3.5rem;
     text-align: center;
     box-shadow: 0 15px 35px rgba(0,0,0,.08);
   }
@@ -48,44 +48,45 @@ export const citasGeneradaStyles = css`
   }
 
   .titulo {
-    font-size: clamp(2rem, 3vw, 2.6rem);
+    font-size: clamp(2.4rem, 3vw, 2.8rem);
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     color: #2e3032;
   }
 
   .folio {
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+    font-size: clamp(1.7rem, 2.2vw, 2.1rem);
+    font-weight: 700;
+    margin-bottom: 2rem;
     color: #4a4a4a;
   }
 
   .texto {
-    font-size: 1.05rem;
-    max-width: 700px;
+    font-size: 1.25rem;
+    max-width: 680px;
     margin: 0 auto 2.5rem;
-    line-height: 1.4;
-    margin-bottom: 2rem;
+    line-height: 1.7;
     color: #3a3a3a;
   }
 
   .acciones {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1.2rem;
     align-items: center;
   }
 
   .btn {
-    width: 220px;
-    height: 42px;
+    width: 260px;
+    height: 52px;
     border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.4px;
   }
 
   .btn.primario {

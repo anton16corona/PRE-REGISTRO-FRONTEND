@@ -18,7 +18,10 @@ export class ConsultaFolioView extends LitElement {
     
     /* Para restricción con código temporal. */
     pasoCodigo: { type: Boolean },
-    codigoIngresado: { type: String }
+    codigoIngresado: { type: String },
+
+    intentosFallidos: { type: Number },
+    bloqueadoHasta: { type: Number }
   };
 
   constructor() {
@@ -31,27 +34,68 @@ export class ConsultaFolioView extends LitElement {
 
     this.pasoCodigo = false;
     this.codigoIngresado = '';
+
+    this.intentosFallidos = 0;
+    this.bloqueadoHasta = 0;
   }
 
-  get folioCompleto() {
+  get folioCompleto() 
+  {
     if (!this.convocatoria || !this.consecutivo) return '';
     return `SSPMQ/IPES/${this.perfil}/${this.convocatoria}-${this.consecutivo}`;
   }
 
-  goBack() {
-    const origen = sessionStorage.getItem('origen_convocatoria');
-    console.log('Origen guardado:', origen);
+  async validarFolioExistente() 
+  {
+    try {
+      const resp = await fetch(`http://localhost:3000/preregistros?folio=${this.folioCompleto}`);
+      const data = await resp.json();
 
-    if (origen) {
-      globalThis.location.href = origen;
-    } else {
-      globalThis.location.href = '/convocatorias-view';
+      return data.length > 0;
+
+    } catch(e) {
+      console.error('Error consultando folio:', e);
+      return false;
     }
   }
 
-  consultar() {
-    // 1️⃣ Folio incompleto
-    if (!this.convocatoria || !this.consecutivo) {
+  /* ============== 🔧 CORRECCIÓN: NAVEGACIÓN DE RETORNO ============== */
+  goBack() {
+    // 1️⃣ Intentar obtener el origen guardado en sessionStorage
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    
+    console.log('🔙 Volviendo desde consulta folio. Origen:', origen);
+
+    if (origen) {
+      // Si hay origen guardado, ir a esa ruta
+      globalThis.location.href = origen;
+    } else {
+      // Si no hay origen, simplemente ir hacia atrás en el historial
+      history.back();
+    }
+  }
+
+  async consultar() 
+  {
+    // 🔒 VALIDAR BLOQUEO
+    if (Date.now() < this.bloqueadoHasta) 
+    {
+      const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
+
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'error',
+        titulo: 'Sistema bloqueado',
+        mensaje: `Demasiados intentos incorrectos.`,
+        extra: `Intenta nuevamente en ${segundos} segundos.`,
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    // 1️⃣ VALIDAR CAMPOS
+    if (!this.convocatoria || !this.consecutivo) 
+    {
       this.mostrarAlerta = true;
       this.alertaConfig = {
         tipo: 'warning',
@@ -62,50 +106,94 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // 2️⃣ SIMULACIÓN: folio inexistente
-    if (this.convocatoria === '0') {
+    // 2️⃣ CONSULTAR DB.JSON
+    const existe = await this.validarFolioExistente();
+
+    if (!existe) 
+    {
+      this.intentosFallidos++;
+
+      // 🔒 3 INTENTOS → BLOQUEAR
+      if (this.intentosFallidos >= 3) {
+
+        this.bloqueadoHasta = Date.now() + 60000; // 1 minuto
+        this.intentosFallidos = 0;
+
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'error',
+          titulo: 'Sistema bloqueado',
+          mensaje: 'Has realizado 3 intentos incorrectos.',
+          extra: 'El sistema se ha inhabilitado por 1 minuto.',
+          boton: 'ENTENDIDO'
+        };
+        return;
+      }
+
       this.mostrarAlerta = true;
       this.alertaConfig = {
-        tipo: 'inexistente-folio',
-        titulo: 'Folio no encontrado',
-        mensaje:
-          'El folio ingresado no existe o es incorrecto.',
-        extra:
-          'Verifica la información proporcionada e inténtalo nuevamente.',
+        tipo: 'error',
+        titulo: 'Folio incorrecto',
+        mensaje: 'El folio ingresado no existe.',
+        extra: `Intentos restantes: ${3 - this.intentosFallidos}`,
         boton: 'ENTENDIDO'
       };
       return;
     }
 
-    // 3️⃣ Folio válido → pedir código
+    // ✅ Folio válido → pedir código
     this.pasoCodigo = true;
     this.mostrarAlerta = true;
     this.alertaConfig = {
       tipo: 'info',
       titulo: 'Verificación de seguridad',
-      mensaje:
-        'Para proteger tu información, enviamos un código de verificación a tu correo electrónico.',
-      extra:
-        'Ingresa el código para continuar.',
+      mensaje: 'Enviamos un código a tu correo.',
+      extra: 'Ingresa el código para continuar.',
       boton: 'VALIDAR CÓDIGO'
     };
   }
 
-  validarCodigo() {
-    if (this.codigoIngresado !== '1234567') {
-      this.pasoCodigo = false; // 🔴 CLAVE
+  validarCodigo() 
+  {
+    const codigosValidos = [
+      '1234567',
+      '9876543',
+      '1111111'
+    ];
+
+    if (!codigosValidos.includes(this.codigoIngresado)) {
+
+      this.intentosFallidos++;
+
+      if (this.intentosFallidos >= 3) {
+
+        this.bloqueadoHasta = Date.now() + 60000;
+        this.intentosFallidos = 0;
+
+        this.alertaConfig = {
+          tipo: 'error',
+          titulo: 'Sistema bloqueado',
+          mensaje: '3 códigos incorrectos.',
+          extra: 'Intenta nuevamente en 1 minuto.',
+          boton: 'ENTENDIDO'
+        };
+        return;
+      }
+
       this.alertaConfig = {
         tipo: 'error',
         titulo: 'Código incorrecto',
-        mensaje: 'El código ingresado no es válido o ha expirado.',
+        mensaje: 'El código ingresado no es válido.',
+        extra: `Intentos restantes: ${3 - this.intentosFallidos}`,
         boton: 'ENTENDIDO'
       };
       return;
     }
 
-    // Código correcto
+    // ✅ CÓDIGO CORRECTO
     this.mostrarAlerta = false;
     this.pasoCodigo = false;
+    this.intentosFallidos = 0;
 
     sessionStorage.setItem('folio_consulta', this.folioCompleto);
     globalThis.history.pushState({}, '', '/progreso-folio');
@@ -116,44 +204,44 @@ export class ConsultaFolioView extends LitElement {
     this.mostrarAlerta = false;
   }
 
-  // ---------- CARRUSEL DE FOTOS. ----------
-    images = [
-        '/src/assets/estatus/EstatusA.jpg',
-        '/src/assets/estatus/EstatusB.jpg',
-        '/src/assets/estatus/EstatusC.jpg',
-        '/src/assets/estatus/EstatusD.jpg',
-        '/src/assets/estatus/EstatusE.jpg',
-        '/src/assets/estatus/EstatusF.jpg',
-        '/src/assets/estatus/EstatusG.jpg'
-    ];
+  /* ============== CARRUSEL DE FOTOS ============== */
+  images = [
+    '/src/assets/estatus/EstatusA.jpg',
+    '/src/assets/estatus/EstatusB.jpg',
+    '/src/assets/estatus/EstatusC.jpg',
+    '/src/assets/estatus/EstatusD.jpg',
+    '/src/assets/estatus/EstatusE.jpg',
+    '/src/assets/estatus/EstatusF.jpg',
+    '/src/assets/estatus/EstatusG.jpg'
+  ];
 
-    index = 0;
-    direction = 1; // 1 = adelante, -1 = atrás
-    intervalId;
+  index = 0;
+  direction = 1; // 1 = adelante, -1 = atrás
+  intervalId;
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.startAutoplay();
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    this.startAutoplay();
+  }
 
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        clearInterval(this.intervalId);
-    }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    clearInterval(this.intervalId);
+  }
 
-    startAutoplay() {
-      this.intervalId = setInterval(() => {
-        // cambiar dirección si llega a los extremos
-        if (this.index === this.images.length - 1) {
-          this.direction = -1;
-        } else if (this.index === 0) {
-          this.direction = 1;
-        }
+  startAutoplay() {
+    this.intervalId = setInterval(() => {
+      // cambiar dirección si llega a los extremos
+      if (this.index === this.images.length - 1) {
+        this.direction = -1;
+      } else if (this.index === 0) {
+        this.direction = 1;
+      }
 
-        this.index += this.direction;
-        this.updateCarousel();
-      }, 1500);
-    }
+      this.index += this.direction;
+      this.updateCarousel();
+    }, 1500);
+  }
 
   updateCarousel() {
     const track = this.renderRoot.querySelector('.carousel-track');
@@ -161,7 +249,7 @@ export class ConsultaFolioView extends LitElement {
     track.style.transform = `translateX(-${this.index * 100}%)`;
   }
 
-/* ========================================= HTML ======================================== */
+  /* ========================================= HTML ======================================== */
   render() {
     return html`
       ${this.mostrarAlerta ? html`
@@ -174,7 +262,6 @@ export class ConsultaFolioView extends LitElement {
           .boton=${this.alertaConfig.boton}
           @aceptar=${this.pasoCodigo ? this.validarCodigo : this.cerrarAlerta}
         >
-
           ${this.pasoCodigo ? html`
             <input
               type="text"
@@ -189,12 +276,9 @@ export class ConsultaFolioView extends LitElement {
                 border-radius: 12px;
                 border: 1px solid #ccc;
               "
-              @input=${e =>
-                this.codigoIngresado = e.target.value.replaceAll(/\D/g,'')
-              }
+              @input=${e => this.codigoIngresado = e.target.value.replaceAll(/\D/g,'')}
             />
           ` : ''}
-
         </alerta-view>
       ` : ''}
 
@@ -221,11 +305,17 @@ export class ConsultaFolioView extends LitElement {
               <option value="PC">PC</option>
             </select>
             /
-            <input placeholder="6" maxlength="2"
-              @input=${e => this.convocatoria = e.target.value.replaceAll(/\D/g,'')} />
+            <input 
+              placeholder="6" 
+              maxlength="2"
+              @input=${e => this.convocatoria = e.target.value.replaceAll(/\D/g,'')} 
+            />
             -
-            <input placeholder="001" maxlength="3"
-              @input=${e => this.consecutivo = e.target.value.replaceAll(/\D/g,'')} />
+            <input 
+              placeholder="001" 
+              maxlength="3"
+              @input=${e => this.consecutivo = e.target.value.replaceAll(/\D/g,'')} 
+            />
           </div>
 
           <div class="form-actions">
@@ -244,15 +334,12 @@ export class ConsultaFolioView extends LitElement {
 
           <div class="carousel">
             <div class="carousel-track">
-                  ${this.images.map(
-                  img => html`<img src=${img} class="carousel-image" />`
-                  )}
-              </div>
+              ${this.images.map(img => html`
+                <img src=${img} class="carousel-image" />
+              `)}
             </div>
           </div>
         </div>
-
-
       </div>
     `;
   }
