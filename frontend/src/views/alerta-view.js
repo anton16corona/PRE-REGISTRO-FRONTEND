@@ -17,9 +17,8 @@ export class AlertaView extends LitElement {
       justify-content: center;
       z-index: 1000;
       animation: fade 0.25s ease;
-
-      padding: 1rem;              /* evita que choque con bordes */
-      overflow-y: auto;           /* permite scroll en pantallas pequeñas */
+      padding: 1rem;
+      overflow-y: auto;
     }
 
     @keyframes fade {
@@ -47,8 +46,6 @@ export class AlertaView extends LitElement {
       max-width: 1200px;
       box-sizing: border-box;
     }
-
-
 
     slot {
       grid-column: 1 / -1;
@@ -110,31 +107,14 @@ export class AlertaView extends LitElement {
       background: #b8742a;
     }
 
-    /* ===== ACCIONES ===== */
-    .acciones {
-      grid-column: 1 / -1;
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-
-    .btn {
-      background: #a9633b;
-      color: #fff;
-      border-radius: 999px;
-      padding: 0.7rem 2.5rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-block;
-    }
-
     /* WARNING AMARILLO PERSONALIZADO */
     .warning-yellow {
-      background: #fff3bf;       /* fondo amarillo suave */
-      color: #7a5a00;            /* texto oscuro cálido */
+      background: #fff3bf;
+      color: #7a5a00;
     }
 
     .warning-yellow .icono {
-      background: #f2c94c;       /* círculo del icono */
+      background: #f2c94c;
       color: #5c4500;
     }
 
@@ -143,7 +123,7 @@ export class AlertaView extends LitElement {
     }
 
     .warning-yellow .btn {
-      background: #f2c94c;       /* botón amarillo */
+      background: #f2c94c;
       color: #5c4500;
     }
 
@@ -267,8 +247,58 @@ export class AlertaView extends LitElement {
       background: #7b7c80;
     }
 
+    /* ============== 🔒 ALERTA TIPO BLOQUEADO (BEIGE) - CORREGIDO ============== */
+    .bloqueado {
+      background: #fff8e1;
+      color: #6d4c41;
+    }
+
+    .bloqueado .icono {
+      background: #fff3cd;
+      color: #f9a825;
+    }
+
+    .bloqueado h2 {
+      color: #e65100;
+    }
+
+    .bloqueado p {
+      color: #6d4c41;
+    }
+
+    .bloqueado .btn {
+      background: #f9a825;
+      color: #fff;
+    }
+
+    .bloqueado .btn:hover {
+      background: #f57c00;
+    }
+
+    /* ===== ACCIONES ===== */
+    .acciones {
+      grid-column: 1 / -1;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .btn {
+      background: #a9633b;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.7rem 2.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
     /* ======================= CAMBIO DE PERFIL EN CONVOCATORIA ======================= */
-    /* Panel principal, el grande del de cambio de convocatoria. */
     .warning-redireccion {
       background: #aab4c1;
       color: #2e3032;
@@ -315,7 +345,6 @@ export class AlertaView extends LitElement {
       padding: 0.5rem;
     }
 
-    /* Estilos para el scrollbar */
     .cards-container::-webkit-scrollbar {
       height: 10px;
     }
@@ -410,9 +439,6 @@ export class AlertaView extends LitElement {
     }
 
     /* ======================================= RESPONSIVE ======================================= */
-    /* ============ AJUSTES DE TAMAÑO PARA DIVERSOS DISPOSITIVOS MÓVILES COMPATIBILIDAD ========== */
-
-    /* ================= PARA 768 PX ================== */
     @media (max-width: 768px) {
       .cards {
         grid-template-columns: repeat(auto-fill, 260px);
@@ -461,7 +487,6 @@ export class AlertaView extends LitElement {
       }
     }
 
-    /* ================= PARA 480 PX ================== */
     @media (max-width: 480px) {
       .card {
         width: 220px;
@@ -555,9 +580,9 @@ export class AlertaView extends LitElement {
   render() {
     const contenido = html`
       <div class="alerta ${this.tipo}">
-        ${this.tipo !== 'warning-redireccion' ? html`
+        ${this.tipo === 'warning-redireccion' ? '' : html`
           <div class="icono">!</div>
-        ` : ''}
+        `}
 
         <div>
           <h2>${this.titulo}</h2>
