@@ -30,7 +30,6 @@ export const progresoFolioStyles = css`
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
 
-  /* ============== 🎬 ANIMACIÓN DE ENTRADA SUAVE ============== */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -46,7 +45,7 @@ export const progresoFolioStyles = css`
     animation: fadeInUp 0.6s ease-out;
   }
 
-  /* ============== 📝 FOLIO HEADER MEJORADO ============== */
+  /* ============== 📝 FOLIO HEADER CORREGIDO ============== */
   .folio-header {
     text-align: center;
     margin-bottom: 3rem;
@@ -59,29 +58,25 @@ export const progresoFolioStyles = css`
     margin: 0 0 1rem 0;
   }
 
+  /* 🎨 FOLIO CON DEGRADADO */
   .folio {
     font-size: 2rem;
     font-weight: 800;
-    color: #5374a8;
     letter-spacing: 1px;
     margin-bottom: 0.8rem;
+    /* El degradado se aplica inline con el color del perfil */
   }
 
-  /* 🏷️ BADGE DE PERFIL */
-  .perfil-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #5374a8, #6a8bc4);
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+  /* 🏷️ NOMBRE DE PERFIL (SIN BADGE, SOLO TEXTO) */
+  .perfil-nombre {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2e3032;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(83, 116, 168, 0.3);
+    letter-spacing: 0.5px;
   }
 
-  /* ============== 🔄 BARRA DE PROGRESO MEJORADA ============== */
+  /* ============== 🔄 BARRA DE PROGRESO ============== */
   .progress-container {
     display: flex;
     align-items: center;
@@ -91,7 +86,6 @@ export const progresoFolioStyles = css`
     padding: 0 20px;
   }
 
-  /* WRAPPER DEL PASO */
   .step-wrapper {
     display: flex;
     flex-direction: column;
@@ -107,7 +101,6 @@ export const progresoFolioStyles = css`
     transform: translateY(-5px);
   }
 
-  /* CÍRCULOS MÁS GRANDES */
   .step-circle {
     width: 60px;
     height: 60px;
@@ -124,14 +117,12 @@ export const progresoFolioStyles = css`
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  /* ESTADO: APROBADO (VERDE) */
   .step-wrapper.aprobado .step-circle {
     background: #4caf50;
     border-color: #4caf50;
     color: #fff;
   }
 
-  /* ESTADO: EN PROCESO (AZUL) */
   .step-wrapper.en-proceso .step-circle {
     background: #5374a8;
     border-color: #5374a8;
@@ -139,7 +130,6 @@ export const progresoFolioStyles = css`
     box-shadow: 0 0 0 4px rgba(83, 116, 168, 0.2);
   }
 
-  /* ESTADO: BLOQUEADO (GRIS) */
   .step-wrapper.bloqueado .step-circle {
     background: #e0e0e0;
     border-color: #e0e0e0;
@@ -147,18 +137,15 @@ export const progresoFolioStyles = css`
     cursor: not-allowed;
   }
 
-  /* SELECCIONADO */
   .step-wrapper.seleccionado .step-circle {
     box-shadow: 0 0 0 4px rgba(83, 116, 168, 0.3);
     transform: scale(1.1);
   }
 
-  /* CHECKMARK PARA APROBADOS */
   .checkmark {
     font-size: 1.8rem;
   }
 
-  /* ETIQUETAS */
   .step-label {
     font-size: 0.85rem;
     font-weight: 600;
@@ -172,7 +159,6 @@ export const progresoFolioStyles = css`
     color: #999;
   }
 
-  /* ============== 📊 LÍNEAS DE CONEXIÓN ============== */
   .step-line {
     flex: 1;
     height: 4px;
@@ -183,7 +169,6 @@ export const progresoFolioStyles = css`
     transition: background 0.5s ease;
   }
 
-  /* LÍNEA COMPLETADA (VERDE O AZUL) */
   .step-line.completed {
     background: linear-gradient(to right, #5374a8, #999);
   }
@@ -193,30 +178,56 @@ export const progresoFolioStyles = css`
     margin-bottom: 2rem;
   }
 
-  /* GRID DOBLE PARA PRE-REGISTRO */
   .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 
-  /* CAJA DE INFORMACIÓN */
+  /* ============== 📦 CAJA DE INFORMACIÓN CON SCROLLBAR ============== */
   .info-box {
     background: #f8f8f8;
     border-radius: 16px;
     padding: 2rem;
     border-left: 5px solid #e0e0e0;
     transition: all 0.3s ease;
+    max-height: 600px;
+    overflow-y: auto;
   }
 
+  .info-box::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .info-box::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  .info-box::-webkit-scrollbar-thumb {
+    background: rgba(83, 116, 168, 0.4);
+    border-radius: 10px;
+  }
+
+  .info-box::-webkit-scrollbar-thumb:hover {
+    background: rgba(83, 116, 168, 0.6);
+  }
+
+  /* 🎨 TÍTULOS CON ÍCONOS */
   .info-box h3 {
     font-size: 1.2rem;
     font-weight: 700;
     margin: 0 0 1rem 0;
     color: #2e3032;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  /* COLORES SEGÚN ESTADO */
+  .info-box h3 svg {
+    flex-shrink: 0;
+  }
+
   .info-box.aprobado {
     background: #e8f5e9;
     border-left-color: #4caf50;
@@ -232,13 +243,30 @@ export const progresoFolioStyles = css`
     border-left-color: #bdbdbd;
   }
 
-  /* ============== 📝 TEXTO FORMATEADO CON SALTOS DE LÍNEA ============== */
+  /* ============== 📝 TEXTO FORMATEADO ============== */
   .formatted-text {
     white-space: pre-line;
     line-height: 1.8;
     margin: 0;
     color: #2e3032;
     font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* 🎨 DOCUMENTOS ESPECÍFICOS POR PERFIL */
+  .formatted-text .doc-perfil {
+    font-weight: 500;
+  }
+
+  /* ⭐ ASTERISCOS */
+  .formatted-text .asterisco-rojo,
+  .formatted-text:contains('*') {
+    color: inherit;
+  }
+
+  /* Resaltar asteriscos en el texto */
+  .formatted-text {
+    position: relative;
   }
 
   /* ============== ✅ BOTÓN ACEPTAR ============== */
@@ -287,6 +315,10 @@ export const progresoFolioStyles = css`
     .info-grid {
       gap: 1.5rem;
     }
+
+    .info-box {
+      max-height: 500px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -302,9 +334,8 @@ export const progresoFolioStyles = css`
       font-size: 1.5rem;
     }
 
-    .perfil-badge {
-      font-size: 0.8rem;
-      padding: 0.4rem 1.2rem;
+    .perfil-nombre {
+      font-size: 0.9rem;
     }
 
     .progress-container {
@@ -336,6 +367,7 @@ export const progresoFolioStyles = css`
 
     .info-box {
       padding: 1.5rem;
+      max-height: 450px;
     }
 
     .btn {
@@ -358,9 +390,8 @@ export const progresoFolioStyles = css`
       letter-spacing: 0;
     }
 
-    .perfil-badge {
-      font-size: 0.75rem;
-      padding: 0.35rem 1rem;
+    .perfil-nombre {
+      font-size: 0.85rem;
     }
 
     .step-circle {
@@ -375,6 +406,7 @@ export const progresoFolioStyles = css`
 
     .info-box {
       padding: 1.2rem;
+      max-height: 400px;
     }
 
     .formatted-text {

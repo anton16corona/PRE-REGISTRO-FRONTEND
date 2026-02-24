@@ -1,15 +1,23 @@
 /**
  * ============================================================================
- * CONFIGURACIÓN DE INFORMACIÓN POR PERFIL Y ETAPA
+ * CONFIGURACIÓN DE INFORMACIÓN POR PERFIL Y ETAPA - CORREGIDA
  * ============================================================================
- * 
- * Este archivo contiene toda la información organizada por:
- * - Perfil policial (GC, GA, GV, PA, PP, etc.)
- * - Etapa del proceso (Pre-registro, Registro, Evaluación Médica, etc.)
- * 
- * Estructura:
- * PROCESO_INFO[perfil][etapa] = { sede, documentacion, mensaje, requisitos }
  */
+
+// ============================================================================
+// COLORES POR PERFIL
+// ============================================================================
+
+export const COLORES_PERFIL = {
+  'GC': '#8B4513',  // Café (Guardia Cívica)
+  'GA': '#2E7D32',  // Verde oscuro (Guardia Auxiliar)
+  'GV': '#F57C00',  // Naranja (Guardia Vial)
+  'PA': '#1976D2',  // Azul (Policía Auxiliar)
+  'PP': '#5374a8',  // Azul institucional (Policía de Proximidad)
+  'PC': '#7B1FA2',  // Morado (Policía Cibernética)
+  'UA': '#C62828',  // Rojo oscuro (Análisis)
+  'AV': '#00897B'   // Verde azulado (Atención a Víctimas)
+};
 
 // ============================================================================
 // SEDES POR ETAPA
@@ -73,93 +81,87 @@ Lunes a Viernes de 8:00 a 16:00 hrs`
 // DOCUMENTACIÓN COMÚN (TODOS LOS PERFILES)
 // ============================================================================
 
-const DOCS_COMUNES = `• CURP original y copia
-• Acta de nacimiento original y copia
-• Comprobante de domicilio (máximo 3 meses)
-• Identificación oficial vigente (INE/IFE)
-• RFC con homoclave
-• Certificado médico reciente
-• Cartilla del Servicio Militar Nacional (hombres)
-• Comprobante de no antecedentes penales`;
+const DOCS_COMUNES = `• Acta de nacimiento * (Formato actualizado con Código QR).
+• Credencial de Elector vigente INE.
+• Licencia para conducir vigente, expedida en el estado de Querétaro (en caso de contar con ella).
+• Oficio de baja voluntaria y/u hoja de servicio, en caso de que haya pertenecido al Ejército, Armada, Fuerza Aérea Mexicana o alguna corporación policial del país.
+• Comprobante de domicilio. *
+• Constancia de Situación Fiscal (RFC) que emite el SAT.
+• Número de Seguridad Social (NSS).
+• Clave Única de Registro de Población (CURP).
+• Currículum vitae actualizado con fotografía reciente y con firma autógrafa en cada hoja, que incluya al menos las actividades realizadas en los últimos tres años.
+• Una fotografía reciente tamaño infantil a color, fondo blanco, de frente, sin lentes, con orejas y frente descubiertas. En caso de mujeres, sin maquillaje ni accesorios.`;
 
 // ============================================================================
 // DOCUMENTACIÓN POR PERFIL - PRE-REGISTRO
 // ============================================================================
 
 export const DOCUMENTACION_PREREGISTRO = {
-  // GUARDIA CÍVICA
-  'GC': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Certificado de secundaria terminada
-• Carta de no inhabilitación
-• Licencia de conducir vigente tipo A`,
-
-  // GUARDIA AUXILIAR
-  'GA': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Certificado de secundaria terminada
-• Carta de no inhabilitación`,
-
-  // GUARDIA VIAL
-  'GV': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Certificado de secundaria terminada
-• Licencia de conducir vigente tipo A o B
-• Certificado de manejo defensivo (deseable)`,
-
-  // POLICÍA AUXILIAR
-  'PA': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Certificado de secundaria terminada
-• Constancia de buena conducta
-• Carta de recomendación (2)`,
-
-  // POLICÍA DE PROXIMIDAD
-  'PP': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Certificado de bachillerato terminado
-• Constancia de calificaciones
-• Carta de motivos (1 cuartilla)
-• Cartas de recomendación (2)`,
-
-  // POLICÍA CIBERNÉTICA
-  'PC': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Título profesional o cédula de Licenciatura
-• Constancia de calificaciones universitarias
-• Carta de motivos (2 cuartillas)
-• Certificaciones en tecnología (opcional pero deseable)
-• Cartas de recomendación (2)`,
-
-  // ANÁLISIS EN SEGURIDAD PÚBLICA
-  'UA': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Título profesional o cédula de Licenciatura
-• Constancia de calificaciones universitarias
-• Carta de motivos (2 cuartillas)
-• Tesis o proyecto de investigación (opcional)
-• Cartas de recomendación (2)`,
-
-  // ATENCIÓN A VÍCTIMAS
-  'AV': `Documentación requerida:
-
-${DOCS_COMUNES}
-• Título profesional o cédula de Licenciatura
-• Constancia de calificaciones universitarias
-• Carta de motivos enfocada en trabajo social (2 cuartillas)
-• Certificados de cursos en atención psicológica o victimología (deseable)
-• Cartas de recomendación (2)`
+  'GC': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+  },
+  'GA': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+  },
+  'GV': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+  },
+  'PA': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
+• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+  },
+  'PP': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
+• Certificado de estudios concluidos del nivel de BACHILLERATO, ** reconocidos oficialmente.`
+  },
+  'PC': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
+• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente y en las siguientes áreas: Sistemas Computacionales o Informática.`
+  },
+  'UA': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
+• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente.`
+  },
+  'AV': {
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
+en 3 COPIAS legibles (anverso y reverso), los siguientes 
+documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    comunes: DOCS_COMUNES,
+    especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
+• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente y en áreas afines a la Seguridad Pública, pudiendo ser Derecho, Psicología, Victimología o Criminología, Ciencias de la Seguridad, Seguridad Pública, Trabajo Social o Sociología.`
+  }
 };
 
 // ============================================================================
-// INFORMACIÓN POR ETAPA - REGISTRO
+// INFORMACIÓN POR ETAPA - OTRAS ETAPAS
 // ============================================================================
 
 export const INFO_REGISTRO = {
@@ -174,7 +176,6 @@ El personal verificará la autenticidad de tus documentos y se realizará:
 • Asignación de número de candidato
 
 IMPORTANTE: La falta de algún documento original impedirá continuar con el proceso.`,
-
   documentacion: `Documentos adicionales para esta etapa:
 
 • Todos los documentos originales del Pre-registro
@@ -182,10 +183,6 @@ IMPORTANTE: La falta de algún documento original impedirá continuar con el pro
 • Comprobante de Pre-registro impreso
 • Identificación oficial vigente`
 };
-
-// ============================================================================
-// INFORMACIÓN POR ETAPA - EVALUACIÓN MÉDICA
-// ============================================================================
 
 export const INFO_EVALUACION_MEDICA = {
   mensaje: `Evaluación médica integral
@@ -208,7 +205,6 @@ Indicaciones:
 • No usar lentes de contacto (traer armazón)
 
 Duración aproximada: 3-4 horas`,
-
   documentacion: `Requisitos para esta etapa:
 
 • Comprobante de registro
@@ -218,10 +214,6 @@ Duración aproximada: 3-4 horas`,
 • Toalla personal
 • Agua para hidratación`
 };
-
-// ============================================================================
-// INFORMACIÓN POR ETAPA - EVALUACIÓN PSICOMÉTRICA
-// ============================================================================
 
 export const INFO_EVALUACION_PSICOMETRICA = {
   mensaje: `Evaluación psicológica y psicométrica
@@ -241,7 +233,6 @@ Indicaciones:
 • No consumir sustancias estimulantes
 
 Duración aproximada: 4-5 horas`,
-
   documentacion: `Requisitos para esta etapa:
 
 • Comprobante de evaluación médica APROBADA
@@ -250,10 +241,6 @@ Duración aproximada: 4-5 horas`,
 • Pluma negra
 • Agua para hidratación`
 };
-
-// ============================================================================
-// INFORMACIÓN POR ETAPA - CONTROL DE CONFIANZA
-// ============================================================================
 
 export const INFO_CONTROL_CONFIANZA = {
   mensaje: `Evaluación de Control de Confianza
@@ -277,7 +264,6 @@ Indicaciones:
 IMPORTANTE: Esta evaluación se realiza conforme a la Ley General del Sistema Nacional de Seguridad Pública.
 
 Duración aproximada: 6-8 horas`,
-
   documentacion: `Requisitos para esta etapa:
 
 • Comprobante de evaluación psicométrica APROBADA
@@ -290,15 +276,32 @@ Duración aproximada: 6-8 horas`,
 };
 
 // ============================================================================
-// FUNCIÓN HELPER PARA OBTENER INFORMACIÓN
+// LEYENDAS DE ASTERISCOS
 // ============================================================================
 
-/**
- * Obtiene la información completa de una etapa según el perfil
- * @param {string} perfil - Código del perfil (GC, GA, GV, PA, PP, PC, UA, AV)
- * @param {number} etapaIndex - Índice de la etapa (0-4)
- * @returns {object} Objeto con sede, documentacion y mensaje
- */
+export const LEYENDAS_ASTERISCOS = `
+
+NOTAS IMPORTANTES:
+
+* Los documentos con * deberán tener fecha de emisión del mes en que se presenta la inscripción.
+
+** Los documentos con ** son certificados escolares oficiales.`;
+
+// ============================================================================
+// MENSAJES SIMPLES PARA ALERTAS DE ETAPAS BLOQUEADAS
+// ============================================================================
+
+export const MENSAJES_BLOQUEADOS = [
+  'Para conocer más sobre esta etapa, deberás primero completar y aprobar el Pre-registro.',
+  'Para conocer más sobre esta etapa, deberás primero completar y aprobar el Registro.',
+  'Para conocer más sobre esta etapa, deberás primero completar y aprobar la Evaluación Médica.',
+  'Para conocer más sobre esta etapa, deberás primero completar y aprobar la Evaluación Psicométrica.'
+];
+
+// ============================================================================
+// FUNCIÓN HELPER
+// ============================================================================
+
 export function getInformacionEtapa(perfil, etapaIndex) {
   const etapas = [
     'pre-registro',
@@ -310,16 +313,24 @@ export function getInformacionEtapa(perfil, etapaIndex) {
 
   const etapaNombre = etapas[etapaIndex];
 
-  // Caso especial: Pre-registro (depende del perfil)
   if (etapaIndex === 0) {
+    const docsPerfil = DOCUMENTACION_PREREGISTRO[perfil] || DOCUMENTACION_PREREGISTRO['GC'];
+    
     return {
       sede: SEDES[etapaNombre],
-      documentacion: DOCUMENTACION_PREREGISTRO[perfil] || DOCUMENTACION_PREREGISTRO['GC'],
-      mensaje: null
+      documentacion: `${docsPerfil.intro}
+
+${docsPerfil.comunes}
+
+${docsPerfil.especificos}
+
+${LEYENDAS_ASTERISCOS}`,
+      mensaje: null,
+      mensajeAlerta: null,
+      colorPerfil: COLORES_PERFIL[perfil]
     };
   }
 
-  // Resto de etapas (comunes para todos)
   const infoMap = {
     'registro': INFO_REGISTRO,
     'evaluacion-medica': INFO_EVALUACION_MEDICA,
@@ -332,24 +343,16 @@ export function getInformacionEtapa(perfil, etapaIndex) {
   return {
     sede: SEDES[etapaNombre],
     documentacion: info?.documentacion,
-    mensaje: info?.mensaje
+    mensaje: info?.mensaje,
+    mensajeAlerta: MENSAJES_BLOQUEADOS[etapaIndex - 1],
+    colorPerfil: COLORES_PERFIL[perfil]
   };
 }
 
-/**
- * Extrae el código de perfil del folio
- * @param {string} folio - Folio completo (ej: "SSPMQ/IPES/GC/6-001")
- * @returns {string} Código del perfil (ej: "GC")
- */
 export function extraerPerfilDeFolio(folio) {
-  // Formato: SSPMQ/IPES/[PERFIL]/[CONVOCATORIA]-[CONSECUTIVO]
   const partes = folio.split('/');
-  return partes[2] || 'GC'; // Por defecto GC si no se encuentra
+  return partes[2] || 'GC';
 }
-
-// ============================================================================
-// MAPEO DE CÓDIGOS A NOMBRES COMPLETOS
-// ============================================================================
 
 export const NOMBRES_PERFILES = {
   'GC': 'Guardia Cívica',

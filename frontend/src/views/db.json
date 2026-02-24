@@ -1208,5 +1208,15 @@
         }
       ]
     }
+  ],
+  "candidatos": [
+    {
+      "id": "1",
+      "folio": "SSPMQ/IPES/GC/6-001",
+      "nombre": "Juan Pérez García",
+      "estatusProceso": 4,
+      "fechaRegistro": "2026-02-15",
+      "ultimaActualizacion": "2026-02-23"
+    }
   ]
 }
