@@ -45,7 +45,7 @@ export const progresoFolioStyles = css`
     animation: fadeInUp 0.6s ease-out;
   }
 
-  /* ============== 📝 FOLIO HEADER CORREGIDO ============== */
+  /* ============== FOLIO HEADER ============== */
   .folio-header {
     text-align: center;
     margin-bottom: 3rem;
@@ -58,16 +58,13 @@ export const progresoFolioStyles = css`
     margin: 0 0 1rem 0;
   }
 
-  /* 🎨 FOLIO CON DEGRADADO */
   .folio {
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 1px;
     margin-bottom: 0.8rem;
-    /* El degradado se aplica inline con el color del perfil */
   }
 
-  /* 🏷️ NOMBRE DE PERFIL (SIN BADGE, SOLO TEXTO) */
   .perfil-nombre {
     font-size: 1rem;
     font-weight: 600;
@@ -76,7 +73,7 @@ export const progresoFolioStyles = css`
     letter-spacing: 0.5px;
   }
 
-  /* ============== 🔄 BARRA DE PROGRESO ============== */
+  /* ============== BARRA DE PROGRESO ============== */
   .progress-container {
     display: flex;
     align-items: center;
@@ -173,7 +170,7 @@ export const progresoFolioStyles = css`
     background: linear-gradient(to right, #5374a8, #999);
   }
 
-  /* ============== 📋 CONTENEDOR DE INFORMACIÓN ============== */
+  /* ============== CONTENEDOR DE INFORMACIÓN ============== */
   .info-container {
     margin-bottom: 2rem;
   }
@@ -184,7 +181,7 @@ export const progresoFolioStyles = css`
     gap: 2rem;
   }
 
-  /* ============== 📦 CAJA DE INFORMACIÓN CON SCROLLBAR ============== */
+  /* ============== CAJA DE INFORMACIÓN ============== */
   .info-box {
     background: #f8f8f8;
     border-radius: 16px;
@@ -213,7 +210,6 @@ export const progresoFolioStyles = css`
     background: rgba(83, 116, 168, 0.6);
   }
 
-  /* 🎨 TÍTULOS CON ÍCONOS */
   .info-box h3 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -251,22 +247,59 @@ export const progresoFolioStyles = css`
     color: #2e3032;
     font-size: 0.95rem;
     font-weight: 300;
+    text-align: justify;  /* ✅ JUSTIFICADO */
   }
 
-  /* 🎨 DOCUMENTOS ESPECÍFICOS POR PERFIL */
+  /* 🎯 SEDE CENTRADA */
+  .info-box h3 + .formatted-text {
+    text-align: center;  /* Solo para sede */
+  }
+
+  /* Documentación vuelve a estar justificada */
+  .info-box:not(:first-child) .formatted-text {
+    text-align: justify;
+  }
+
   .formatted-text .doc-perfil {
     font-weight: 500;
   }
 
-  /* ⭐ ASTERISCOS */
+  /* ============== ⭐ ASTERISCOS EN NEGRITAS Y COLORES ============== */
   .formatted-text .asterisco-rojo,
-  .formatted-text:contains('*') {
-    color: inherit;
+  .asterisco-rojo {
+    color: #d32f2f !important;
+    font-weight: 700 !important;
+    font-size: 1em;
   }
 
-  /* Resaltar asteriscos en el texto */
-  .formatted-text {
-    position: relative;
+  .formatted-text .asterisco-azul,
+  .asterisco-azul {
+    color: #1976d2 !important;
+    font-weight: 700 !important;
+    font-size: 1em;
+  }
+
+  /* ============== 📌 NOTAS IMPORTANTES (CURSIVA Y REDUCIDO ESPACIADO) ============== */
+  .formatted-text .notas-importantes,
+  .notas-importantes {
+    margin-top: 0.8rem;  /* Reducido (era 2rem) */
+    padding: 1rem;
+    background: rgba(83, 116, 168, 0.08);
+    border-radius: 8px;
+    border-left: 3px solid #5374a8;
+  }
+
+  .notas-importantes em {
+    font-style: italic;
+    display: block;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .notas-importantes em:first-child {
+    font-weight: 700;
+    font-size: 1em;
+    margin-bottom: 0.8rem;
   }
 
   /* ============== ✅ BOTÓN ACEPTAR ============== */

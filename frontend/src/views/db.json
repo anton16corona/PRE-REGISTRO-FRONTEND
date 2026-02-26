@@ -291,6 +291,44 @@
       "folio": "SSPMQ/IPES/GC/6-001",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-02-20T20:24:52.768Z"
+    },
+    {
+      "id": "b068",
+      "curp": "CASF891229HPLRLR09",
+      "nombre": "FRANCISCO",
+      "apellido1": "CARDENAS",
+      "apellido2": "SALAZAR",
+      "rfc": "CASF891229HGT",
+      "fechaNacimiento": "1989-12-29",
+      "edad": 36,
+      "sexo": "H",
+      "civil": "Soltero",
+      "email": "cardenasfc@hotmail.com",
+      "email2": "cardenasfc@hotmail.com",
+      "tel": "4425965656",
+      "tel2": "4425965656",
+      "contactoAlterno": "FERNANDO CARDENAS",
+      "telAlterno": "4465656565",
+      "municipio": "QUERÉTARO",
+      "colonia": "CENTRO",
+      "cp": "76000",
+      "calle": "VEGA Y MONROY",
+      "exterior": "56",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": true,
+        "frente": "correcto.webp",
+        "reverso": "Bien.png"
+      },
+      "medio": "tv",
+      "fechaEnvio": "2026-02-26T16:36:19.957Z",
+      "siglas": "GV",
+      "folio": "SSPMQ/IPES/GV/6-001",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-02-26T16:36:19.973Z"
     }
   ],
   "citas": [
@@ -520,6 +558,12 @@
       "id": "3d70",
       "folio": "SSPMQ/IPES/GC/6-001",
       "fecha": "2026-04-15",
+      "hora": "12:00"
+    },
+    {
+      "id": "cf81",
+      "folio": "SSPMQ/IPES/GV/6-001",
+      "fecha": "2026-03-25",
       "hora": "12:00"
     }
   ],
@@ -1008,7 +1052,7 @@
         },
         {
           "hora": "12:00",
-          "ocupados": 0,
+          "ocupados": 1,
           "capacidad": 10
         },
         {

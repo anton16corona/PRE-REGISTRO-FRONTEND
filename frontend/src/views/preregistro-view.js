@@ -391,7 +391,9 @@ export class PreregistroView extends LitElement {
     telTouched: { state: true },
     tel2Touched: { state: true },
     telError: { state: true },
-    tel2Error: { state: true }
+    tel2Error: { state: true },
+    curpExiste: { state:true },
+    validandoCurp: { state:true }
   };
 
   constructor() {
@@ -416,13 +418,15 @@ export class PreregistroView extends LitElement {
     this.tel2Touched = false;
     this.telError = null;
     this.tel2Error = null;
+    this.curpExiste = false;
+    this.validandoCurp = false;
 
-    // 🔧 CORRECCIÓN: Cargar datos guardados con validación de coherencia
+    //CORRECCIÓN: Cargar datos guardados con validación de coherencia
     const guardado = sessionStorage.getItem('paso1_data');
     if (guardado) {
       this.form = JSON.parse(guardado);
       
-      // ✅ Si hay fechaNacimiento Y edad guardadas, recalcular para verificar coherencia
+      // Si hay fechaNacimiento Y edad guardadas, recalcular para verificar coherencia
       if (this.form.fechaNacimiento && this.form.edad) {
         const birth = new Date(this.form.fechaNacimiento);
         const today = new Date();
@@ -436,10 +440,34 @@ export class PreregistroView extends LitElement {
         this.edad = edadCalculada;
         this.form.edad = edadCalculada;
       }
-      // ❌ Si solo hay fechaNacimiento sin edad, borrar la fecha (incoherente)
+      // Si solo hay fechaNacimiento sin edad, borrar la fecha (incoherente)
       else if (this.form.fechaNacimiento && !this.form.edad) {
         delete this.form.fechaNacimiento;
         this.edad = '';
+      }
+
+      if(this.form.fechaNacimiento)
+      {
+        const birth = new Date(this.form.fechaNacimiento);
+        const today = new Date();
+
+        let edad = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+          edad--;
+        }
+
+        this.edad = edad;
+        this.form.edad = edad;
+
+        const convocatoria = this.getConvocatoriaConfig();
+
+        if(convocatoria){
+          this.edadValidaConvocatoria =
+            edad >= convocatoria.edadMin &&
+            edad <= convocatoria.edadMax;
+        }
       }
     }
   }
@@ -451,6 +479,8 @@ export class PreregistroView extends LitElement {
     const rfcCompleto = this.validarRFC(f.rfc || '');
 
     this.formValido =
+      !this.curpExiste &&
+      !this.validandoCurp &&
       curpCompleta &&
       rfcCompleto &&
       f.nombre &&
@@ -469,6 +499,57 @@ export class PreregistroView extends LitElement {
       !this.emailMatchError;
   }
 
+  updated(){
+    this.validateForm();
+  }
+
+async verificarCurpExistente(curp) {
+  if (curp.length !== 18) return;
+
+  if (this._curpAbortController) {
+    this._curpAbortController.abort();
+  }
+  this._curpAbortController = new AbortController();
+  this.validandoCurp = true;
+
+  let existe = false;
+
+  try {
+    const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`, {
+      signal: this._curpAbortController.signal
+    });
+
+    if (resp.ok) {
+      const data = await resp.json();
+      existe = data.length > 0; // ✅ si regresa al menos un registro, ya existe
+    }
+
+  } catch (e) {
+    if (e.name === 'AbortError') return;
+    console.error('Error al verificar CURP:', e);
+    existe = false;
+  }
+
+  if (existe) {
+    this.curpExiste = true;
+    this.formValido = false;
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'warning-yellow',
+      titulo: 'PRE-REGISTRO YA EXISTENTE',
+      mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
+      extra: 'Si crees que es un error, comunícate con el área correspondiente.',
+      boton: 'ENTENDIDO'
+    };
+    this.requestUpdate();
+  } else {
+    this.curpExiste = false;
+    this.mostrarAlerta = false;
+  }
+
+  this.validandoCurp = false;
+}
+
   normalizeText(e) {
     const map = {
       á:'A', é:'E', í:'I', ó:'O', ú:'U', ñ:'N',
@@ -484,68 +565,81 @@ export class PreregistroView extends LitElement {
   }
 
   updateEdad(e) {
-    if (!e.target.value || e.target.value.length < 10) {
-      return;
-    }
+  this.form.fechaNacimiento = e.target.value;
+  sessionStorage.setItem('paso1_data', JSON.stringify(this.form));
 
-    const birth = new Date(e.target.value);
-    const today = new Date();
-
-    let edad = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      edad--;
-    }
-
-    this.edad = edad;
-    this.form.edad = edad; // 🔥 Guardar la edad en el form
+  if (!e.target.value || e.target.value.length < 10) {
+    this.edad = '';
     this.edadValidaConvocatoria = false;
+    return;
+  }
 
-    const convocatoria = this.getConvocatoriaConfig();
-    const origen = sessionStorage.getItem('origen_convocatoria');
+  const birth = new Date(e.target.value);
+  const today = new Date();
 
-    if (edad < 18) {
+  let edad = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    edad--;
+  }
+
+  //Solo calcula y guarda, SIN mostrar alertas
+  this.edad = edad;
+  this.form.edad = edad;
+  this.edadValidaConvocatoria = false;
+  this.validateForm();
+}
+
+validarEdadBlur() {
+  const edad = this.edad;
+  if (edad === '' || edad === undefined) return;
+
+  const convocatoria = this.getConvocatoriaConfig();
+  const origen = sessionStorage.getItem('origen_convocatoria');
+
+  if (edad < 18) {
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'warning-menor',
+      titulo: 'Registro no permitido',
+      mensaje: 'Debes ser mayor de edad para continuar.',
+      boton: 'ENTENDIDO',
+      onAceptar: 'limpiar-registro'
+    };
+    return;
+  }
+
+  if (convocatoria && (edad < convocatoria.edadMin || edad > convocatoria.edadMax)) {
+    const alternativas = this.getConvocatoriasCompatibles(edad).filter(c => c.path !== origen);
+
+    if (alternativas.length > 0) {
       this.mostrarAlerta = true;
       this.alertaConfig = {
-        tipo: 'warning-menor',
-        titulo: 'Registro no permitido',
-        mensaje: 'Debes ser mayor de edad para continuar.',
-        boton: 'ENTENDIDO',
-        onAceptar: 'limpiar-registro'
+        tipo: 'warning-yellow',
+        titulo: 'ESTIMADO USUARIO',
+        mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con los requisitos necesarios para la convocatoria seleccionada.',
+        extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil proporcionado.',
+        alternativas: alternativas
+      };
+      return;
+    } else {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'error',
+        titulo: 'Edad fuera de rango',
+        mensaje: 'Actualmente no existe ninguna convocatoria compatible con tu edad.',
+        boton: 'ENTENDIDO'
       };
       return;
     }
-
-    if (convocatoria && (edad < convocatoria.edadMin || edad > convocatoria.edadMax)) {
-      const alternativas = this.getConvocatoriasCompatibles(edad).filter(c => c.path !== origen);
-
-      if (alternativas.length > 0) {
-        this.mostrarAlerta = true;
-        this.alertaConfig = {
-          tipo: 'warning-redireccion',
-          titulo: 'ESTIMADO USUARIO',
-          mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con los requisitos necesarios para la convocatoria seleccionada.',
-          extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil proporcionado.',
-          alternativas: alternativas
-        };
-        return;
-      } else {
-        this.mostrarAlerta = true;
-        this.alertaConfig = {
-          tipo: 'error',
-          titulo: 'Edad fuera de rango',
-          mensaje: 'Actualmente no existe ninguna convocatoria compatible con tu edad.',
-          boton: 'ENTENDIDO'
-        };
-        return;
-      }
-    }
-
-    this.edadValidaConvocatoria = true;
-    this.mostrarAlerta = false;
-    this.validateForm();
   }
+
+  //Edad válida
+  this.edadValidaConvocatoria = true;
+  this.mostrarAlerta = false;
+  this.validateForm();
+}
 
   updateField(e) {
     this.form[e.target.name] = e.target.value;
@@ -688,7 +782,7 @@ export class PreregistroView extends LitElement {
     }
   }
 
-  /* ============== 🔒 PREVENIR COPIAR/PEGAR ============== */
+  /* ============== PREVENIR COPIAR/PEGAR ============== */
   preventPaste(e) {
     e.preventDefault();
     return false;
@@ -742,46 +836,56 @@ export class PreregistroView extends LitElement {
     const regexRFC = /^[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}$/;
     return regexRFC.test(rfc);
   }
-
-  continuar() {
-    if (!this.formValido) {
-      this.mostrarAlerta = true;
-      this.alertaConfig = {
-        tipo: 'warning-yellow',
-        titulo: 'Formulario incompleto',
-        mensaje: 'Debes completar todos los campos obligatorios para continuar.',
-        boton: 'ENTENDIDO'
-      };
-      return;
-    }
-
-    if (!this.validarCURP(this.form.curp)) {
-      this.mostrarAlerta = true;
-      this.alertaConfig = {
-        tipo: 'warning-yellow',
-        titulo: 'CURP inválido',
-        mensaje: 'El CURP ingresado no tiene un formato válido.',
-        extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
-        boton: 'ENTENDIDO'
-      };
-      return;
-    }
-
-    if (!this.validarRFC(this.form.rfc)) {
-      this.mostrarAlerta = true;
-      this.alertaConfig = {
-        tipo: 'warning',
-        titulo: 'RFC inválido',
-        mensaje: 'El RFC ingresado no tiene un formato válido.',
-        extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
-        boton: 'ENTENDIDO'
-      };
-      return;
-    }
-
-    this.submitForm();
+continuar() {
+  if (!this.formValido) {
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'warning-yellow',
+      titulo: 'Formulario incompleto',
+      mensaje: 'Debes completar todos los campos obligatorios para continuar.',
+      boton: 'ENTENDIDO'
+    };
+    return;
   }
 
+if (this.curpExiste) {
+  this.mostrarAlerta = true;
+  this.alertaConfig = {
+    tipo: 'warning-redireccion',
+    titulo: 'PRE-REGISTRO YA EXISTENTE',
+    mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
+    extra: 'Si crees que es un error, comunícate con el área correspondiente.',
+    boton: 'ENTENDIDO'
+  };
+  return;
+}
+
+  if (!this.validarCURP(this.form.curp)) {
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'warning-yellow',
+      titulo: 'CURP inválido',
+      mensaje: 'El CURP ingresado no tiene un formato válido.',
+      extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
+      boton: 'ENTENDIDO'
+    };
+    return;
+  }
+
+  if (!this.validarRFC(this.form.rfc)) {
+    this.mostrarAlerta = true;
+    this.alertaConfig = {
+      tipo: 'warning',
+      titulo: 'RFC inválido',
+      mensaje: 'El RFC ingresado no tiene un formato válido.',
+      extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
+      boton: 'ENTENDIDO'
+    };
+    return;
+  }
+
+  this.submitForm();
+}
   cerrarAlerta() {
     this.mostrarAlerta = false;
   }
@@ -864,14 +968,18 @@ export class PreregistroView extends LitElement {
           <div class="grid">
             <div>
               <label><span class="required">*</span>CURP: </label>
-              <input name="curp" placeholder="ABCD000000EFGHI00" maxlength="18"
-                .value=${this.curp}
-                @input=${e => {
-                  this.curp = e.target.value.toUpperCase();
-                  this.form.curp = this.curp;
-                  this.validateForm();
-                }}
-              />
+              <input name="curp" placeholder="ABCD000000EFGHI00" maxlength="18" .value=${this.form.curp || ''} @input=${async e => {
+                e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9]/g,'');
+
+                this.form.curp = e.target.value;
+                this.curpExiste = false;
+                this.mostrarAlerta = false; 
+                this.updateField(e);
+                if (e.target.value.length === 18) {
+                  await this.verificarCurpExistente(e.target.value);
+                    }
+                    this.validateForm();
+                }}/>
             </div>
 
             <div>
@@ -909,8 +1017,8 @@ export class PreregistroView extends LitElement {
                 name="fechaNacimiento" 
                 .value=${this.form.fechaNacimiento || ''} 
                 required 
-                @input=${this.updateField}
-                @blur=${this.updateEdad}
+                @change=${this.updateEdad}
+                @blur=${this.validarEdadBlur}
               />
             </div>
 
@@ -930,6 +1038,7 @@ export class PreregistroView extends LitElement {
                     .checked=${this.form.sexo === 'H'}
                     @change=${e => {
                       this.form.sexo = e.target.value;
+                      sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
                       this.validateForm();
                     }}
                   />
@@ -944,6 +1053,7 @@ export class PreregistroView extends LitElement {
                     .checked=${this.form.sexo === 'M'}
                     @change=${e => {
                       this.form.sexo = e.target.value;
+                      sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
                       this.validateForm();
                     }}
                   />
@@ -964,6 +1074,7 @@ export class PreregistroView extends LitElement {
                       .checked=${this.form.civil === opcion}
                       @change=${e => {
                         this.form.civil = e.target.value;
+                        sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
                         this.validateForm();
                       }}
                     />
@@ -996,7 +1107,7 @@ export class PreregistroView extends LitElement {
               ` : ''}
             </div>
 
-            <!-- 🔒 CONFIRMAR EMAIL (SIN COPIAR/PEGAR) -->
+            <!-- CONFIRMAR EMAIL (SIN COPIAR/PEGAR) -->
             <div>
               <label><span class="required">*</span>Confirmar Correo:</label>
               <input
@@ -1040,7 +1151,7 @@ export class PreregistroView extends LitElement {
               ` : ''}
             </div>
 
-            <!-- 🔒 CONFIRMAR TELÉFONO (SIN COPIAR/PEGAR) -->
+            <!-- CONFIRMAR TELÉFONO (SIN COPIAR/PEGAR) -->
             <div>
               <label><span class="required">*</span>Confirmar Teléfono: </label>
               <input 

@@ -1,94 +1,92 @@
 /**
  * ============================================================================
- * CONFIGURACIÓN DE INFORMACIÓN POR PERFIL Y ETAPA - CORREGIDA
+ * CONFIGURACIÓN DE INFORMACIÓN POR PERFIL Y ETAPA - ACTUALIZADA
  * ============================================================================
  */
 
 // ============================================================================
-// COLORES POR PERFIL
+// COLORES POR PERFIL (AJUSTADOS PARA MEJOR CONTRASTE)
 // ============================================================================
 
 export const COLORES_PERFIL = {
-  'GC': '#8B4513',  // Café (Guardia Cívica)
-  'GA': '#2E7D32',  // Verde oscuro (Guardia Auxiliar)
-  'GV': '#F57C00',  // Naranja (Guardia Vial)
-  'PA': '#1976D2',  // Azul (Policía Auxiliar)
-  'PP': '#5374a8',  // Azul institucional (Policía de Proximidad)
-  'PC': '#7B1FA2',  // Morado (Policía Cibernética)
-  'UA': '#C62828',  // Rojo oscuro (Análisis)
-  'AV': '#00897B'   // Verde azulado (Atención a Víctimas)
+  'GC': '#29569e',
+  'GA': '#158cc5',
+  'GV': '#8ba000',      // Más oscuro (era #b4c51f)
+  'PA': '#7aa7c8',
+  'PP': '#6d8a8f',      // Más oscuro (era #a4b6ba)
+  'PC': '#3c8c9c',
+  'UA': '#29569e',
+  'AV': '#5b3996'
 };
 
 // ============================================================================
-// SEDES POR ETAPA
+// SEDES POR ETAPA (CON FORMATO HTML)
 // ============================================================================
 
 export const SEDES = {
   'pre-registro': `Deberás acudir a:
-        
-SECRETARÍA DE SEGURIDAD 
-PÚBLICA MUNICIPAL DE QUERÉTARO
 
-Av. Tláloc 102, Desarrollo San Pablo,
-76130 Santiago de Querétaro, Qro.
+<b style="font-size: 1.1em;">SECRETARÍA DE SEGURIDAD PÚBLICA MUNICIPAL DE QUERÉTARO</b>
 
-Teléfono de contacto:
-442 427 67 00 ext.
-4987, 4921, 4314, 4936, 4932.`,
+<span style="font-size: 1.05em;">Av. Tláloc 102, Desarrollo San Pablo,
+76130 Santiago de Querétaro, Qro.</span>
+
+<b>Teléfono de contacto:</b>
+<b>442 427 67 00 ext. 4987, 4921, 4314, 4936, 4932.</b>`,
 
   'registro': `Deberás acudir a:
-        
-CENTRO DE EVALUACIÓN IPES
 
-Av. Constituyentes 1, Centro Histórico,
-76000 Santiago de Querétaro, Qro.
+<b style="font-size: 1.1em;">CENTRO DE EVALUACIÓN IPES</b>
 
-Horario de atención:
+<span style="font-size: 1.05em;">Av. Constituyentes 1, Centro Histórico,
+76000 Santiago de Querétaro, Qro.</span>
+
+<b>Horario de atención:</b>
 Lunes a Viernes de 8:00 a 14:00 hrs`,
 
   'evaluacion-medica': `Deberás acudir a:
-        
-CENTRO MÉDICO POLICIAL
 
-Calle 5 de Febrero 45, Col. Centro,
-76000 Santiago de Querétaro, Qro.
+<b style="font-size: 1.1em;">CENTRO MÉDICO POLICIAL</b>
 
-Horario de atención:
+<span style="font-size: 1.05em;">Calle 5 de Febrero 45, Col. Centro,
+76000 Santiago de Querétaro, Qro.</span>
+
+<b>Horario de atención:</b>
 Lunes a Viernes de 7:00 a 15:00 hrs`,
 
   'evaluacion-psicometrica': `Deberás acudir a:
-        
-DEPARTAMENTO DE PSICOLOGÍA IPES
 
-Av. Constituyentes 1, Centro Histórico,
-76000 Santiago de Querétaro, Qro.
+<b style="font-size: 1.1em;">DEPARTAMENTO DE PSICOLOGÍA IPES</b>
 
-Horario de atención:
+<span style="font-size: 1.05em;">Av. Constituyentes 1, Centro Histórico,
+76000 Santiago de Querétaro, Qro.</span>
+
+<b>Horario de atención:</b>
 Lunes a Sábado de 8:00 a 14:00 hrs`,
 
   'control-confianza': `Deberás acudir a:
-        
-CENTRO ESTATAL DE CONTROL DE CONFIANZA
 
-Libramiento Sur-Poniente 1000, El Salitre,
-76127 Santiago de Querétaro, Qro.
+<b style="font-size: 1.1em;">CENTRO ESTATAL DE CONTROL DE CONFIANZA</b>
 
-Horario de atención:
+<span style="font-size: 1.05em;">Libramiento Sur-Poniente 1000, El Salitre,
+76127 Santiago de Querétaro, Qro.</span>
+
+<b>Horario de atención:</b>
 Lunes a Viernes de 8:00 a 16:00 hrs`
 };
 
 // ============================================================================
-// DOCUMENTACIÓN COMÚN (TODOS LOS PERFILES)
+// DOCUMENTACIÓN COMÚN (CON ASTERISCOS CORREGIDOS)
 // ============================================================================
 
-const DOCS_COMUNES = `• Acta de nacimiento * (Formato actualizado con Código QR).
+const DOCS_COMUNES = `• Clave Única de Registro de Población (CURP). <span class="asterisco-rojo">*</span>
+• Acta de nacimiento <span class="asterisco-rojo">*</span> (Formato actualizado con Código QR).
 • Credencial de Elector vigente INE.
 • Licencia para conducir vigente, expedida en el estado de Querétaro (en caso de contar con ella).
 • Oficio de baja voluntaria y/u hoja de servicio, en caso de que haya pertenecido al Ejército, Armada, Fuerza Aérea Mexicana o alguna corporación policial del país.
-• Comprobante de domicilio. *
-• Constancia de Situación Fiscal (RFC) que emite el SAT.
-• Número de Seguridad Social (NSS).
-• Clave Única de Registro de Población (CURP).
+• Comprobante de domicilio. <span class="asterisco-rojo">*</span>
+• Constancia de Situación Fiscal (RFC) que emite el SAT. <span class="asterisco-rojo">*</span>
+• Número de Seguridad Social (NSS). <span class="asterisco-rojo">*</span>
 • Currículum vitae actualizado con fotografía reciente y con firma autógrafa en cada hoja, que incluya al menos las actividades realizadas en los últimos tres años.
 • Una fotografía reciente tamaño infantil a color, fondo blanco, de frente, sin lentes, con orejas y frente descubiertas. En caso de mujeres, sin maquillaje ni accesorios.`;
 
@@ -98,65 +96,49 @@ const DOCS_COMUNES = `• Acta de nacimiento * (Formato actualizado con Código 
 
 export const DOCUMENTACION_PREREGISTRO = {
   'GC': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
-    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'GA': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
-    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'GV': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
-    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+    especificos: `• Certificado de estudios concluidos del nivel de SECUNDARIA, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'PA': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
     especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
-• Certificado de estudios concluidos del nivel de SECUNDARIA, ** reconocidos oficialmente.`
+• Certificado de estudios concluidos del nivel de SECUNDARIA, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'PP': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
     especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
-• Certificado de estudios concluidos del nivel de BACHILLERATO, ** reconocidos oficialmente.`
+• Certificado de estudios concluidos del nivel de BACHILLERATO, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'PC': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
     especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
-• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente y en las siguientes áreas: Sistemas Computacionales o Informática.`
+• Certificado de estudios concluidos del nivel de LICENCIATURA, <span class="asterisco-azul">**</span> reconocidos oficialmente y en las siguientes áreas: Sistemas Computacionales o Informática.`
   },
   'UA': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
     especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
-• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente.`
+• Certificado de estudios concluidos del nivel de LICENCIATURA, <span class="asterisco-azul">**</span> reconocidos oficialmente.`
   },
   'AV': {
-    intro: `Deberá presentar en un fólder tamaño carta, color beige, 
-en 3 COPIAS legibles (anverso y reverso), los siguientes 
-documentos, asegurándose de que se encuentren en el siguiente orden:`,
+    intro: `Deberá presentar en un fólder tamaño carta, color beige, en 3 COPIAS legibles (anverso y reverso), los siguientes documentos, asegurándose de que se encuentren en el siguiente orden:`,
     comunes: DOCS_COMUNES,
     especificos: `• Cartilla del Servicio Militar Nacional liberada, tratándose de hombres (presentar copia de pre-cartilla y hoja de liberación).
-• Certificado de estudios concluidos del nivel de LICENCIATURA, ** reconocidos oficialmente y en áreas afines a la Seguridad Pública, pudiendo ser Derecho, Psicología, Victimología o Criminología, Ciencias de la Seguridad, Seguridad Pública, Trabajo Social o Sociología.`
+• Certificado de estudios concluidos del nivel de LICENCIATURA, <span class="asterisco-azul">**</span> reconocidos oficialmente y en áreas afines a la Seguridad Pública, pudiendo ser Derecho, Psicología, Victimología o Criminología, Ciencias de la Seguridad, Seguridad Pública, Trabajo Social o Sociología.`
   }
 };
 
@@ -276,16 +258,17 @@ Duración aproximada: 6-8 horas`,
 };
 
 // ============================================================================
-// LEYENDAS DE ASTERISCOS
+// LEYENDAS DE ASTERISCOS (REDUCIDO ESPACIADO)
 // ============================================================================
 
 export const LEYENDAS_ASTERISCOS = `
+<div class="notas-importantes">
+<em>NOTAS:</em>
 
-NOTAS IMPORTANTES:
+<em><span class="asterisco-rojo">*</span> Los documentos con <span class="asterisco-rojo">*</span> deberán tener fecha de emisión del mes en que se presenta la inscripción.</em>
 
-* Los documentos con * deberán tener fecha de emisión del mes en que se presenta la inscripción.
-
-** Los documentos con ** son certificados escolares oficiales.`;
+<em><span class="asterisco-azul">**</span> Los documentos con <span class="asterisco-azul">**</span> son certificados escolares oficiales.</em>
+</div>`;
 
 // ============================================================================
 // MENSAJES SIMPLES PARA ALERTAS DE ETAPAS BLOQUEADAS
@@ -323,7 +306,6 @@ export function getInformacionEtapa(perfil, etapaIndex) {
 ${docsPerfil.comunes}
 
 ${docsPerfil.especificos}
-
 ${LEYENDAS_ASTERISCOS}`,
       mensaje: null,
       mensajeAlerta: null,

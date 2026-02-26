@@ -42,14 +42,14 @@ export class ProgresoFolioView extends LitElement {
 
   getColorPerfil(perfil) {
     const colores = {
-      'GC': '#8B4513',
-      'GA': '#2E7D32',
-      'GV': '#F57C00',
-      'PA': '#1976D2',
-      'PP': '#5374a8',
-      'PC': '#7B1FA2',
-      'UA': '#C62828',
-      'AV': '#00897B'
+      'GC': '#29569e',
+      'GA': '#158cc5',
+      'GV': '#b4c51f',
+      'PA': '#7aa7c8',
+      'PP': '#a4b6ba',
+      'PC': '#3c8c9c',
+      'UA': '#29569e',
+      'AV': '#5b3996'
     };
     return colores[perfil] || '#5374a8';
   }
@@ -78,7 +78,7 @@ export class ProgresoFolioView extends LitElement {
     });
   }
 
-  /* ============== 🎨 APLICAR COLOR A DOCUMENTOS ESPECÍFICOS ============== */
+  /* ============== APLICAR COLOR A DOCUMENTOS ESPECÍFICOS ============== */
   aplicarColorDocumentos(texto, color) {
     if (!texto) return texto;
     
@@ -154,7 +154,7 @@ export class ProgresoFolioView extends LitElement {
     this.obtenerProceso();
   }
 
-  /* ============== 🎨 ICONOS SVG DE BOOTSTRAP ============== */
+  /* ============== ICONOS SVG DE BOOTSTRAP ============== */
   iconoUbicacion() {
     return svg`
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
@@ -195,7 +195,7 @@ export class ProgresoFolioView extends LitElement {
 
       <div class="fondo">
         <div class="card animate-in">
-          <!-- 📝 TÍTULO Y FOLIO MEJORADOS -->
+          <!-- TÍTULO Y FOLIO MEJORADOS -->
           <div class="folio-header">
             <h2 class="folio-title">SOLICITUD CON FOLIO:</h2>
             <div class="folio" style="background: linear-gradient(135deg, ${this.colorPerfil}, ${this.colorPerfil}dd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -206,7 +206,7 @@ export class ProgresoFolioView extends LitElement {
             </div>
           </div>
 
-          <!-- 🔄 BARRA DE PROGRESO -->
+          <!-- BARRA DE PROGRESO -->
           <div class="progress-container">
             ${this.pasos.map((paso, index) => {
               const isCompleted = paso.estatus === 'aprobado';
@@ -225,14 +225,14 @@ export class ProgresoFolioView extends LitElement {
                   <div class="step-label">${paso.nombre}</div>
                 </div>
 
-                ${!isLast ? html`
+                ${isLast ? '' : html`
                   <div class="step-line ${isCompleted || isCurrent ? 'completed' : ''}"></div>
-                ` : ''}
+                `}
               `;
             })}
           </div>
 
-          <!-- 📋 INFORMACIÓN DEL PASO -->
+          <!-- INFORMACIÓN DEL PASO -->
           <div class="info-container">
             ${esPreregistro ? html`
               <div class="info-grid">

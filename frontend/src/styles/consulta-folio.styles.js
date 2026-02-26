@@ -136,4 +136,20 @@ export const consultaFolioStyles = css`
         object-fit: cover;
         border-radius: 18px;
     }
+
+  /* ============== 🎬 ANIMACIÓN DE ENTRADA SUTIL ============== */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-in {
+    animation: fadeInUp 0.5s ease-out;
+  }
 `;

@@ -203,6 +203,7 @@ export class PreregistroPaso2 extends LitElement {
       gap: 3rem;
       flex-wrap: wrap;
       align-items: center; /* 🔴 clave */
+      margin-top: 1.5rem;
     }
 
     .radio-group {
@@ -379,7 +380,7 @@ export class PreregistroPaso2 extends LitElement {
     super();
     this.form = {};
     this.formValido = false;
-    this.ine = 'no';
+    this.ine = '';
     this.ineFrenteCargado = false;
     this.ineReversoCargado = false;
     this.mostrarAlerta = false;
@@ -388,6 +389,9 @@ export class PreregistroPaso2 extends LitElement {
     this.licencia = '';
     this.cartilla = '';
     this.certificadoSecundaria = '';
+    this.ineFrenteArchivo = null;
+    this.ineReversoArchivo = null;
+
 
     const guardado = sessionStorage.getItem('paso2_data');
     if (guardado) {
@@ -441,18 +445,18 @@ export class PreregistroPaso2 extends LitElement {
     this.form = {
       ...this.form,
       municipio: municipio,
-      colonia: '', // 🔴 importante limpiar colonia
+      colonia: '', // Importante limpiar colonia.
       cp: municipio === 'QUERÉTARO' ? '76000' : ''
     };
 
-    this.requestUpdate(); // 🔴 forzar render
+    this.requestUpdate(); // Forzamos al render.
     this.validateForm();
   }
 
   exteriorInteriorFormat(e) {
     e.target.value = e.target.value
       .toUpperCase()
-      .replaceAll(/[^A-Z0-9\-/]/g, '') // solo letras, números, - y /
+      .replaceAll(/[^A-Z0-9\-/]/g, '') // Solamente letras, números, y guiones. /
       .slice(0, 5);
 
     this.updateField(e);
@@ -484,7 +488,7 @@ export class PreregistroPaso2 extends LitElement {
 
     // El usuario debe tener al menos el nivel requerido
     if (jerarquiaUsuario < jerarquiaRequerida) {
-      // 🔴 NO CUMPLE con el nivel de estudios
+      // NO CUMPLE con el nivel de estudios
       const alternativas = this.getConvocatoriasCompatiblesEstudios(nivelUsuario)
         .filter(c => c.path !== origen);
 
@@ -511,7 +515,7 @@ export class PreregistroPaso2 extends LitElement {
       }
       this.nivelEstudiosValido = false;
     } else {
-      // ✅ SÍ CUMPLE con el nivel de estudios
+      // SÍ CUMPLE con el nivel de estudios.
       this.nivelEstudiosValido = true;
       this.mostrarAlerta = false;
     }
@@ -533,8 +537,7 @@ export class PreregistroPaso2 extends LitElement {
       });
   }
 
-  get requiereCertificadoSecundaria() 
-  {
+  get requiereCertificadoSecundaria() {
     const origen = sessionStorage.getItem('origen_convocatoria');
     const convocatoria = CONVOCATORIAS[origen];
 
@@ -542,7 +545,7 @@ export class PreregistroPaso2 extends LitElement {
 
     return (
       convocatoria.nivelEstudiosMin === 'SECUNDARIA' &&
-      this.form.nivelEstudios === 'SECUNDARIA'
+      this.form.nivelEstudios
     );
   }
 
@@ -551,19 +554,24 @@ export class PreregistroPaso2 extends LitElement {
   handleIneFrente(e) {
     if (e.target.files && e.target.files.length > 0) {
       this.ineFrenteCargado = true;
+      this.ineFrenteArchivo = e.target.files[0].name;     // ---- Se guarda el nombre del archivo (próximamente ruta o URL).
       this.validateForm();
     }
   }
 
-  handleIneReverso(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      this.ineReversoCargado = true;
-      this.validateForm();
-    }
+handleIneReverso(e) {
+  if (e.target.files && e.target.files.length > 0) {
+    this.ineReversoCargado = true;
+    this.ineReversoArchivo = e.target.files[0].name;      // ---- Se guarda el nombre del archivo (próximamente ruta o URL).
+    this.validateForm();
   }
+}
 
   get ineValido() {
-    return this.ine !== 'si' || (this.ineFrenteCargado && this.ineReversoCargado);
+    if (this.ine === 'si') {
+      return this.ineFrenteCargado && this.ineReversoCargado;
+    }
+    return true;
   }
 
   /* ================== VALIDACIÓN GENERAL ================== */
@@ -572,7 +580,7 @@ export class PreregistroPaso2 extends LitElement {
 
       const certificadoValido =
         !this.requiereCertificadoSecundaria ||
-        (this.requiereCertificadoSecundaria && this.certificadoSecundaria !== '');
+        this.certificadoSecundaria !== '';
 
       const documentosValidos =
         (this.licencia !== '') &&     // Obligatorio seleccionar.
@@ -602,24 +610,26 @@ export class PreregistroPaso2 extends LitElement {
 
   irACorreo() {
 
-    // 1️⃣ Leer el objeto maestro creado en Paso 1
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
 
-    // 2️⃣ Inyectar la información del Paso 2
     data.paso2 = {
       ...this.form,
       licencia: this.licencia,
       cartilla: this.cartilla,
-      ine: this.ine
+      certificadoSecundaria: this.certificadoSecundaria,
+
+      ine: {
+        tieneINE: this.ine === 'si',
+        frente: this.ine === 'si' ? this.ineFrenteArchivo : null,
+        reverso: this.ine === 'si' ? this.ineReversoArchivo : null
+      }
     };
 
-    // 3️⃣ Guardar nuevamente el objeto completo
     sessionStorage.setItem(
       'preregistro_data',
       JSON.stringify(data)
     );
 
-    // 4️⃣ Navegar al Paso 3
     globalThis.location.href = '/preregistro-envio';
   }
 
@@ -719,7 +729,7 @@ export class PreregistroPaso2 extends LitElement {
                   type="text"
                   name="cp"
                   .value=${this.form.cp}
-                  @input=${this.handleChange}
+                  @input=${e => this.onlyNumbers(e,5)}
                   maxlength="5"
                   ?disabled=${!this.form.municipio || this.form.municipio === 'QUERÉTARO'}
                   placeholder="Ingrese código postal"
@@ -775,7 +785,9 @@ export class PreregistroPaso2 extends LitElement {
             </select>
           </div>
 
-          ${this.requiereCertificadoSecundaria ? html`
+          <!-- GRUPO DE CERTIFICADOS Y DOCUMENTOS PARA PREGUNTAR SI CUENTA CON ELLOS. -->
+          <div class="radio-line">  
+            <!-- CERTIFICADO DE SECUNDARIA -->
             <div class="radio-group">
               <span class="radio-label">
                 Certificado de Secundaria:
@@ -805,9 +817,7 @@ export class PreregistroPaso2 extends LitElement {
                 <span>No</span>
               </label>
             </div>
-          ` : ''}
 
-          <div class="radio-line">
             <!-- LICENCIA -->
             <div class="radio-group">
               <span class="radio-label">Licencia de Conducir:</span>
