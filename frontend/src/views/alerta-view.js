@@ -89,7 +89,7 @@ export class AlertaView extends LitElement {
 
     /* ===== VARIANTES ===== */
 
-    /* 🔴 WARNING / ALERTA ROJA */
+    /*WARNING / ALERTA ROJA */
     .warning {
       background: #ffd2a8;
       color: #5a3300;
@@ -98,7 +98,7 @@ export class AlertaView extends LitElement {
       background: #b8742a;
     }
 
-    /* 🟡 ERROR */
+    /*ERROR */
     .error {
       background: #ffe3a3;
       color: #6b4b00;
@@ -203,7 +203,7 @@ export class AlertaView extends LitElement {
       background: #d23636;
     }
 
-    /* 🟢 SUCCESS */
+    /*SUCCESS */
     .success {
       background: #d4f5a2;
       color: #2f5e1a;
@@ -225,7 +225,7 @@ export class AlertaView extends LitElement {
       background: #75d072;
     }
 
-    /* 🔵 INFO */
+    /*INFO */
     .info {
       background: #b3bcc6;
       color: #22262d;
@@ -247,7 +247,7 @@ export class AlertaView extends LitElement {
       background: #7b7c80;
     }
 
-    /* ============== 🔒 ALERTA TIPO BLOQUEADO (BEIGE) - CORREGIDO ============== */
+    /* ============== ALERTA TIPO BLOQUEADO (BEIGE) - CORREGIDO ============== */
     .bloqueado {
       background: #fff8e1;
       color: #6d4c41;
@@ -299,15 +299,19 @@ export class AlertaView extends LitElement {
     }
 
     /* ======================= CAMBIO DE PERFIL EN CONVOCATORIA ======================= */
-    .warning-redireccion {
+      .warning-redireccion {
       background: #aab4c1;
       color: #2e3032;
       width: 100%;
       max-width: 1000px;
-      height: 700px;
-      min-height: 70vh;
+      height: auto;         /* ← se ajusta al contenido */
       grid-template-columns: 1fr;
       padding: 2rem;
+    }
+
+    .warning-redireccion > div {
+    gird-column: 1 / -1;
+    text-align: center;
     }
 
     .warning-redireccion .icono {
@@ -338,6 +342,7 @@ export class AlertaView extends LitElement {
     }
 
     .cards-container {
+      grid-column: 1 / -1;
       margin-top: 0rem;
       width: 100%;
       overflow-x: auto;

@@ -329,6 +329,196 @@
       "folio": "SSPMQ/IPES/GV/6-001",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-02-26T16:36:19.973Z"
+    },
+    {
+      "id": "883a",
+      "curp": "RIDJ020425MQTVZNA4",
+      "nombre": "JANINE",
+      "apellido1": "RIVERA",
+      "apellido2": "DIAZ",
+      "email": "riveradiazjanine@gmail.com",
+      "email2": "riveradiazjanine@gmail.com",
+      "tel": "4423296104",
+      "rfc": "RIDJ0204256J6",
+      "fechaNacimiento": "2002-04-25",
+      "edad": 23,
+      "sexo": "M",
+      "civil": "Soltero",
+      "tel2": "4423296104",
+      "contactoAlterno": "JOSE ANTONIO CORONA",
+      "telAlterno": "4423296104",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "municipio": "QUERÉTARO",
+      "colonia": "CENTRO",
+      "cp": "76000",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "no",
+      "cartilla": "no",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "radio",
+      "fechaEnvio": "2026-03-02T16:23:30.889Z",
+      "siglas": "PA",
+      "folio": "SSPMQ/IPES/PA/6-002",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-02T16:23:30.904Z"
+    },
+    {
+      "id": "9a29",
+      "curp": "RIDJ020426MQTVZNA8",
+      "nombre": "NINA MARIA",
+      "apellido1": "RIVERA",
+      "apellido2": "DIAZ",
+      "rfc": "RIDJ0204268Y8",
+      "fechaNacimiento": "1997-09-30",
+      "edad": 28,
+      "sexo": "M",
+      "civil": "Casado",
+      "email": "ninamaria@gmail.com",
+      "email2": "ninamaria@gmail.com",
+      "tel": "4427766714",
+      "tel2": "4427766714",
+      "contactoAlterno": "JANINE RIVERA DIAZ",
+      "telAlterno": "4423296104",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "municipio": "QUERÉTARO",
+      "colonia": "EL REFUGIO",
+      "cp": "76000",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "no",
+      "cartilla": "no",
+      "certificadoSecundaria": "no",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "redes",
+      "fechaEnvio": "2026-03-02T16:27:12.854Z",
+      "siglas": "PA",
+      "folio": "SSPMQ/IPES/PA/6-003",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-02T16:27:12.863Z"
+    },
+    {
+      "id": "ebdc",
+      "curp": "RIDJ020629MQTVZNA9",
+      "nombre": "SARA",
+      "apellido1": "RIVERA",
+      "apellido2": "DIAZ",
+      "rfc": "RIDJ0206297T7",
+      "fechaNacimiento": "2004-01-22",
+      "edad": 22,
+      "sexo": "M",
+      "civil": "Soltero",
+      "email": "sarita_polloo@gmail.com",
+      "email2": "sarita_polloo@gmail.com",
+      "tel": "4426087017",
+      "tel2": "4426087017",
+      "contactoAlterno": "NINA MARIA RIVERA DIAZ",
+      "telAlterno": "4427766714",
+      "municipio": "QUERÉTARO",
+      "colonia": "CENTRO",
+      "cp": "76000",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "otro",
+      "fechaEnvio": "2026-03-02T16:30:59.958Z",
+      "siglas": "PA",
+      "folio": "SSPMQ/IPES/PA/6-004",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-02T16:30:59.968Z"
+    },
+    {
+      "id": "c15e",
+      "curp": "WHSW370427HBCRQX53",
+      "nombre": "WENSESLAO",
+      "apellido1": "LOPEZ",
+      "apellido2": "PRIETO",
+      "rfc": "WHSW370424HBC",
+      "fechaNacimiento": "2000-06-02",
+      "edad": 25,
+      "sexo": "H",
+      "civil": "Soltero",
+      "email": "wens_lao@gmail.com",
+      "email2": "wens_lao@gmail.com",
+      "tel": "4421478963",
+      "tel2": "4421478963",
+      "contactoAlterno": "JANINE RIVERA DIAZ",
+      "telAlterno": "4423296104",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "municipio": "QUERÉTARO",
+      "colonia": "EL REFUGIO",
+      "cp": "76000",
+      "nivelEstudios": "SECUNDARIA",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "redes",
+      "fechaEnvio": "2026-03-02T17:01:32.032Z",
+      "siglas": "GC",
+      "folio": "SSPMQ/IPES/GC/6-002",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-02T17:01:32.041Z"
+    },
+    {
+      "id": "fc6c",
+      "curp": "DMRW760320HMNBAR79",
+      "nombre": "DENISON MARIANO",
+      "apellido1": "RAMIREZ",
+      "apellido2": "WEST",
+      "rfc": "DMRW760320HMN",
+      "fechaNacimiento": "1997-04-18",
+      "edad": 28,
+      "sexo": "H",
+      "civil": "Casado",
+      "email": "denison_mariano27@gmail.com",
+      "email2": "denison_mariano27@gmail.com",
+      "tel": "4425698712",
+      "tel2": "4425698712",
+      "contactoAlterno": "JOSE ANTONIO CORONA",
+      "telAlterno": "4429856320",
+      "municipio": "QUERÉTARO",
+      "colonia": "CENTRO",
+      "cp": "76000",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "nivelEstudios": "DOCTORADO",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "redes",
+      "fechaEnvio": "2026-03-02T17:18:38.174Z",
+      "siglas": "PP",
+      "folio": "SSPMQ/IPES/PP/6-002",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-02T17:18:38.184Z"
     }
   ],
   "citas": [
@@ -565,6 +755,30 @@
       "folio": "SSPMQ/IPES/GV/6-001",
       "fecha": "2026-03-25",
       "hora": "12:00"
+    },
+    {
+      "id": "2937",
+      "folio": "SSPMQ/IPES/PA/6-003",
+      "fecha": "2026-03-27",
+      "hora": "09:00"
+    },
+    {
+      "id": "e543",
+      "folio": "SSPMQ/IPES/PA/6-004",
+      "fecha": "2026-03-27",
+      "hora": "09:00"
+    },
+    {
+      "id": "fce8",
+      "folio": "SSPMQ/IPES/GC/6-002",
+      "fecha": "2026-02-27",
+      "hora": "09:00"
+    },
+    {
+      "id": "1fa1",
+      "folio": "SSPMQ/IPES/PP/6-002",
+      "fecha": "2026-03-27",
+      "hora": "15:00"
     }
   ],
   "agenda": [
@@ -1026,7 +1240,7 @@
       "horarios": [
         {
           "hora": "09:00",
-          "ocupados": 0,
+          "ocupados": 3,
           "capacidad": 10
         },
         {
@@ -1036,7 +1250,7 @@
         },
         {
           "hora": "15:00",
-          "ocupados": 0,
+          "ocupados": 1,
           "capacidad": 10
         }
       ]
@@ -1251,6 +1465,27 @@
           "capacidad": 10
         }
       ]
+    },
+    {
+      "id": "eac1",
+      "fecha": "2026-02-27",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 1,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
     }
   ],
   "candidatos": [
@@ -1262,5 +1497,6 @@
       "fechaRegistro": "2026-02-15",
       "ultimaActualizacion": "2026-02-23"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

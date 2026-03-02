@@ -447,7 +447,7 @@ export class PdfZoomViewer extends LitElement {
 
     const page = await this.pdfDoc.getPage(this.currentPage);
     
-    // 🔥 CLAVE: Escala base alta (4x) para máxima calidad
+    // CLAVE: Escala base alta (4x) para máxima calidad
     // Esto asegura que incluso con zoom 5x, la calidad sea nítida
     const baseScale = 4;
     const viewport = page.getViewport({ scale: baseScale });
@@ -777,7 +777,7 @@ export class PdfZoomViewer extends LitElement {
                 </div>
 
                 <div class="zoom-info">
-                  🖱️ Rueda del mouse o botones · Arrastra para mover · Pellizca para zoom en móvil
+                  Rueda del mouse o botones · Arrastra para mover · Pellizca para zoom en móvil
                 </div>
               </div>
             </div>

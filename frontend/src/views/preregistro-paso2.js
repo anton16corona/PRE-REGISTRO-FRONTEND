@@ -202,7 +202,7 @@ export class PreregistroPaso2 extends LitElement {
       display: flex;
       gap: 3rem;
       flex-wrap: wrap;
-      align-items: center; /* 🔴 clave */
+      align-items: center; /*clave */
       margin-top: 1.5rem;
     }
 

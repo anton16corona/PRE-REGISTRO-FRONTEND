@@ -168,7 +168,7 @@ export class CitasCalendarioView extends LitElement {
       ];
     }
 
-    // 🟩 LUNES A VIERNES (días 1-5)
+    //LUNES A VIERNES (días 1-5)
     return [
       { hora: '09:00', ocupados: 0, capacidad: 10 },
       { hora: '12:00', ocupados: 0, capacidad: 10 },
@@ -200,9 +200,9 @@ export class CitasCalendarioView extends LitElement {
     if (data.length > 0) {
       const dia = data[0];
       
-      // 🚨 MIGRAR FORMATO VIEJO SI ES NECESARIO
+      // MIGRAR FORMATO VIEJO SI ES NECESARIO
       if (!dia.horarios[0].capacidad) {
-        console.log('🔄 Migrando agenda con formato antiguo...');
+        console.log('Migrando agenda con formato antiguo...');
         
         const horariosNuevos = this.generarHorarios(fecha);
         const diaActualizado = {
@@ -222,13 +222,13 @@ export class CitasCalendarioView extends LitElement {
       return dia;
     }
 
-    // ❌ NO CREAR DÍAS DOMINGO O FESTIVOS
+    // NO CREAR DÍAS DOMINGO O FESTIVOS
     const f = new Date(fecha + 'T00:00:00');
     if (f.getDay() === 0 || this.esDiaFestivo(fecha)) {
       throw new Error('Día inhábil');
     }
 
-    // ✅ CREAR NUEVO DÍA
+    //CREAR NUEVO DÍA
     const nuevoDia = {
       fecha,
       horarios: this.generarHorarios(fecha)
@@ -244,86 +244,83 @@ export class CitasCalendarioView extends LitElement {
   }
 
   /* ================== CALCULAR DISPONIBILIDAD DE UN DÍA ================== */
+
   async calcularDisponibilidadDia(fecha) {
-    const f = new Date(fecha + 'T00:00:00');
-    const diaSemana = f.getDay();
+  const f = new Date(fecha + 'T00:00:00');
+  const diaSemana = f.getDay();
 
-    // 🔴 DOMINGOS Y FESTIVOS
-    if (diaSemana === 0 || this.esDiaFestivo(fecha)) {
-      return 'rojo';
-    }
+  if (diaSemana === 0 || this.esDiaFestivo(fecha)) return 'rojo';
+  if (!this.estaEnRangoConvocatoria(fecha)) return 'rojo';
 
-    // 🔴 FUERA DE RANGO DE CONVOCATORIA
-    if (!this.estaEnRangoConvocatoria(fecha)) {
-      return 'rojo';
-    }
-
-    // Obtener datos de la agenda
+  try {
     const resp = await fetch(`http://localhost:3000/agenda?fecha=${fecha}`);
     const data = await resp.json();
 
-    if (data.length === 0) {
-      return 'verde'; // Sin citas aún = disponible
-    }
+    if (data.length === 0) return 'verde';
 
     const dia = data[0];
     let totalCapacidad = 0;
     let totalOcupados = 0;
 
     dia.horarios.forEach(h => {
-      const capacidad = h.capacidad || 10; // Fallback para formato viejo
-      totalCapacidad += capacidad;
-      totalOcupados += h.ocupados || 0;
+      totalCapacidad += h.capacidad ?? 10;
+      totalOcupados += h.ocupados ?? 0;
     });
 
     const porcentaje = totalCapacidad > 0 ? totalOcupados / totalCapacidad : 0;
 
-    // 🔴 LLENO (100%)
-    if (porcentaje >= 1) {
-      return 'rojo';
-    }
-    // 🟡 PARCIAL (70% - 99%)
-    else if (porcentaje >= 0.7) {
-      return 'amarillo';
-    }
-    // 🟢 DISPONIBLE (0% - 69%)
-    else {
-      return 'verde';
-    }
-  }
+    if (porcentaje >= 1)   return 'rojo';
+    if (porcentaje >= 0.7) return 'amarillo';
+    return 'verde';
 
+  } catch (e) {
+    console.warn(`Error calculando disponibilidad para ${fecha}:`, e);
+    return 'verde'; // Asumir disponible si falla la red
+  }
+}
   /* ================== GENERAR CALENDARIO DEL MES ================== */
-  async generarCalendarioMes() {
-    const anio = this.anioActual;
-    const mes = this.mesActual;
+async generarCalendarioMes() {
+  const anio = this.anioActual;
+  const mes = this.mesActual;
 
-    this.nombreMesActual = `${this.getNombreMes(mes)} ${anio}`;
+  this.nombreMesActual = `${this.getNombreMes(mes)} ${anio}`;
 
-    const dias = [];
-    const primerDia = new Date(anio, mes, 1).getDay();
-    const totalDias = new Date(anio, mes + 1, 0).getDate();
+  const primerDia = new Date(anio, mes, 1).getDay();
+  const totalDias = new Date(anio, mes + 1, 0).getDate();
 
-    // Espacios vacíos al inicio
-    for (let i = 0; i < primerDia; i++) {
-      dias.push({ tipo: 'vacio' });
-    }
-
-    // Días del mes
-    for (let i = 1; i <= totalDias; i++) {
-      const fecha = new Date(anio, mes, i);
-      const fechaStr = fecha.toISOString().split('T')[0];
-      
-      const tipo = await this.calcularDisponibilidadDia(fechaStr);
-
-      dias.push({
-        dia: i,
-        tipo,
-        fecha: fechaStr
-      });
-    }
-
-    this.diasMes = dias;
+  //Construir lista de fechas del mes
+  const fechas = [];
+  for (let i = 1; i <= totalDias; i++) {
+    const fecha = new Date(anio, mes, i);
+    fechas.push({
+      dia: i,
+      fecha: fecha.toISOString().split('T')[0]
+    });
   }
+
+  //Calcular disponibilidad en PARALELO (mucho más rápido)
+  const disponibilidades = await Promise.all(
+    fechas.map(f => this.calcularDisponibilidadDia(f.fecha))
+  );
+
+  // Armar el array final con espacios vacíos + días
+  const dias = [];
+
+  for (let i = 0; i < primerDia; i++) {
+    dias.push({ tipo: 'vacio' });
+  }
+
+  fechas.forEach((f, i) => {
+    dias.push({
+      dia: f.dia,
+      fecha: f.fecha,
+      tipo: disponibilidades[i]
+    });
+  });
+
+  //Asignar → dispara re-render de Lit
+  this.diasMes = [...dias];
+}
 
   /* ================== SELECCIÓN DE DÍA ================== */
   async seleccionarDia(diaObj) {

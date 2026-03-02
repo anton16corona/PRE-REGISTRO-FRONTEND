@@ -56,7 +56,7 @@ export class PerfilesProximidad extends LitElement {
 
     /* ===== TITULO ===== */
     .card-body {
-      min-height: 120px; /* 🔑 ajusta si quieres más aire */
+      min-height: 120px; /*ajusta si quieres más aire */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -87,7 +87,7 @@ export class PerfilesProximidad extends LitElement {
 
     /* ===== BUTTONS ===== */
     .card-actions {
-      margin-top: auto; /* 🔑 empuja botones al mismo nivel */
+      margin-top: auto; /*empuja botones al mismo nivel */
       flex-direction: column;
       align-items: center;
     }

@@ -397,57 +397,45 @@ export class PreregistroView extends LitElement {
   };
 
   constructor() {
-    super();
-    this.edad = '';
-    this.valido = false;
-    this.form = {};
-    this.emailError = false;
-    this.email2Error = false;
-    this.emailMatchError = false;
-    this.emailTouched = false;
-    this.email2Touched = false;
-    this.formValido = false;
-    this.sexo = '';
-    this.curp = '';
-    this.civil = '';
-    this.rfc = '';
-    this.mostrarAlerta = false;
-    this.alertaConfig = {};
-    this.edadValidaConvocatoria = false;
-    this.telTouched = false;
-    this.tel2Touched = false;
-    this.telError = null;
-    this.tel2Error = null;
-    this.curpExiste = false;
-    this.validandoCurp = false;
+  super();
+  this.edad = '';
+  this.valido = false;
+  this.form = {};
+  this.emailError = false;
+  this.email2Error = false;
+  this.emailMatchError = false;
+  this.emailTouched = false;
+  this.email2Touched = false;
+  this.formValido = false;
+  this.sexo = '';
+  this.curp = '';
+  this.civil = '';
+  this.rfc = '';
+  this.mostrarAlerta = false;
+  this.alertaConfig = {};
+  this.edadValidaConvocatoria = false;
+  this.telTouched = false;
+  this.tel2Touched = false;
+  this.telError = null;
+  this.tel2Error = null;
+  this.curpExiste = false;
+  this.validandoCurp = false;
 
-    //CORRECCIÓN: Cargar datos guardados con validación de coherencia
-    const guardado = sessionStorage.getItem('paso1_data');
-    if (guardado) {
-      this.form = JSON.parse(guardado);
-      
-      // Si hay fechaNacimiento Y edad guardadas, recalcular para verificar coherencia
-      if (this.form.fechaNacimiento && this.form.edad) {
-        const birth = new Date(this.form.fechaNacimiento);
-        const today = new Date();
-        let edadCalculada = today.getFullYear() - birth.getFullYear();
-        const m = today.getMonth() - birth.getMonth();
-        
-        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-          edadCalculada--;
-        }
-        
-        this.edad = edadCalculada;
-        this.form.edad = edadCalculada;
-      }
-      // Si solo hay fechaNacimiento sin edad, borrar la fecha (incoherente)
-      else if (this.form.fechaNacimiento && !this.form.edad) {
-        delete this.form.fechaNacimiento;
-        this.edad = '';
-      }
+  const origenActual = sessionStorage.getItem('origen_convocatoria');
+  const guardado = sessionStorage.getItem('paso1_data');
 
-      if(this.form.fechaNacimiento)
-      {
+  //Solo restaurar si el form pertenece a la misma convocatoria
+  if (guardado) {
+    const datosGuardados = JSON.parse(guardado);
+
+    if (datosGuardados._convocatoria !== origenActual) {
+      // Convocatoria diferente → descartar datos anteriores
+      sessionStorage.removeItem('paso1_data');
+    } else {
+      //Misma convocatoria → restaurar
+      this.form = datosGuardados;
+
+      if (this.form.fechaNacimiento) {
         const birth = new Date(this.form.fechaNacimiento);
         const today = new Date();
 
@@ -462,8 +450,7 @@ export class PreregistroView extends LitElement {
         this.form.edad = edad;
 
         const convocatoria = this.getConvocatoriaConfig();
-
-        if(convocatoria){
+        if (convocatoria) {
           this.edadValidaConvocatoria =
             edad >= convocatoria.edadMin &&
             edad <= convocatoria.edadMax;
@@ -471,6 +458,7 @@ export class PreregistroView extends LitElement {
       }
     }
   }
+}
 
   validateForm() {
     const f = this.form;
@@ -521,7 +509,7 @@ async verificarCurpExistente(curp) {
 
     if (resp.ok) {
       const data = await resp.json();
-      existe = data.length > 0; // ✅ si regresa al menos un registro, ya existe
+      existe = data.length > 0; //si regresa al menos un registro, ya existe
     }
 
   } catch (e) {
@@ -563,7 +551,7 @@ async verificarCurpExistente(curp) {
 
     this.updateField(e);
   }
-
+  
   updateEdad(e) {
   this.form.fechaNacimiento = e.target.value;
   sessionStorage.setItem('paso1_data', JSON.stringify(this.form));

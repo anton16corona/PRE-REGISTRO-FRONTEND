@@ -15,7 +15,7 @@ export class PreregistroCompletado extends LitElement {
   constructor() {
     super();
 
-    // 🔥 Leer el folio real generado en el paso 3
+    //Leer el folio real generado en el paso 3
     this.folio = sessionStorage.getItem('folio_preregistro') || 'SIN FOLIO';
   }
 

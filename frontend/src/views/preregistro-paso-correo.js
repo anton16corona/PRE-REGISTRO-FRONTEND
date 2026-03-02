@@ -488,7 +488,7 @@ export class PreregistroPasoCorreo extends LitElement {
   }
 
   finalizar() {
-    // 🔴 SIMULACIÓN: código incorrecto
+    //SIMULACIÓN: código incorrecto
     if (this.codigo === '000000') {
       this.mostrarAlerta = true;
       this.alertaConfig = {
@@ -503,16 +503,16 @@ export class PreregistroPasoCorreo extends LitElement {
       return;
     }
 
-    // 1️⃣ Leer objeto maestro
+    //Leer objeto maestro
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
 
-    // 2️⃣ Agregar paso 3
+    //Agregar paso 3
     data.paso3 = {
       medio: this.medio,
       fechaEnvio: new Date().toISOString()
     };
 
-    // 3️⃣ Construir objeto final limpio
+    //Construir objeto final limpio
     const preregistroFinal = {
       ...data.paso1,
       ...data.paso2,
@@ -520,19 +520,19 @@ export class PreregistroPasoCorreo extends LitElement {
       estatus: 'PENDIENTE'
     };
 
-    // 4️⃣ Guardar JSON final (temporalmente)
+    //Guardar JSON final (temporalmente)
     sessionStorage.setItem(
       'preregistro_final',
       JSON.stringify(preregistroFinal)
     );
 
-    // 5️⃣ Simular folio dinámico
+    //Simular folio dinámico
     const folio = `GC-${Math.floor(100000 + Math.random() * 900000)}`;
 
     sessionStorage.setItem('preregistro_completado', 'true');
     sessionStorage.setItem('folio_preregistro', folio);
 
-    // 6️⃣ Redirigir
+    //Redirigir
     globalThis.location.href = '/preregistro-completado';
   }
 
@@ -603,7 +603,7 @@ export class PreregistroPasoCorreo extends LitElement {
 
     const curp = data.paso1.curp;
 
-    // 🔴 VALIDAR CURP DUPLICADA
+    //VALIDAR CURP DUPLICADA
     const existe = await this.validarCURPExistente(curp);
 
     if (existe) {
@@ -620,11 +620,11 @@ export class PreregistroPasoCorreo extends LitElement {
       return;
     }
 
-    // 🟢 OBTENER CONVOCATORIA
+    //OBTENER CONVOCATORIA
     const origen = sessionStorage.getItem('origen_convocatoria');
     const siglas = this.getSiglasConvocatoria(origen);
 
-    // 🟢 GENERAR FOLIO
+    //GENERAR FOLIO
     const folio = await this.generarFolio(siglas);
 
     const preregistroFinal = {
@@ -637,7 +637,7 @@ export class PreregistroPasoCorreo extends LitElement {
       fechaRegistro: new Date().toISOString()
     };
 
-    // 🟢 GUARDAR
+    //GUARDAR
     await fetch('http://localhost:3000/preregistros', {
       method: 'POST',
       headers: {

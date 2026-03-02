@@ -45,11 +45,11 @@ export class ConsultaFolioView extends LitElement {
     
     this.intervaloCuentaRegresiva = null;
 
-    // 🔒 CARGAR ESTADO DE BLOQUEO DESDE LOCALSTORAGE
+    //CARGAR ESTADO DE BLOQUEO DESDE LOCALSTORAGE
     this.cargarEstadoBloqueo();
   }
 
-  /* ============== 💾 PERSISTENCIA DE BLOQUEO ============== */
+  /* ============== PERSISTENCIA DE BLOQUEO ============== */
   cargarEstadoBloqueo() {
     try {
       const bloqueoGuardado = localStorage.getItem('consulta_folio_bloqueo');
@@ -59,7 +59,7 @@ export class ConsultaFolioView extends LitElement {
         
         // Verificar si el bloqueo sigue vigente
         if (datos.bloqueadoHasta && Date.now() < datos.bloqueadoHasta) {
-          console.log('🔒 Restaurando estado de bloqueo desde localStorage');
+          console.log('Restaurando estado de bloqueo desde localStorage');
           
           this.bloqueadoHasta = datos.bloqueadoHasta;
           this.intentosFallidos = datos.intentosFallidos || 0;
@@ -69,7 +69,7 @@ export class ConsultaFolioView extends LitElement {
           this.iniciarCuentaRegresiva();
         } else {
           // El bloqueo ya expiró, limpiar
-          console.log('✅ Bloqueo expirado, limpiando localStorage');
+          console.log('Bloqueo expirado, limpiando localStorage');
           localStorage.removeItem('consulta_folio_bloqueo');
         }
       }
@@ -87,7 +87,7 @@ export class ConsultaFolioView extends LitElement {
       };
       
       localStorage.setItem('consulta_folio_bloqueo', JSON.stringify(datos));
-      console.log('💾 Estado de bloqueo guardado en localStorage');
+      console.log('Estado de bloqueo guardado en localStorage');
     } catch (e) {
       console.error('Error al guardar estado de bloqueo:', e);
     }
@@ -96,7 +96,7 @@ export class ConsultaFolioView extends LitElement {
   limpiarEstadoBloqueo() {
     try {
       localStorage.removeItem('consulta_folio_bloqueo');
-      console.log('🧹 Estado de bloqueo eliminado de localStorage');
+      console.log('Estado de bloqueo eliminado de localStorage');
     } catch (e) {
       console.error('Error al limpiar estado de bloqueo:', e);
     }
@@ -122,20 +122,20 @@ export class ConsultaFolioView extends LitElement {
   goBack() {
     let origen = sessionStorage.getItem('origen_convocatoria');
     
-    console.log('🔙 Volviendo desde consulta folio. Origen guardado:', origen);
+    console.log('Volviendo desde consulta folio. Origen guardado:', origen);
 
     // NUNCA permitir regresar a progreso-folio
     if (origen?.includes('progreso-folio')) {
-      console.log('⚠️ Origen era progreso-folio, limpiando...');
+      console.log('Origen era progreso-folio, limpiando...');
       origen = null;
       sessionStorage.removeItem('origen_convocatoria');
     }
 
     if (origen) {
-      console.log('✅ Navegando a:', origen);
+      console.log('Navegando a:', origen);
       globalThis.location.href = origen;
     } else {
-      console.log('✅ Sin origen válido, navegando a convocatorias');
+      console.log('Sin origen válido, navegando a convocatorias');
       globalThis.location.href = '/';
     }
   }
@@ -152,7 +152,7 @@ export class ConsultaFolioView extends LitElement {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
       
       if (segundos <= 0) {
-        // ✅ Tiempo cumplido, desbloquear
+        // Tiempo cumplido, desbloquear
         this.campoBloqueado = false;
         this.segundosRestantes = 0;
         this.bloqueadoHasta = 0;
@@ -162,7 +162,7 @@ export class ConsultaFolioView extends LitElement {
         // Limpiar localStorage
         this.limpiarEstadoBloqueo();
         
-        console.log('✅ Campo desbloqueado');
+        console.log('Campo desbloqueado');
       } else {
         this.segundosRestantes = segundos;
       }
@@ -171,13 +171,13 @@ export class ConsultaFolioView extends LitElement {
     }, 1000);
   }
 
-  /* ============== 🔒 ACTIVAR BLOQUEO ============== */
+  /* ==============ACTIVAR BLOQUEO ============== */
   activarBloqueo() {
     this.bloqueadoHasta = Date.now() + 60000; // 1 minuto
     this.campoBloqueado = true;
     this.intentosFallidos = 0;
 
-    // 💾 Guardar en localStorage
+    //  Guardar en localStorage
     this.guardarEstadoBloqueo();
 
     // Iniciar cuenta regresiva visual
@@ -185,7 +185,7 @@ export class ConsultaFolioView extends LitElement {
   }
 
   async consultar() {
-    // 🔒 VALIDAR BLOQUEO ANTES DE CONSULTAR
+    //VALIDAR BLOQUEO ANTES DE CONSULTAR
     if (Date.now() < this.bloqueadoHasta) {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
 
@@ -200,7 +200,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // 1️⃣ VALIDAR CAMPOS
+    //VALIDAR CAMPOS
     if (!this.convocatoria || !this.consecutivo) {
       this.mostrarAlerta = true;
       this.alertaConfig = {
@@ -212,13 +212,13 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // 2️⃣ CONSULTAR DB.JSON
+    //CONSULTAR DB.JSON
     const existe = await this.validarFolioExistente();
 
     if (!existe) {
       this.intentosFallidos++;
 
-      // 🔒 3 INTENTOS → BLOQUEAR COMPLETAMENTE
+      //INTENTOS → BLOQUEAR COMPLETAMENTE
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
@@ -244,7 +244,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // ✅ Folio válido → pedir código
+    //Folio válido → pedir código
     this.pasoCodigo = true;
     this.intentosFallidos = 0;
     this.mostrarAlerta = true;
@@ -258,7 +258,7 @@ export class ConsultaFolioView extends LitElement {
   }
 
   validarCodigo() {
-    // 🔒 VALIDAR BLOQUEO ANTES DE VALIDAR CÓDIGO
+    //VALIDAR BLOQUEO ANTES DE VALIDAR CÓDIGO
     if (Date.now() < this.bloqueadoHasta) {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
 
@@ -294,7 +294,7 @@ export class ConsultaFolioView extends LitElement {
     if (!codigosValidos.includes(this.codigoIngresado)) {
       this.intentosFallidos++;
 
-      // 🔒 3 INTENTOS → BLOQUEAR CAMPO Y SISTEMA
+      //3 INTENTOS → BLOQUEAR CAMPO Y SISTEMA
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
@@ -320,7 +320,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // ✅ CÓDIGO CORRECTO
+    //CÓDIGO CORRECTO
     this.mostrarAlerta = false;
     this.pasoCodigo = false;
     this.intentosFallidos = 0;
@@ -339,7 +339,7 @@ export class ConsultaFolioView extends LitElement {
     this.mostrarAlerta = false;
   }
 
-  /* ============== 🔢 VALIDACIÓN ESTRICTA DE SOLO NÚMEROS ============== */
+  /* ==============VALIDACIÓN ESTRICTA DE SOLO NÚMEROS ============== */
   handleConvocatoriaInput(e) {
     if (this.campoBloqueado) return;
     
@@ -516,7 +516,7 @@ export class ConsultaFolioView extends LitElement {
 
       <ipes-header></ipes-header>
 
-      <!-- 🎬 APLICAR ANIMACIÓN DE ENTRADA -->
+      <!--APLICAR ANIMACIÓN DE ENTRADA -->
       <div class="fondo animate-in">
         <div class="card">
           <h2>CONSULTA EL ESTATUS DE TU SOLICITUD</h2>
