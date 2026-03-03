@@ -519,6 +519,44 @@
       "folio": "SSPMQ/IPES/PP/6-002",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-03-02T17:18:38.184Z"
+    },
+    {
+      "id": "27e3",
+      "nombre": "DANIELA",
+      "apellido1": "CASTRO",
+      "apellido2": "BARRERA",
+      "email": "danicab19@yahoo.gob.mx",
+      "email2": "danicab19@yahoo.gob.mx",
+      "tel": "4421520012",
+      "tel2": "4421520012",
+      "fechaNacimiento": "1992-05-16",
+      "curp": "CABD920516MTLSRN04",
+      "rfc": "CABD920516FDA",
+      "edad": 33,
+      "sexo": "M",
+      "civil": "Casado",
+      "contactoAlterno": "GABRIELA MEDINA",
+      "telAlterno": "4469877878",
+      "municipio": "SAN JOAQUÍN",
+      "colonia": "LA GRUTA",
+      "cp": "76550",
+      "calle": "INDEPENDENCIA",
+      "exterior": "1",
+      "nivelEstudios": "LICENCIATURA",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": true,
+        "frente": "WhatsApp Image 2026-01-22 at 08.39.31.jpeg",
+        "reverso": "Bien.png"
+      },
+      "medio": "tv",
+      "fechaEnvio": "2026-03-03T17:27:07.204Z",
+      "siglas": "PC",
+      "folio": "SSPMQ/IPES/PC/6-001",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-03T17:27:07.219Z"
     }
   ],
   "citas": [
@@ -779,6 +817,12 @@
       "folio": "SSPMQ/IPES/PP/6-002",
       "fecha": "2026-03-27",
       "hora": "15:00"
+    },
+    {
+      "id": "c565",
+      "folio": "SSPMQ/IPES/PC/6-001",
+      "fecha": "2026-03-04",
+      "hora": "12:00"
     }
   ],
   "agenda": [
@@ -1478,6 +1522,48 @@
         {
           "hora": "12:00",
           "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "a5a4",
+      "fecha": "2026-03-11",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "15:00",
+          "ocupados": 0,
+          "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "db59",
+      "fecha": "2026-03-04",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 0,
+          "capacidad": 10
+        },
+        {
+          "hora": "12:00",
+          "ocupados": 1,
           "capacidad": 10
         },
         {

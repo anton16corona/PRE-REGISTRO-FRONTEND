@@ -34,7 +34,7 @@ export class ConvocatoriaProximidadCibernetica extends ConvocatoriaProximidadBas
     this.backRoute = '/perfiles-proximidad';
 
     // ========== CONVOCATORIA CERRADA ==========
-    this.convocatoriaActiva = false; // Esta convocatoria está cerrada.
+    this.convocatoriaActiva = true; // Esta convocatoria está cerrada.
   }
 }
 

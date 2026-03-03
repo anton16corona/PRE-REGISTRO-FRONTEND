@@ -385,4 +385,83 @@ export const citasCalendarioStyles = css`
         font-size: 0.85rem;
       }
     }
+
+    /* ===== 1024px ===== */
+    @media (max-width: 1024px) {
+      .card {
+        max-width: 90%;
+      }
+
+      .contenido {
+        grid-template-columns: 1fr 260px;
+        gap: 2rem;
+      }
+    }
+
+    /* ===== 900px ===== */
+    @media (max-width: 900px) {
+      .contenido {
+        grid-template-columns: 1fr;
+      }
+
+      .horarios {
+        margin-top: 1.5rem;
+      }
+    }
+
+    /* ===== 640px ===== */
+    @media (max-width: 640px) {
+      .titulo {
+        font-size: 1.5rem;
+      }
+
+      .btn-mes {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      .hora {
+        font-size: 0.8rem;
+      }
+    }
+
+  /* ===== 360px ===== */
+    @media (max-width: 360px) {
+      .dia {
+        font-size: 0.7rem;
+        padding: 6px 0;
+      }
+
+      .semana {
+        font-size: 0.6rem;
+      }
+
+      .horarios h4 {
+        font-size: 0.9rem;
+      }
+
+      .hora strong {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ===== 320px ===== */
+    @media (max-width: 320px) {
+    .card {
+      padding: 1rem 0.6rem;
+    }
+
+    .titulo {
+      font-size: 1.2rem;
+    }
+
+    .info-convocatoria {
+      font-size: 0.75rem;
+    }
+
+    .btn {
+      height: 38px;
+      font-size: 0.85rem;
+    }
+  }
 `;

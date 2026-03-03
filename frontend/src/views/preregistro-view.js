@@ -273,11 +273,54 @@ export class PreregistroView extends LitElement {
       .cards {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      h1 {
+        font-size: 2.1rem;
+      }
+
+      .card {
+        border-radius: 20px;
+      }
     }
 
     @media (max-width: 900px) {
       .grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      h2 {
+        margin-top: 2rem;
+      }
+    }
+
+    /* ========================= 768px ========================= */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.9rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+      }
+
+      .radio-group {
+        gap: 1rem;
+      }
+
+      .radio-group label {
+        padding: 6px 12px;
+      }
+
+      .form-actions {
+        gap: 1rem;
+      }
+
+      .btn-primario,
+      .btn-secundario,
+      .btn-cancelar {
+        width: 100%;
+        font-size: 1.1rem;
       }
     }
 
@@ -329,6 +372,14 @@ export class PreregistroView extends LitElement {
         max-width: 100%;
         font-size: 1.1rem;
       }
+
+      main {
+        padding: 2rem 0.8rem;
+      }
+
+      .edad {
+        font-size: 16px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -341,6 +392,18 @@ export class PreregistroView extends LitElement {
         margin: 0 auto;
       }
 
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .subtitle {
+        font-size: 0.85rem;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+      }
+
       .ipes {
         font-size: 1.1rem;
         padding: 0 0.5rem;
@@ -350,11 +413,64 @@ export class PreregistroView extends LitElement {
         flex-wrap: wrap;
         gap: 0.8rem;
       }
+
+        .form-actions {
+        flex-direction: column;
+      }
+
+      .btn-primario,
+      .btn-secundario,
+      .btn-cancelar {
+        padding: 0.7rem;
+        font-size: 1rem;
+      }
     }
 
     @media (max-width: 360px) {
       .card {
-        padding: 1.2rem;
+        padding: 1.2rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      input {
+        font-size: 13px;
+      }
+
+      .btn-primario,
+      .btn-secundario,
+      .btn-cancelar {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ========================= 320px ========================= */
+    @media (max-width: 320px) {
+      .card {
+        padding: 1rem 0.8rem;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .subtitle {
+        font-size: 0.8rem;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
+
+      label {
+        font-size: 0.8rem;
+      }
+
+      input {
+        font-size: 12px;
       }
     }
 

@@ -444,6 +444,22 @@ export class AlertaView extends LitElement {
     }
 
     /* ======================================= RESPONSIVE ======================================= */
+
+    /* ========================= 1024px ========================= */
+    @media (max-width: 1024px) {
+      .alerta {
+        max-width: 90%;
+      }
+    }
+
+    /* ========================= 900px ========================= */
+    @media (max-width: 900px) {
+      .cards {
+        gap: 1.5rem;
+      }
+    }
+
+    /* ========================= 768px ========================= */
     @media (max-width: 768px) {
       .cards {
         grid-template-columns: repeat(auto-fill, 260px);
@@ -492,6 +508,25 @@ export class AlertaView extends LitElement {
       }
     }
 
+    /* ========================= 640px ========================= */
+    @media (max-width: 640px) {
+      .cards {
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        justify-content: center;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 260px;
+      }
+
+      .card img {
+        height: 160px;
+      }
+    }
+
+    /* ========================= 480px ========================= */
     @media (max-width: 480px) {
       .card {
         width: 220px;
@@ -526,6 +561,40 @@ export class AlertaView extends LitElement {
       .btn {
         width: 100%;
         padding: 0.8rem;
+      }
+    }
+
+    /* ========================= 360px ========================= */
+    @media (max-width: 360px) {
+      .alerta {
+        border-radius: 18px;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+
+      .card img {
+        height: 140px;
+      }
+    }
+
+    /* ========================= 320px ========================= */
+    @media (max-width: 320px) {
+      .alerta {
+        padding: 1.2rem 0.8rem;
+      }
+
+      .card img {
+        height: 120px;
+      }
+
+      .card-title {
+        font-size: 0.85rem;
       }
     }
   `;

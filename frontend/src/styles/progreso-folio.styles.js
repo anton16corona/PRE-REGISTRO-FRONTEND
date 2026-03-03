@@ -446,4 +446,71 @@ export const progresoFolioStyles = css`
       font-size: 0.85rem;
     }
   }
+
+  /* ===== 900px ===== */
+  @media (max-width: 900px) {
+    .info-grid {
+      gap: 1.2rem;
+    }
+
+    .step-label {
+      font-size: 0.7rem;
+    }
+  }
+
+  /* ===== 640px ===== */
+  @media (max-width: 640px) {
+    .progress-container {
+      gap: 1.5rem;
+    }
+
+    .step-wrapper {
+      gap: 0.8rem;
+    }
+
+    .info-box {
+      max-height: 380px;
+    }
+
+    .formatted-text {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* ===== 360px ===== */
+  @media (max-width: 360px) {
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      font-size: 0.9rem;
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+    }
+
+    .formatted-text {
+      font-size: 0.8rem;
+    }
+
+    .btn {
+      font-size: 1rem;
+      padding: 0.8rem 1rem;
+    }
+  }
+
+  /* ===== 320px ===== */
+  @media (max-width: 320px) {
+    .folio {
+      font-size: 1.1rem;
+    }
+
+    .perfil-nombre {
+      font-size: 0.75rem;
+    }
+
+    .info-box {
+      padding: 1rem;
+    }
+  }
 `;

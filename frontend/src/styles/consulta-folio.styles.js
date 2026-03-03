@@ -152,4 +152,110 @@ export const consultaFolioStyles = css`
   .animate-in {
     animation: fadeInUp 0.5s ease-out;
   }
+
+  /* ===== 1024px ===== */
+  @media (max-width: 1024px) {
+    .card {
+      padding: 3rem 2rem;
+    }
+  }
+
+  /* ===== 900px ===== */
+  @media (max-width: 900px) {
+    .carousel {
+      height: 230px;
+    }
+  }
+
+  /* ===== 768px ===== */
+  @media (max-width: 768px) {
+    .card {
+      padding: 2.5rem 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+
+    .folio-linea {
+      font-size: 1.2rem;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  /* ===== 640px ===== */
+  @media (max-width: 640px) {
+    .carousel {
+      height: 200px;
+    }
+
+    .folio-linea input {
+      width: 70px;
+    }
+  }
+
+  /* ===== 480px ===== */
+  @media (max-width: 480px) {
+    .card {
+      padding: 2rem 1rem;
+      border-radius: 18px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .folio-linea {
+      font-size: 1rem;
+      gap: .4rem;
+    }
+
+    .btn-secundario {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+
+    .carousel {
+      height: 180px;
+    }
+  }
+
+  /* ===== 360px ===== */
+  @media (max-width: 360px) {
+    .folio-linea input {
+      width: 60px;
+      font-size: 0.9rem;
+    }
+
+    .carousel {
+      height: 160px;
+    }
+  }
+
+  /* ===== 320px ===== */
+  @media (max-width: 320px) {
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+
+    .folio-linea {
+      font-size: 0.9rem;
+    }
+
+    .carousel {
+      height: 140px;
+    }
+  }
 `;

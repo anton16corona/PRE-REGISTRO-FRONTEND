@@ -12,8 +12,8 @@ const CONVOCATORIAS_CONFIG = {
   },
   '/convocatoria-guardia-vial': {
     nombre: 'GUARDIA VIAL',
-    fechaInicio: '2026-02-01',
-    fechaFin: '2026-03-31'
+    fechaInicio: '2026-01-01',
+    fechaFin: '2026-12-31'
   },
   '/convocatoria-guardia-auxiliar': {
     nombre: 'GUARDIA AUXILIAR',
@@ -24,6 +24,26 @@ const CONVOCATORIAS_CONFIG = {
     nombre: 'POLICÍA DE PROXIMIDAD',
     fechaInicio: '2026-03-01',
     fechaFin: '2026-04-30'
+  },
+    '/convocatoria-proximidad-cibernetica': {
+    nombre: 'POLICÍA DE PROXIMIDAD CIBERNETICA',
+    fechaInicio: '2026-02-27',
+    fechaFin: '2026-04-5'
+  },
+    '/convocatoria-proximidad-seg-pub': {
+    nombre: 'POLICÍA DE PROXIMIDAD',
+    fechaInicio: '2026-03-08',
+    fechaFin: '2026-04-15'
+  },
+    '/convocatoria-proximidad-victimas': {
+    nombre: 'POLICÍA DE PROXIMIDAD',
+    fechaInicio: '2026-03-21',
+    fechaFin: '2026-05-10'
+  },
+  '/convocatoria-auxiliar': {
+    nombre: 'POLICÍA AUXILIAR',
+    fechaInicio: '2026-03-19',
+    fechaFin: '2026-05-03'
   }
 };
 

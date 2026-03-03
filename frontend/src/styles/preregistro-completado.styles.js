@@ -99,4 +99,149 @@ export const preregistroCompletadoStyles = css`
         font-size: 1.05rem;
       }
     }
+
+    /* ========================= 1024px ========================= */
+    @media (max-width: 1024px) {
+      .panel {
+        padding: 3.5rem 2rem;
+        border-radius: 24px;
+      }
+
+      .subtitle,
+      .genera-cita {
+        max-width: 650px;
+      }
+    }
+
+    /* ========================= 900px ========================= */
+    @media (max-width: 900px) {
+      .panel {
+        padding: 3rem 1.8rem;
+      }
+
+      .verified {
+        width: clamp(110px, 25vw, 160px);
+      }
+    }
+
+    /* ========================= 768px ========================= */
+    @media (max-width: 768px) {
+      main {
+        padding: 2.5rem 1rem;
+      }
+
+      .panel {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .subtitle,
+      .genera-cita {
+        font-size: 1.1rem;
+      }
+
+      .btn-cita {
+        width: 100%;
+        max-width: 350px;
+        font-size: 1.2rem;
+        padding: 0.9rem 2rem;
+      }
+    }
+
+    /* ========================= 640px ========================= */
+    @media (max-width: 640px) {
+      .panel {
+        padding: 2.2rem 1.3rem;
+      }
+
+      .subtitle,
+      .genera-cita {
+        font-size: 1rem;
+      }
+
+      .folio {
+        letter-spacing: 1px;
+      }
+    }
+
+    /* ========================= 480px ========================= */
+    @media (max-width: 480px) {
+      main {
+        padding: 2rem 0.8rem;
+      }
+
+      .panel {
+        padding: 2rem 1.2rem;
+        border-radius: 20px;
+      }
+
+      .title {
+        font-size: 1.6rem;
+      }
+
+      .subtitle,
+      .genera-cita {
+        font-size: 0.95rem;
+      }
+
+      .folio {
+        font-size: 2rem;
+        margin: 1.2rem 0 2rem;
+      }
+
+      .btn-cita {
+        font-size: 1.1rem;
+        padding: 0.8rem 1.5rem;
+      }
+    }
+
+    /* ========================= 360px ========================= */
+    @media (max-width: 360px) {
+      .panel {
+        padding: 1.8rem 1rem;
+      }
+
+      .title {
+        font-size: 1.4rem;
+      }
+
+      .subtitle,
+      .genera-cita {
+        font-size: 0.9rem;
+      }
+
+      .folio {
+        font-size: 1.8rem;
+      }
+
+      .btn-cita {
+        font-size: 1rem;
+      }
+    }
+
+    /* ========================= 320px ========================= */
+    @media (max-width: 320px) {
+      .panel {
+        padding: 1.5rem 0.8rem;
+        border-radius: 18px;
+      }
+
+      .title {
+        font-size: 1.2rem;
+      }
+
+      .subtitle,
+      .genera-cita {
+        font-size: 0.85rem;
+      }
+
+      .folio {
+        font-size: 1.6rem;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-cita {
+        font-size: 0.95rem;
+        padding: 0.75rem 1rem;
+      }
+    }
 `;
