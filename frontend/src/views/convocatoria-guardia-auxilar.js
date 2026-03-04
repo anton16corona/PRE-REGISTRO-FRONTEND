@@ -32,6 +32,10 @@ export class ConvocatoriaGuardiaAuxiliar extends ConvocatoriaBase {
     // ========== RUTAS ==========
     this.pdfUrl = '/convocatoria/convocatoria-guardia.pdf';
     this.backRoute = '/perfiles-guardias';
+
+    // ========== ESTADO CONVOCATORIA ==========
+    // Cambiar a false cuando no haya convocatoria abierta
+    this.convocatoriaActiva = true;
   }
 }
 

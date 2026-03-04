@@ -119,6 +119,55 @@ export class ConvocatoriaProximidadBase extends LitElement {
       position: relative;
     }
 
+    /* ================= OVERLAY DE CARGA DEL PDF ================= */
+    .pdf-loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(32, 30, 57, 0.88);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      gap: 1.2rem;
+      pointer-events: none;
+    }
+
+    .pdf-loading-spinner {
+      width: 56px;
+      height: 56px;
+      border: 5px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #a1942f;
+      border-radius: 50%;
+      animation: pdf-spin 0.9s linear infinite;
+    }
+
+    @keyframes pdf-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pdf-loading-texto {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    .pdf-loading-puntos::after {
+      content: '';
+      animation: pdf-puntos 1.4s steps(4, end) infinite;
+    }
+
+    @keyframes pdf-puntos {
+      0%   { content: ''; }
+      25%  { content: '.'; }
+      50%  { content: '..'; }
+      75%  { content: '...'; }
+      100% { content: ''; }
+    }
+
     .pdf-overlay {
       position: absolute;
       inset: 0;
@@ -277,7 +326,10 @@ export class ConvocatoriaProximidadBase extends LitElement {
 
     // Control de convocatoria activa/cerrada
     convocatoriaActiva: { type: Boolean },
-    overlayAceptado: { type: Boolean }
+    overlayAceptado: { type: Boolean },
+
+    // Control de carga del PDF
+    pdfCargado: { type: Boolean }
   };
 
   constructor() {
@@ -306,6 +358,9 @@ export class ConvocatoriaProximidadBase extends LitElement {
     // Overlay
     this.convocatoriaActiva = true; // Por defecto está activa
     this.overlayAceptado = false;
+
+    // Carga del PDF
+    this.pdfCargado = false;
   }
 
   updated(changedProperties) {
@@ -330,6 +385,11 @@ export class ConvocatoriaProximidadBase extends LitElement {
     if (changedProperties.has('colorBtnSecundario')) {
       this.style.setProperty('--color-btn-secundario', this.colorBtnSecundario);
     }
+  }
+
+  /* ============== CARGA DEL PDF ============== */
+  onPdfLoaded(e) {
+    this.pdfCargado = true;
   }
 
   /* ============== NAVEGACIÓN ============== */
@@ -362,7 +422,19 @@ export class ConvocatoriaProximidadBase extends LitElement {
         <section class="hero">
           <!-- PDF DE CONVOCATORIA CON OVERLAY OPCIONAL -->
           <div class="pdf-wrapper">
-            <pdf-zoom-viewer pdfUrl="${this.pdfUrl}"></pdf-zoom-viewer>
+            <pdf-zoom-viewer
+              pdfUrl="${this.pdfUrl}"
+              @pdf-loaded=${this.onPdfLoaded}
+            ></pdf-zoom-viewer>
+
+            ${!this.pdfCargado ? html`
+              <div class="pdf-loading-overlay">
+                <div class="pdf-loading-spinner"></div>
+                <div class="pdf-loading-texto">
+                  Cargando convocatoria<span class="pdf-loading-puntos"></span>
+                </div>
+              </div>
+            ` : ''}
 
             ${!this.convocatoriaActiva && !this.overlayAceptado ? html`
               <div class="pdf-overlay">

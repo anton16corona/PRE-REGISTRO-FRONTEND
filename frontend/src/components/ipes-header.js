@@ -45,13 +45,13 @@ export class IpesHeader extends LitElement {
   render() {
     return html`
       <header>
-        <img src="/src/assets/SSPlogo.png" alt="SSP" />
+        <img src="/src/assets/IPESlogo.png" alt="SSP" />
 
         <div class="ipes">
           INSTITUTO POLICIAL DE ESTUDIOS SUPERIORES
         </div>
 
-        <img src="/src/assets/IPESlogo.png" alt="IPES" />
+        <img src="/src/assets/SSPlogo.png" alt="IPES" />
       </header>
     `;
   }

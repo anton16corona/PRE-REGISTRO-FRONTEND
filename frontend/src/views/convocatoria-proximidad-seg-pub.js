@@ -39,7 +39,7 @@ export class ConvocatoriaProximidadSegPub extends ConvocatoriaProximidadBase {
     this.backRoute = '/perfiles-proximidad';
 
     // ========== CONVOCATORIA ACTIVA ==========
-    this.convocatoriaActiva = true;
+    this.convocatoriaActiva = false;
   }
 }
 

@@ -400,10 +400,24 @@ export class PdfZoomViewer extends LitElement {
 
       // Renderizar primera página en preview
       await this.renderPreview();
+
+      // Notificar al componente padre que el PDF terminó de cargar
+      this.dispatchEvent(new CustomEvent('pdf-loaded', {
+        bubbles: true,
+        composed: true,
+        detail: { success: true, totalPages: this.totalPages }
+      }));
     } catch (error) {
       console.error('Error cargando PDF:', error);
       this.isLoading = false;
       this.requestUpdate();
+
+      // Notificar al componente padre incluso si hubo error
+      this.dispatchEvent(new CustomEvent('pdf-loaded', {
+        bubbles: true,
+        composed: true,
+        detail: { success: false, error }
+      }));
     }
   }
 

@@ -1,5 +1,7 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html} from 'lit';
 import '../components/ipes-header.js';
+
+import { preregistroUnoStyles } from '../styles/preregistro-uno.styles.js';
 
 const CONVOCATORIAS = {
   '/convocatoria-guardia-civica': {
@@ -52,439 +54,10 @@ const CONVOCATORIAS = {
   }
 };
 
-export class PreregistroView extends LitElement {
-  static styles = css`
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+export class PreregistroView extends LitElement 
+{
 
-    :host {
-      display: block;
-      min-height: 100vh;
-      background: #f1eee8;
-      font-family: 'Montserrat', sans-serif;
-      color: #2e3032;
-      animation: fadeInUp .4s ease;
-    }
-
-    main {
-      display: flex;
-      justify-content: center;
-      padding: 3rem 1rem;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 1200px;
-      padding: clamp(1.5rem, 4vw, 3rem);
-      box-sizing: border-box;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2.4rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    h2 {
-      color: #131c49;
-      margin: 2.5rem 0 1rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
-    }
-
-    label {
-      font-weight: 500;
-    }
-
-    .required {
-      color: #455f9a;
-      margin-right: 4px;
-    }
-
-    input, select {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid #000;
-      padding: 6px 2px;
-      outline: none;
-      width: 100%;
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
-      font-size: 16px;
-      color: #000;
-    }
-
-    input::placeholder {
-      color: #717173;
-    }
-
-    input:disabled {
-      background: transparent;
-      color: #4c4c4c;
-    }
-
-    .edad {
-      border: none;
-      font-size: 18px;
-      font-weight: 500;
-      padding-top: 10px;
-    }
-
-    .radio-group {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      margin-top: 0.5rem;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 3rem;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 3rem;
-      font-family: 'Montserrat', sans-serif;
-      font-weight:600;
-    }
-
-    button {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .btn-secundario {
-      background: #d7a23f;
-      color: #fff;
-      border: none;
-      border-radius: 28px;
-      padding: 0.8rem 3rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-primario {
-      background: #7aa7c8;
-      color: #fff;
-      border: none;
-      border-radius: 28px;
-      padding: 0.8rem 3rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-cancelar {
-      background: #d73f3f;
-      color: #fff;
-      border: none;
-      border-radius: 28px;
-      padding: 0.8rem 3rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    input[type="date"] {
-      position: relative;
-      cursor: pointer;
-    }
-
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      opacity: 0.8;
-      cursor: pointer;
-    }
-
-    input[type="date"]:focus {
-      border-bottom: 2px solid #131c49;
-      background: rgba(19, 28, 73, 0.05);
-      transition: all 0.2s ease;
-    }
-
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      padding: 4px 10px;
-      border-radius: 12px;
-      transition: background 0.25s ease;
-    }
-
-    .radio-group input:checked + span {
-      font-weight: 600;
-    }
-
-    .radio-group label:has(input:checked) {
-      background: rgba(19, 28, 73, 0.1);
-    }
-
-    .msg {
-      display: block;
-      margin-top: 6px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .msg-gray {
-      color: #757575;
-    }
-
-    .msg-orange {
-      color: #f57c00;
-    }
-
-    .msg-red {
-      color: #d32f2f;
-    }
-
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill,
-    select:-webkit-autofill {
-      -webkit-text-fill-color: #000;
-      -webkit-box-shadow: 0 0 0px 1000px #8fa6c1 inset;
-      transition: background-color 5000s ease-in-out 0s;
-    }
-
-    @media (max-width: 1024px) {
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      h1 {
-        font-size: 2.1rem;
-      }
-
-      .card {
-        border-radius: 20px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      h2 {
-        margin-top: 2rem;
-      }
-    }
-
-    /* ========================= 768px ========================= */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.9rem;
-      }
-
-      .subtitle {
-        font-size: 0.95rem;
-      }
-
-      .radio-group {
-        gap: 1rem;
-      }
-
-      .radio-group label {
-        padding: 6px 12px;
-      }
-
-      .form-actions {
-        gap: 1rem;
-      }
-
-      .btn-primario,
-      .btn-secundario,
-      .btn-cancelar {
-        width: 100%;
-        font-size: 1.1rem;
-      }
-    }
-
-    @media (max-width: 640px) {
-      header {
-        text-align: center;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .ipes {
-        font-size: 1.4rem;
-      }
-
-      .title {
-        font-size: 2rem;
-      }
-
-      .card {
-        padding: 1.5rem;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      label {
-        font-size: 0.9rem;
-      }
-
-      input {
-        font-size: 15px;
-      }
-
-      .btn-primario,
-      .btn-secundario {
-        width: 100%;
-      }
-
-      .form-actions {
-        flex-direction: column;
-      }
-
-      .btn-primario,
-      .btn-secundario {
-        width: 100%;
-        max-width: 100%;
-        font-size: 1.1rem;
-      }
-
-      main {
-        padding: 2rem 0.8rem;
-      }
-
-      .edad {
-        font-size: 16px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        grid-template-columns: 1fr;
-        padding: 1rem;
-      }
-
-      header img {
-        margin: 0 auto;
-      }
-
-      h1 {
-        font-size: 1.6rem;
-      }
-
-      .subtitle {
-        font-size: 0.85rem;
-      }
-
-      h2 {
-        font-size: 1.1rem;
-      }
-
-      .ipes {
-        font-size: 1.1rem;
-        padding: 0 0.5rem;
-      }
-
-      .radio-group {
-        flex-wrap: wrap;
-        gap: 0.8rem;
-      }
-
-        .form-actions {
-        flex-direction: column;
-      }
-
-      .btn-primario,
-      .btn-secundario,
-      .btn-cancelar {
-        padding: 0.7rem;
-        font-size: 1rem;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .card {
-        padding: 1.2rem 1rem;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      input {
-        font-size: 13px;
-      }
-
-      .btn-primario,
-      .btn-secundario,
-      .btn-cancelar {
-        font-size: 0.95rem;
-      }
-    }
-
-    /* ========================= 320px ========================= */
-    @media (max-width: 320px) {
-      .card {
-        padding: 1rem 0.8rem;
-        border-radius: 16px;
-      }
-
-      h1 {
-        font-size: 1.2rem;
-      }
-
-      .subtitle {
-        font-size: 0.8rem;
-      }
-
-      h2 {
-        font-size: 1rem;
-      }
-
-      label {
-        font-size: 0.8rem;
-      }
-
-      input {
-        font-size: 12px;
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  `;
+  static styles = [preregistroUnoStyles];
 
   static properties = {
     edad: { state: true },
@@ -497,7 +70,7 @@ export class PreregistroView extends LitElement {
     emailTouched: { state: true },
     email2Touched: { state: true },
     formValido: { state: true },
-    civil: { type:String },
+    civil: { type: String },
     sexo: { type: String },
     curp: { type: String },
     rfc: { type: String },
@@ -508,85 +81,119 @@ export class PreregistroView extends LitElement {
     tel2Touched: { state: true },
     telError: { state: true },
     tel2Error: { state: true },
-    curpExiste: { state:true },
-    validandoCurp: { state:true }
+    curpExiste: { state: true },
+    validandoCurp: { state: true },
+    // ── RFC-CURP ──
+    rfcCurpMismatch: { state: true }
   };
 
   constructor() {
-  super();
-  this.edad = '';
-  this.valido = false;
-  this.form = {};
-  this.emailError = false;
-  this.email2Error = false;
-  this.emailMatchError = false;
-  this.emailTouched = false;
-  this.email2Touched = false;
-  this.formValido = false;
-  this.sexo = '';
-  this.curp = '';
-  this.civil = '';
-  this.rfc = '';
-  this.mostrarAlerta = false;
-  this.alertaConfig = {};
-  this.edadValidaConvocatoria = false;
-  this.telTouched = false;
-  this.tel2Touched = false;
-  this.telError = null;
-  this.tel2Error = null;
-  this.curpExiste = false;
-  this.validandoCurp = false;
+    super();
+    this.edad = '';
+    this.valido = false;
+    this.form = {};
+    this.emailError = false;
+    this.email2Error = false;
+    this.emailMatchError = false;
+    this.emailTouched = false;
+    this.email2Touched = false;
+    this.formValido = false;
+    this.sexo = '';
+    this.curp = '';
+    this.civil = '';
+    this.rfc = '';
+    this.mostrarAlerta = false;
+    this.alertaConfig = {};
+    this.edadValidaConvocatoria = false;
+    this.telTouched = false;
+    this.tel2Touched = false;
+    this.telError = null;
+    this.tel2Error = null;
+    this.curpExiste = false;
+    this.validandoCurp = false;
+    // ── RFC-CURP ──
+    this.rfcCurpMismatch = false;
 
-  const origenActual = sessionStorage.getItem('origen_convocatoria');
-  const guardado = sessionStorage.getItem('paso1_data');
+    const origenActual = sessionStorage.getItem('origen_convocatoria');
+    const guardado = sessionStorage.getItem('paso1_data');
 
-  //Solo restaurar si el form pertenece a la misma convocatoria
-  if (guardado) {
-    const datosGuardados = JSON.parse(guardado);
+    if (guardado) {
+      const datosGuardados = JSON.parse(guardado);
 
-    if (datosGuardados._convocatoria !== origenActual) {
-      // Convocatoria diferente → descartar datos anteriores
-      sessionStorage.removeItem('paso1_data');
-    } else {
-      //Misma convocatoria → restaurar
-      this.form = datosGuardados;
+      if (datosGuardados._convocatoria !== origenActual) {
+        // Convocatoria diferente → descartar
+        sessionStorage.removeItem('paso1_data');
+      } else {
+        // Misma convocatoria → restaurar TODO el formulario
+        this.form = datosGuardados;
 
-      if (this.form.fechaNacimiento) {
-        const birth = new Date(this.form.fechaNacimiento);
-        const today = new Date();
+        // Restaurar estado touched para que los mensajes de validación
+        // aparezcan correctamente al volver al formulario
+        if (this.form.email)  this.emailTouched  = true;
+        if (this.form.email2) this.email2Touched = true;
+        if (this.form.tel)    this.telTouched    = true;
+        if (this.form.tel2)   this.tel2Touched   = true;
 
-        let edad = today.getFullYear() - birth.getFullYear();
-        const m = today.getMonth() - birth.getMonth();
+        // Restaurar errores de email y teléfono
+        const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
+        if (this.form.email && !regexEmail.test(this.form.email))   this.emailError  = 'format';
+        if (this.form.email2 && !regexEmail.test(this.form.email2)) this.email2Error = 'format';
+        if (this.form.email && this.form.email2 && this.form.email !== this.form.email2) this.emailMatchError = true;
+        if (this.form.tel  && this.form.tel.length  !== 10) this.telError  = 'format';
+        if (this.form.tel2 && this.form.tel2.length !== 10) this.tel2Error = 'format';
+        if (this.form.tel && this.form.tel2 && this.form.tel !== this.form.tel2) this.phoneMatchError = true;
 
-        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-          edad--;
-        }
+        if (this.form.fechaNacimiento) {
+          const birth = new Date(this.form.fechaNacimiento);
+          const today = new Date();
 
-        this.edad = edad;
-        this.form.edad = edad;
+          let edad = today.getFullYear() - birth.getFullYear();
+          const m = today.getMonth() - birth.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) edad--;
 
-        const convocatoria = this.getConvocatoriaConfig();
-        if (convocatoria) {
-          this.edadValidaConvocatoria =
-            edad >= convocatoria.edadMin &&
-            edad <= convocatoria.edadMax;
+          this.edad = edad;
+          this.form.edad = edad;
+
+          const convocatoria = this.getConvocatoriaConfig();
+          if (convocatoria) {
+            this.edadValidaConvocatoria =
+              edad >= convocatoria.edadMin && edad <= convocatoria.edadMax;
+          }
         }
       }
     }
   }
-}
+
+  // ── Siempre guarda con _convocatoria para que la restauración funcione ──
+  guardarEnSession() {
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    sessionStorage.setItem('paso1_data', JSON.stringify({
+      ...this.form,
+      _convocatoria: origen
+    }));
+  }
 
   validateForm() {
     const f = this.form;
 
     const curpCompleta = f.curp?.length === 18;
-    const rfcCompleto = this.validarRFC(f.rfc || '');
+    const rfcCompleto  = this.validarRFC(f.rfc || '');
+
+    // ── RFC-CURP: los primeros 10 caracteres deben coincidir ──
+    const rfcMatchesCurp =
+      (f.rfc?.length >= 10 && f.curp?.length >= 10)
+        ? f.rfc.substring(0, 10) === f.curp.substring(0, 10)
+        : true; // sin 10 chars todavía, no mostrar error
+
+    this.rfcCurpMismatch =
+      f.rfc?.length >= 10 && f.curp?.length >= 10 && !rfcMatchesCurp;
 
     this.formValido =
       !this.curpExiste &&
       !this.validandoCurp &&
       curpCompleta &&
       rfcCompleto &&
+      rfcMatchesCurp &&        // ── RFC-CURP ──
       f.nombre &&
       f.apellido1 &&
       f.email &&
@@ -603,56 +210,56 @@ export class PreregistroView extends LitElement {
       !this.emailMatchError;
   }
 
-  updated(){
+  updated() {
     this.validateForm();
   }
 
-async verificarCurpExistente(curp) {
-  if (curp.length !== 18) return;
+  async verificarCurpExistente(curp) {
+    if (curp.length !== 18) return;
 
-  if (this._curpAbortController) {
-    this._curpAbortController.abort();
-  }
-  this._curpAbortController = new AbortController();
-  this.validandoCurp = true;
+    if (this._curpAbortController) {
+      this._curpAbortController.abort();
+    }
+    this._curpAbortController = new AbortController();
+    this.validandoCurp = true;
 
-  let existe = false;
+    let existe = false;
 
-  try {
-    const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`, {
-      signal: this._curpAbortController.signal
-    });
+    try {
+      const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`, {
+        signal: this._curpAbortController.signal
+      });
 
-    if (resp.ok) {
-      const data = await resp.json();
-      existe = data.length > 0; //si regresa al menos un registro, ya existe
+      if (resp.ok) {
+        const data = await resp.json();
+        existe = data.length > 0;
+      }
+
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+      console.error('Error al verificar CURP:', e);
+      existe = false;
     }
 
-  } catch (e) {
-    if (e.name === 'AbortError') return;
-    console.error('Error al verificar CURP:', e);
-    existe = false;
-  }
+    if (existe) {
+      this.curpExiste = true;
+      this.formValido = false;
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning-yellow',
+        titulo: 'PRE-REGISTRO YA EXISTENTE',
+        mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
+        extra: 'Si crees que es un error, comunícate con el área correspondiente.',
+        boton: 'ENTENDIDO'
+      };
+      this.requestUpdate();
+    } else {
+      this.curpExiste = false;
+      this.mostrarAlerta = false;
+    }
 
-  if (existe) {
-    this.curpExiste = true;
-    this.formValido = false;
-    this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'warning-yellow',
-      titulo: 'PRE-REGISTRO YA EXISTENTE',
-      mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
-      extra: 'Si crees que es un error, comunícate con el área correspondiente.',
-      boton: 'ENTENDIDO'
-    };
-    this.requestUpdate();
-  } else {
-    this.curpExiste = false;
-    this.mostrarAlerta = false;
+    this.validandoCurp = false;
   }
-
-  this.validandoCurp = false;
-}
 
   normalizeText(e) {
     const map = {
@@ -667,89 +274,85 @@ async verificarCurpExistente(curp) {
 
     this.updateField(e);
   }
-  
+
   updateEdad(e) {
-  this.form.fechaNacimiento = e.target.value;
-  sessionStorage.setItem('paso1_data', JSON.stringify(this.form));
+    this.form.fechaNacimiento = e.target.value;
+    this.guardarEnSession();
 
-  if (!e.target.value || e.target.value.length < 10) {
-    this.edad = '';
-    this.edadValidaConvocatoria = false;
-    return;
-  }
-
-  const birth = new Date(e.target.value);
-  const today = new Date();
-
-  let edad = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-    edad--;
-  }
-
-  //Solo calcula y guarda, SIN mostrar alertas
-  this.edad = edad;
-  this.form.edad = edad;
-  this.edadValidaConvocatoria = false;
-  this.validateForm();
-}
-
-validarEdadBlur() {
-  const edad = this.edad;
-  if (edad === '' || edad === undefined) return;
-
-  const convocatoria = this.getConvocatoriaConfig();
-  const origen = sessionStorage.getItem('origen_convocatoria');
-
-  if (edad < 18) {
-    this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'warning-menor',
-      titulo: 'Registro no permitido',
-      mensaje: 'Debes ser mayor de edad para continuar.',
-      boton: 'ENTENDIDO',
-      onAceptar: 'limpiar-registro'
-    };
-    return;
-  }
-
-  if (convocatoria && (edad < convocatoria.edadMin || edad > convocatoria.edadMax)) {
-    const alternativas = this.getConvocatoriasCompatibles(edad).filter(c => c.path !== origen);
-
-    if (alternativas.length > 0) {
-      this.mostrarAlerta = true;
-      this.alertaConfig = {
-        tipo: 'warning-yellow',
-        titulo: 'ESTIMADO USUARIO',
-        mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con los requisitos necesarios para la convocatoria seleccionada.',
-        extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil proporcionado.',
-        alternativas: alternativas
-      };
+    if (!e.target.value || e.target.value.length < 10) {
+      this.edad = '';
+      this.edadValidaConvocatoria = false;
       return;
-    } else {
+    }
+
+    const birth = new Date(e.target.value);
+    const today = new Date();
+
+    let edad = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) edad--;
+
+    this.edad = edad;
+    this.form.edad = edad;
+    this.edadValidaConvocatoria = false;
+    this.validateForm();
+  }
+
+  validarEdadBlur() {
+    const edad = this.edad;
+    if (edad === '' || edad === undefined) return;
+
+    const convocatoria = this.getConvocatoriaConfig();
+    const origen = sessionStorage.getItem('origen_convocatoria');
+
+    if (edad < 18) {
       this.mostrarAlerta = true;
       this.alertaConfig = {
-        tipo: 'error',
-        titulo: 'Edad fuera de rango',
-        mensaje: 'Actualmente no existe ninguna convocatoria compatible con tu edad.',
-        boton: 'ENTENDIDO'
+        tipo: 'warning-menor',
+        titulo: 'Registro no permitido',
+        mensaje: 'Debes ser mayor de edad para continuar.',
+        boton: 'ENTENDIDO',
+        onAceptar: 'limpiar-registro'
       };
       return;
     }
-  }
 
-  //Edad válida
-  this.edadValidaConvocatoria = true;
-  this.mostrarAlerta = false;
-  this.validateForm();
-}
+    if (convocatoria && (edad < convocatoria.edadMin || edad > convocatoria.edadMax)) {
+      const alternativas = this.getConvocatoriasCompatibles(edad).filter(c => c.path !== origen);
+
+      if (alternativas.length > 0) {
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'warning-yellow',
+          titulo: 'ESTIMADO USUARIO',
+          mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con los requisitos necesarios para la convocatoria seleccionada.',
+          extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil proporcionado.',
+          alternativas: alternativas
+        };
+        return;
+      } else {
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'error',
+          titulo: 'Edad fuera de rango',
+          mensaje: 'Actualmente no existe ninguna convocatoria compatible con tu edad.',
+          boton: 'ENTENDIDO'
+        };
+        return;
+      }
+    }
+
+    // Edad válida
+    this.edadValidaConvocatoria = true;
+    this.mostrarAlerta = false;
+    this.validateForm();
+  }
 
   updateField(e) {
     this.form[e.target.name] = e.target.value;
     this.validate();
     this.validateForm();
-    sessionStorage.setItem('paso1_data', JSON.stringify(this.form));
+    this.guardarEnSession();
   }
 
   validate() {
@@ -774,7 +377,7 @@ validarEdadBlur() {
   }
 
   onlyPhone(e) {
-    e.target.value = e.target.value.replaceAll(/\D/g, '').slice(0,10);
+    e.target.value = e.target.value.replaceAll(/\D/g, '').slice(0, 10);
     this.updateField(e);
   }
 
@@ -892,19 +495,12 @@ validarEdadBlur() {
     return false;
   }
 
-  submitForm() 
-  {
+  submitForm() {
     const preregistro = {
-      paso1: {
-        ...this.form
-      }
+      paso1: { ...this.form }
     };
 
-    sessionStorage.setItem(
-      'preregistro_data',
-      JSON.stringify(preregistro)
-    );
-
+    sessionStorage.setItem('preregistro_data', JSON.stringify(preregistro));
     globalThis.location.href = '/preregistro-continuacion';
   }
 
@@ -916,8 +512,8 @@ validarEdadBlur() {
 
   goBack() {
     const origen = sessionStorage.getItem('origen_convocatoria');
-    console.log('Origen guardado:', origen);
-
+    // Los datos ya quedan guardados en sessionStorage via guardarEnSession(),
+    // al regresar y volver a entrar al formulario se restaurarán automáticamente.
     if (origen) {
       globalThis.location.href = origen;
     } else {
@@ -940,56 +536,71 @@ validarEdadBlur() {
     const regexRFC = /^[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}$/;
     return regexRFC.test(rfc);
   }
-continuar() {
-  if (!this.formValido) {
-    this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'warning-yellow',
-      titulo: 'Formulario incompleto',
-      mensaje: 'Debes completar todos los campos obligatorios para continuar.',
-      boton: 'ENTENDIDO'
-    };
-    return;
+
+  continuar() {
+    if (!this.formValido) {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning-yellow',
+        titulo: 'Formulario incompleto',
+        mensaje: 'Debes completar todos los campos obligatorios para continuar.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    if (this.curpExiste) {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning-redireccion',
+        titulo: 'PRE-REGISTRO YA EXISTENTE',
+        mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
+        extra: 'Si crees que es un error, comunícate con el área correspondiente.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    if (!this.validarCURP(this.form.curp)) {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning-yellow',
+        titulo: 'CURP inválido',
+        mensaje: 'El CURP ingresado no tiene un formato válido.',
+        extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    if (!this.validarRFC(this.form.rfc)) {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning',
+        titulo: 'RFC inválido',
+        mensaje: 'El RFC ingresado no tiene un formato válido.',
+        extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    // ── RFC-CURP: validación final antes de continuar ──
+    if (this.rfcCurpMismatch) {
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'warning-yellow',
+        titulo: 'RFC y CURP no coinciden',
+        mensaje: 'Los primeros 10 caracteres del RFC deben coincidir con los primeros 10 de la CURP.',
+        extra: 'Por favor, verifica que ambos datos correspondan a la misma persona.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
+    this.submitForm();
   }
 
-if (this.curpExiste) {
-  this.mostrarAlerta = true;
-  this.alertaConfig = {
-    tipo: 'warning-redireccion',
-    titulo: 'PRE-REGISTRO YA EXISTENTE',
-    mensaje: 'No es posible continuar con el pre-registro, ya que esta CURP cuenta con un registro previo.',
-    extra: 'Si crees que es un error, comunícate con el área correspondiente.',
-    boton: 'ENTENDIDO'
-  };
-  return;
-}
-
-  if (!this.validarCURP(this.form.curp)) {
-    this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'warning-yellow',
-      titulo: 'CURP inválido',
-      mensaje: 'El CURP ingresado no tiene un formato válido.',
-      extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
-      boton: 'ENTENDIDO'
-    };
-    return;
-  }
-
-  if (!this.validarRFC(this.form.rfc)) {
-    this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'warning',
-      titulo: 'RFC inválido',
-      mensaje: 'El RFC ingresado no tiene un formato válido.',
-      extra: 'Por favor, verifícalo e ingrésalo nuevamente.',
-      boton: 'ENTENDIDO'
-    };
-    return;
-  }
-
-  this.submitForm();
-}
   cerrarAlerta() {
     this.mostrarAlerta = false;
   }
@@ -1039,6 +650,12 @@ if (this.curpExiste) {
     };
     this.edad = '';
     this.edadValidaConvocatoria = false;
+    this.rfcCurpMismatch = false;
+    this.emailTouched = false;
+    this.email2Touched = false;
+    this.telTouched = false;
+    this.tel2Touched = false;
+    sessionStorage.removeItem('paso1_data');
     this.requestUpdate();
   }
 
@@ -1073,17 +690,17 @@ if (this.curpExiste) {
             <div>
               <label><span class="required">*</span>CURP: </label>
               <input name="curp" placeholder="ABCD000000EFGHI00" maxlength="18" .value=${this.form.curp || ''} @input=${async e => {
-                e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9]/g,'');
+                e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9]/g, '');
 
                 this.form.curp = e.target.value;
                 this.curpExiste = false;
-                this.mostrarAlerta = false; 
+                this.mostrarAlerta = false;
                 this.updateField(e);
                 if (e.target.value.length === 18) {
                   await this.verificarCurpExistente(e.target.value);
-                    }
-                    this.validateForm();
-                }}/>
+                }
+                this.validateForm();
+              }}/>
             </div>
 
             <div>
@@ -1102,7 +719,7 @@ if (this.curpExiste) {
             </div>
 
             <div>
-              <label><span class="required">*</span>RFC: </label>  
+              <label><span class="required">*</span>RFC: </label>
               <input name="rfc" placeholder="ABCD000000ABC" maxlength="13" .value=${this.form.rfc || ''}
                 @input=${e => {
                   e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-ZÑ&0-9]/g, '');
@@ -1112,15 +729,21 @@ if (this.curpExiste) {
               ${this.form.rfc && !this.validarRFC(this.form.rfc) ? html`
                 <small class="msg msg-orange">RFC con formato inválido</small>
               ` : ''}
+              <!-- ── RFC-CURP: mensaje en tiempo real ── -->
+              ${this.rfcCurpMismatch ? html`
+                <small class="msg msg-red">
+                  Los primeros 10 caracteres del RFC no coinciden con la CURP
+                </small>
+              ` : ''}
             </div>
 
             <div>
               <label><span class="required">*</span>Fecha de Nacimiento: </label>
-              <input 
-                type="date" 
-                name="fechaNacimiento" 
-                .value=${this.form.fechaNacimiento || ''} 
-                required 
+              <input
+                type="date"
+                name="fechaNacimiento"
+                .value=${this.form.fechaNacimiento || ''}
+                required
                 @change=${this.updateEdad}
                 @blur=${this.validarEdadBlur}
               />
@@ -1135,14 +758,14 @@ if (this.curpExiste) {
               <label><span class="required">*</span>Sexo</label>
               <div class="radio-group">
                 <label>
-                  <input 
-                    type="radio" 
+                  <input
+                    type="radio"
                     name="sexo"
                     value="H"
                     .checked=${this.form.sexo === 'H'}
                     @change=${e => {
                       this.form.sexo = e.target.value;
-                      sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
+                      this.guardarEnSession();
                       this.validateForm();
                     }}
                   />
@@ -1150,14 +773,14 @@ if (this.curpExiste) {
                 </label>
 
                 <label>
-                  <input 
-                    type="radio" 
+                  <input
+                    type="radio"
                     name="sexo"
                     value="M"
                     .checked=${this.form.sexo === 'M'}
                     @change=${e => {
                       this.form.sexo = e.target.value;
-                      sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
+                      this.guardarEnSession();
                       this.validateForm();
                     }}
                   />
@@ -1171,14 +794,14 @@ if (this.curpExiste) {
               <div class="radio-group">
                 ${['Soltero', 'Casado', 'Divorciado', 'Viudo'].map(opcion => html`
                   <label>
-                    <input 
+                    <input
                       type="radio"
                       name="civil"
                       value="${opcion}"
                       .checked=${this.form.civil === opcion}
                       @change=${e => {
                         this.form.civil = e.target.value;
-                        sessionStorage.setItem('paso1_data', JSON.stringify(this.form)); //Fix bug 3
+                        this.guardarEnSession();
                         this.validateForm();
                       }}
                     />
@@ -1239,12 +862,12 @@ if (this.curpExiste) {
             <!-- TELÉFONO -->
             <div>
               <label><span class="required">*</span>No. Teléfono: </label>
-              <input 
-                name="tel" 
-                placeholder="4421234567" 
-                maxlength="10" 
-                .value=${this.form.tel || ''} 
-                @input=${this.onlyPhone} 
+              <input
+                name="tel"
+                placeholder="4421234567"
+                maxlength="10"
+                .value=${this.form.tel || ''}
+                @input=${this.onlyPhone}
                 @blur=${this.validateTelBlur}
               />
               ${this.telTouched && this.telError === 'required' ? html`
@@ -1258,12 +881,12 @@ if (this.curpExiste) {
             <!-- CONFIRMAR TELÉFONO (SIN COPIAR/PEGAR) -->
             <div>
               <label><span class="required">*</span>Confirmar Teléfono: </label>
-              <input 
-                name="tel2" 
-                placeholder="4421234567" 
-                maxlength="10" 
-                .value=${this.form.tel2 || ''} 
-                @input=${this.onlyPhone} 
+              <input
+                name="tel2"
+                placeholder="4421234567"
+                maxlength="10"
+                .value=${this.form.tel2 || ''}
+                @input=${this.onlyPhone}
                 @blur=${this.validateTel2Blur}
                 @paste=${this.preventPaste}
                 @contextmenu=${this.preventPaste}
