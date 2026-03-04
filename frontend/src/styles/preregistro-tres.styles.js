@@ -224,7 +224,26 @@ export const preregistroTresStyles = css`
       color: #0a0f24;
     }
 
-    /* ====== MODAL PDF AVISO DE PRIVACIDAD ====== */
+    /* ====== HINT PDF (leer más) ====== */
+    .pdf-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #5a6a7a;
+      font-style: italic;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .pdf-hint-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    /* ====== MODAL PDF (compartido por términos y privacidad) ====== */
     .modal-pdf-overlay {
       position: fixed;
       inset: 0;

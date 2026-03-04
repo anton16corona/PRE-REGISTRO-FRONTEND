@@ -672,6 +672,45 @@
       "folio": "SSPMQ/IPES/GC/6-003",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-03-03T20:32:15.467Z"
+    },
+    {
+      "id": "5be2",
+      "curp": "COXA030319MOCRXNA4",
+      "nombre": "ANTONIO",
+      "apellido1": "AGUILERA",
+      "apellido2": "PARRA",
+      "rfc": "COXA030319MVP",
+      "fechaNacimiento": "2004-08-12",
+      "edad": 21,
+      "sexo": "H",
+      "civil": "Soltero",
+      "email": "gabperez@gmail.com",
+      "email2": "gabperez@gmail.com",
+      "tel": "4422042222",
+      "tel2": "4422042222",
+      "contactoAlterno": "ALDAIR CABRERA",
+      "telAlterno": "4426548978",
+      "municipio": "SAN JUAN DEL RÍO",
+      "colonia": "COLINAS SUR",
+      "cp": "76122",
+      "calle": "AV PIRINEOS",
+      "exterior": "90-B",
+      "interior": "100",
+      "nivelEstudios": "BACHILLERATO",
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": true,
+        "frente": "WhatsApp Image 2026-01-22 at 08.39.31.jpeg",
+        "reverso": "Bien.png"
+      },
+      "medio": "radio",
+      "fechaEnvio": "2026-03-04T17:36:58.923Z",
+      "siglas": "GC",
+      "folio": "SSPMQ/IPES/GC/6-004",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-04T17:36:58.936Z"
     }
   ],
   "citas": [
@@ -955,6 +994,12 @@
       "id": "82ab",
       "folio": "SSPMQ/IPES/GC/6-003",
       "fecha": "2026-04-02",
+      "hora": "09:00"
+    },
+    {
+      "id": "6947",
+      "folio": "SSPMQ/IPES/GC/6-004",
+      "fecha": "2026-03-04",
       "hora": "09:00"
     }
   ],
@@ -1691,7 +1736,7 @@
       "horarios": [
         {
           "hora": "09:00",
-          "ocupados": 0,
+          "ocupados": 1,
           "capacidad": 10
         },
         {

@@ -259,23 +259,38 @@ export class PdfZoomViewer extends LitElement {
         min-height: 500px;
         padding: 1rem;
       }
-      
-      /* Optimizar zoom-container para móviles */
+
       .zoom-container {
         width: 100vw;
         height: 100vh;
       }
-      
-      /* Hacer los controles más accesibles en móviles */
-      .zoom-controls {
-        top: auto;
-        bottom: 5rem;
-        padding: 0.6rem;
+
+      /* Cerrar arriba-derecha, zoom arriba-izquierda, paginación abajo */
+      .zoom-close {
+        top: 0.8rem;
+        right: 0.8rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
       }
-      
-      .page-controls {
+
+      .zoom-controls {
+        top: 0.8rem;
         bottom: auto;
-        top: 1rem;
+        left: 1rem;
+        transform: none;
+        padding: 0.5rem;
+        gap: 0.4rem;
+      }
+
+      .page-controls {
+        top: auto;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .zoom-info {
+        top: 3.8rem;
       }
     }
 
@@ -285,46 +300,143 @@ export class PdfZoomViewer extends LitElement {
         padding: 0.8rem;
       }
 
-      .zoom-info {
-        font-size: 0.7rem;
-        padding: 0.3rem 0.6rem;
-        top: 4.5rem;
-        max-width: 90vw;
+      .zoom-close {
+        top: 0.6rem;
+        right: 0.6rem;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
       }
 
       .zoom-controls {
-        padding: 0.5rem;
-        gap: 0.4rem;
-        bottom: 4rem;
+        top: 0.6rem;
+        left: 0.6rem;
+        padding: 0.45rem;
+        gap: 0.35rem;
       }
 
       .zoom-btn {
-        padding: 0.5rem 0.9rem;
-        font-size: 1.1rem;
-        min-width: 40px;
+        padding: 0.45rem 0.8rem;
+        font-size: 1rem;
+        min-width: 36px;
       }
 
       .page-controls {
-        padding: 0.6rem 1rem;
-        gap: 0.8rem;
-        top: 1rem;
+        bottom: 0.8rem;
+        padding: 0.5rem 0.9rem;
+        gap: 0.7rem;
       }
 
       .page-info {
-        font-size: 0.85rem;
-        min-width: 90px;
+        font-size: 0.82rem;
+        min-width: 80px;
       }
-      
-      .zoom-close {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+
+      /* Ocultar hint — sin espacio en pantallas pequeñas */
+      .zoom-info {
+        display: none;
       }
-      
-      /* Optimizar el canvas wrapper para móviles */
+
       .zoom-canvas-wrapper {
-        /* Permitir que sea más pequeño y manejable */
         max-width: 100%;
         max-height: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .zoom-close {
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .zoom-controls {
+        top: 0.5rem;
+        left: 0.5rem;
+        padding: 0.4rem;
+        gap: 0.3rem;
+      }
+
+      .zoom-btn {
+        padding: 0.4rem 0.65rem;
+        font-size: 0.9rem;
+        min-width: 32px;
+      }
+
+      .page-controls {
+        bottom: 0.6rem;
+        padding: 0.45rem 0.8rem;
+        gap: 0.6rem;
+      }
+
+      .page-info {
+        font-size: 0.78rem;
+        min-width: 70px;
+      }
+
+      .page-btn {
+        padding: 0.35rem 0.65rem;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .zoom-close {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+        border-radius: 7px;
+      }
+
+      .zoom-controls {
+        padding: 0.35rem;
+        gap: 0.25rem;
+      }
+
+      .zoom-btn {
+        padding: 0.35rem 0.55rem;
+        font-size: 0.85rem;
+        min-width: 28px;
+        border-radius: 6px;
+      }
+
+      .page-controls {
+        padding: 0.4rem 0.65rem;
+        gap: 0.5rem;
+        border-radius: 8px;
+      }
+
+      .page-info {
+        font-size: 0.72rem;
+        min-width: 60px;
+      }
+
+      .page-btn {
+        padding: 0.3rem 0.55rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .zoom-close {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+      }
+
+      .zoom-btn {
+        padding: 0.3rem 0.45rem;
+        font-size: 0.8rem;
+        min-width: 26px;
+      }
+
+      .page-info {
+        font-size: 0.68rem;
+        min-width: 55px;
+      }
+
+      .page-btn {
+        padding: 0.28rem 0.45rem;
+        font-size: 0.85rem;
       }
     }
   `;

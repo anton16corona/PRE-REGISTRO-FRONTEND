@@ -22,7 +22,8 @@ export class PreregistroPasoCorreo extends LitElement
     showTermsModal: { state: true },
     showPrivacyModal: { state: true },
     showCodigoModal: { state: true },
-    privacyPdfCargado: { state: true }
+    privacyPdfCargado: { state: true },
+    termsPdfCargado: { state: true }
   };
 
   constructor() {
@@ -40,6 +41,7 @@ export class PreregistroPasoCorreo extends LitElement
     this.showPrivacyModal = false;
     this.showCodigoModal = false;
     this.privacyPdfCargado = false;
+    this.termsPdfCargado = false;
   }
 
   getSiglasConvocatoria(origen) {
@@ -179,6 +181,15 @@ export class PreregistroPasoCorreo extends LitElement
     return this.termsAccepted && this.privacyAccepted;
   }
 
+  openTermsModal() {
+    this.termsPdfCargado = false;
+    this.showTermsModal = true;
+  }
+
+  onTermsPdfLoaded() {
+    this.termsPdfCargado = true;
+  }
+
   openPrivacyModal() {
     this.privacyPdfCargado = false;
     this.showPrivacyModal = true;
@@ -279,95 +290,49 @@ export class PreregistroPasoCorreo extends LitElement
     globalThis.location.href = '/preregistro-completado';
   }
 
-  loremContent() {
-    return html`
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-      <p>
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-        nisi ut aliquip ex ea commodo consequat.
-      </p>
-      <p>
-        Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur.
-      </p>
-      <p>
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-        officia deserunt mollit anim id est laborum.
-      </p>
-            <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-      <p>
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-        nisi ut aliquip ex ea commodo consequat.
-      </p>
-      <p>
-        Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur.
-      </p>
-      <p>
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-        officia deserunt mollit anim id est laborum.
-      </p>
-    `;
-  }
 
 /* ============================================= HTML ============================================= */
   renderLegalModal(type) {
-    const title =
-      type === 'terms'
-        ? 'Términos y Condiciones'
-        : 'Aviso de Privacidad';
+    const isPrivacy = type === 'privacy';
+    const title = isPrivacy ? 'Aviso de Privacidad' : 'Términos y Condiciones';
+    const pdfUrl = isPrivacy
+      ? '/convocatoria/AvisoPrivacidad.pdf'
+      : '/convocatoria/TerminosCondiciones.pdf';
+    const loaded = isPrivacy ? this.privacyPdfCargado : this.termsPdfCargado;
+    const onLoaded = isPrivacy
+      ? this.onPrivacyPdfLoaded.bind(this)
+      : this.onTermsPdfLoaded.bind(this);
 
-    return html`
-      <div class="modal-overlay">
-        <div class="modal-container">
-          <h2>${title}</h2>
-
-          <div class="modal-content">
-            ${this.loremContent()}
-          </div>
-
-          <div class="modal-actions">
-            <button @click=${() => this.acceptLegal(type)}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  renderPrivacyPdfModal() {
     return html`
       <div class="modal-pdf-overlay">
         <div class="modal-pdf-container">
-          <h2>Aviso de Privacidad</h2>
+          <h2>${title}</h2>
 
           <div class="modal-pdf-viewer">
             <pdf-zoom-viewer
-              pdfUrl="/convocatoria/AvisoPrivacidad.pdf"
-              @pdf-loaded=${this.onPrivacyPdfLoaded}
+              pdfUrl="${pdfUrl}"
+              @pdf-loaded=${onLoaded}
             ></pdf-zoom-viewer>
 
-            ${!this.privacyPdfCargado ? html`
+            ${!loaded ? html`
               <div class="modal-pdf-loading">
                 <div class="modal-pdf-spinner"></div>
                 <div class="modal-pdf-loading-texto">
-                  Cargando aviso de privacidad<span class="modal-pdf-puntos"></span>
+                  Cargando documento<span class="modal-pdf-puntos"></span>
                 </div>
               </div>
-            ` : ''}
+            ` : html`
+              <div class="pdf-hint">
+                <span class="pdf-hint-icon">👆</span>
+                Da clic en el documento para verlo completo con zoom
+              </div>
+            `}
           </div>
 
           <div class="modal-pdf-actions">
             <button
-              ?disabled=${!this.privacyPdfCargado}
-              @click=${() => this.acceptLegal('privacy')}
+              ?disabled=${!loaded}
+              @click=${() => this.acceptLegal(type)}
             >
               Aceptar
             </button>
@@ -376,6 +341,8 @@ export class PreregistroPasoCorreo extends LitElement
       </div>
     `;
   }
+
+
 
   render() {
     return html`
@@ -395,8 +362,11 @@ export class PreregistroPasoCorreo extends LitElement
         <alerta-view
           modal
           tipo="info"
-          titulo="Validación de correo"
-          mensaje="Ingresa el código de 6 dígitos enviado a tu correo electrónico."
+          titulo="Validación de correo electrónico"
+          mensaje="Estimado aspirante, hemos recibido tu solicitud para realizar un pre-registro como participante en alguno de los 
+          perfiles del Instituto Policial de Estudios Superiores de la Secretaría de Seguridad Pública Municipal de Querétaro. 
+          Para poder continuar con tu pre-registro, es necesario validar el correo electrónico proporcionado. 
+          Por favor introduce el siguiente Código de Verificación en el campo señalado:"
           boton=""
           @aceptar=${() => {}}
         >
@@ -452,7 +422,7 @@ export class PreregistroPasoCorreo extends LitElement
               He leído y acepto los
               <span
                 class="legal-link"
-                @click=${() => (this.showTermsModal = true)}
+                @click=${this.openTermsModal}
               >
                 Términos y Condiciones
               </span>
@@ -467,7 +437,7 @@ export class PreregistroPasoCorreo extends LitElement
 
             <!-- MODALES -->
             ${this.showTermsModal ? this.renderLegalModal('terms') : ''}
-            ${this.showPrivacyModal ? this.renderPrivacyPdfModal() : ''}
+            ${this.showPrivacyModal ? this.renderLegalModal('privacy') : ''}
           </div>
 
           <p class="info">
