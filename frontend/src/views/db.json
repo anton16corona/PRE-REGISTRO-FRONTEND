@@ -674,43 +674,43 @@
       "fechaRegistro": "2026-03-03T20:32:15.467Z"
     },
     {
-      "id": "5be2",
-      "curp": "COXA030319MOCRXNA4",
-      "nombre": "ANTONIO",
-      "apellido1": "AGUILERA",
-      "apellido2": "PARRA",
-      "rfc": "COXA030319MVP",
-      "fechaNacimiento": "2004-08-12",
-      "edad": 21,
-      "sexo": "H",
+      "id": "986d",
+      "curp": "SASI040303MQTNRVA4",
+      "nombre": "IVANNA",
+      "apellido1": "RIVERA",
+      "apellido2": "DIAZ",
+      "email": "riveradiazjanine@gmail.com",
+      "email2": "riveradiazjanine@gmail.com",
+      "tel": "4423296104",
+      "rfc": "SASI040303MQT",
+      "fechaNacimiento": "1997-04-19",
+      "edad": 28,
+      "sexo": "M",
       "civil": "Soltero",
-      "email": "gabperez@gmail.com",
-      "email2": "gabperez@gmail.com",
-      "tel": "4422042222",
-      "tel2": "4422042222",
-      "contactoAlterno": "ALDAIR CABRERA",
-      "telAlterno": "4426548978",
-      "municipio": "SAN JUAN DEL RÍO",
-      "colonia": "COLINAS SUR",
-      "cp": "76122",
-      "calle": "AV PIRINEOS",
-      "exterior": "90-B",
-      "interior": "100",
+      "tel2": "4423296104",
+      "_convocatoria": "/convocatoria-auxiliar",
+      "contactoAlterno": "JOSE ANTONIO CORONA",
+      "telAlterno": "4423296104",
+      "calle": "ATARDECER",
+      "exterior": "106",
+      "municipio": "QUERÉTARO",
+      "colonia": "EL REFUGIO",
+      "cp": "76000",
       "nivelEstudios": "BACHILLERATO",
       "licencia": "si",
       "cartilla": "si",
       "certificadoSecundaria": "si",
       "ine": {
-        "tieneINE": true,
-        "frente": "WhatsApp Image 2026-01-22 at 08.39.31.jpeg",
-        "reverso": "Bien.png"
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
       },
-      "medio": "radio",
-      "fechaEnvio": "2026-03-04T17:36:58.923Z",
-      "siglas": "GC",
-      "folio": "SSPMQ/IPES/GC/6-004",
+      "medio": "tv",
+      "fechaEnvio": "2026-03-04T21:54:32.411Z",
+      "siglas": "PA",
+      "folio": "SSPMQ/IPES/PA/6-005",
       "estatus": "PENDIENTE",
-      "fechaRegistro": "2026-03-04T17:36:58.936Z"
+      "fechaRegistro": "2026-03-04T21:54:32.425Z"
     }
   ],
   "citas": [
@@ -997,9 +997,9 @@
       "hora": "09:00"
     },
     {
-      "id": "6947",
-      "folio": "SSPMQ/IPES/GC/6-004",
-      "fecha": "2026-03-04",
+      "id": "6316",
+      "folio": "SSPMQ/IPES/PA/6-005",
+      "fecha": "2026-03-27",
       "hora": "09:00"
     }
   ],
@@ -1462,7 +1462,7 @@
       "horarios": [
         {
           "hora": "09:00",
-          "ocupados": 3,
+          "ocupados": 4,
           "capacidad": 10
         },
         {
@@ -1736,7 +1736,7 @@
       "horarios": [
         {
           "hora": "09:00",
-          "ocupados": 1,
+          "ocupados": 0,
           "capacidad": 10
         },
         {

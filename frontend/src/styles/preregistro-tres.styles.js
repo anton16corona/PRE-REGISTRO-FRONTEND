@@ -19,7 +19,6 @@ export const preregistroTresStyles = css`
       background: #ffffff;
       border-radius: 24px;
       padding: 3rem 2rem;
-      
       animation: slideUpFade 0.45s ease-out;
     }
 
@@ -51,7 +50,6 @@ export const preregistroTresStyles = css`
       color: #2e3032;
     }
 
-    /* SELECT estilo línea */
     select {
       width: 100%;
       background: #ffffff;
@@ -79,12 +77,12 @@ export const preregistroTresStyles = css`
 
     .code {
       font-family: 'Montserrat', sans-serif;
-      font-weight: 800;           /* grueso ancho */
-      font-size: 1.6rem;
+      font-weight: 800;
+      font-size: 1rem;
       text-align: center;
-      width: 100%;
       color: #0a0f24;
       letter-spacing: 1px;
+      white-space: nowrap;
     }
 
     /* ===== TERMINOS ===== */
@@ -133,39 +131,82 @@ export const preregistroTresStyles = css`
       cursor: not-allowed;
     }
 
-    /* ===== CÓDIGO ===== */
+    /* ===== CÓDIGO WRAPPER ===== */
     .codigo-wrapper {
-      max-width: 400px;
-      margin: 1rem auto 0;
+      max-width: 520px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+      align-items: stretch;
+      gap: 0.6rem;
+      text-align: justify;
+    }
+
+    .codigo-wrapper p {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.55;
+      color: #5a6a7a;
       text-align: center;
     }
 
-    .codigo-wrapper label {
-      align-self: flex-start;
+    /* Fila inline: label + input amarillo */
+    .codigo-wrapper p strong {
+      font-weight: 400;
     }
 
-    .codigo-wrapper input {
-        background: transparent;
-        border: none;
-        border-bottom: 1px solid #000;
-        padding: 6px 2px;
-        outline: none;
-        width: 100%;
-        box-sizing: border-box;
-        text-align: center;
+    .codigo-input-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 0.8rem 0 0.4rem;
+    }
 
-        /* ----- FUENTE DE LOS INPUT ------ */
-        font-family: 'Roboto', sans-serif;
-        font-size: 24px;
-        color: #000;
+    .codigo-input-row input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #333;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      width: 160px;
+      text-align: center;
+      letter-spacing: 0.3rem;
+      font-family: 'Roboto', sans-serif;
+      outline: none;
+    }
+
+    .codigo-input-row input:focus {
+      border-bottom: 2px solid #131c49;
+    }
+
+    .codigo-wrapper .btn-primario {
+      align-self: center;
+      margin-top: 0.5rem;
+      background: #7aa7c8;
+      border: none;
+      border-radius: 28px;
+      padding: .9rem 2.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    .codigo-wrapper .btn-primario:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .codigo-wrapper .btn-primario:not(:disabled):hover {
+      background: #5e8fb0;
+      transform: translateY(-2px);
     }
 
     /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
-    /* ====== LINKS DE TÉRMINOS ====== */
     .legal-text {
       margin-top: 24px;
       font-size: 16px;
@@ -187,7 +228,6 @@ export const preregistroTresStyles = css`
       font-weight: 500;
     }
 
-    /* ====== CHECKBOX PERSONALIZADO ====== */
     .legal-text input[type="checkbox"] {
       width: 22px;
       height: 22px;
@@ -224,7 +264,6 @@ export const preregistroTresStyles = css`
       color: #0a0f24;
     }
 
-    /* ====== HINT PDF (leer más) ====== */
     .pdf-hint {
       display: flex;
       align-items: center;
@@ -232,8 +271,9 @@ export const preregistroTresStyles = css`
       gap: 6px;
       margin-top: 10px;
       font-size: 13px;
-      color: #5a6a7a;
+      color: #2f3031;
       font-style: italic;
+      font-weight: 400;
       text-align: center;
       flex-shrink: 0;
     }
@@ -243,7 +283,6 @@ export const preregistroTresStyles = css`
       flex-shrink: 0;
     }
 
-    /* ====== MODAL PDF (compartido por términos y privacidad) ====== */
     .modal-pdf-overlay {
       position: fixed;
       inset: 0;
@@ -283,13 +322,11 @@ export const preregistroTresStyles = css`
       border-radius: 14px;
     }
 
-    /* Forzar que pdf-zoom-viewer llene el espacio disponible */
     .modal-pdf-viewer pdf-zoom-viewer {
       display: block;
       height: 100%;
     }
 
-    /* Overlay de carga dentro del modal PDF */
     .modal-pdf-loading {
       position: absolute;
       inset: 0;
@@ -362,7 +399,6 @@ export const preregistroTresStyles = css`
       opacity: 1;
     }
 
-    /* ====== BOTÓN ENVIAR ====== */
     .send-code-btn {
       margin: 40px auto 0;
       padding: 16px 48px;
@@ -373,18 +409,9 @@ export const preregistroTresStyles = css`
       transition: all 0.3s ease;
     }
 
-    .send-code-btn:disabled {
-      background: #cfdde8;
-      color: #ffffff;
-    }
+    .send-code-btn:disabled { background: #cfdde8; color: #ffffff; }
+    .send-code-btn:not(:disabled) { background: #0a0f24; color: #ffffff; cursor: pointer; }
 
-    .send-code-btn:not(:disabled) {
-      background: #0a0f24;
-      color: #ffffff;
-      cursor: pointer;
-    }
-
-    /* ====== MODAL ====== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -413,7 +440,6 @@ export const preregistroTresStyles = css`
       text-align: center;
     }
 
-    /* CONTENIDO CON SCROLL */
     .modal-content {
       margin: 20px 0;
       max-height: 320px;
@@ -424,11 +450,7 @@ export const preregistroTresStyles = css`
       color: #333;
     }
 
-    /* BOTÓN ACEPTAR */
-    .modal-actions {
-      display: flex;
-      justify-content: center;
-    }
+    .modal-actions { display: flex; justify-content: center; }
 
     .modal-actions button {
       padding: 14px 40px;
@@ -441,468 +463,121 @@ export const preregistroTresStyles = css`
       cursor: pointer;
     }
 
-    .codigo-wrapper input:focus {
-      border-bottom: 2px solid #131c49;
-      color: #717173;
-    }
-
     @keyframes slideUpFade {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   
-    /* ================== AJUSTE TAMAÑO PARA DISPOSITIVOS MÓVILES ================= */
+    /* ================== RESPONSIVE ================= */
 
-    /* ------------- 1024 PX -------------*/
     @media (max-width: 1024px) {
-      main {
-        max-width: 900px;
-      }
-
-      .panel {
-        padding: 2.8rem 2.2rem;
-      }
-
-      .title {
-        font-size: 2.2rem;
-      }
-
-      .modal-pdf-container {
-        max-width: 680px;
-      }
+      main { max-width: 900px; }
+      .panel { padding: 2.8rem 2.2rem; }
+      .title { font-size: 2.2rem; }
+      .modal-pdf-container { max-width: 680px; }
     }
 
-    /* ------------- 900 PX -------------*/
     @media (max-width: 900px) {
-      .panel {
-        padding: 2.5rem 2rem;
-      }
-
-      .title {
-        font-size: 2rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
-
-      .info {
-        font-size: 1rem;
-      }
-
-      button {
-        font-size: 1.1rem;
-        padding: .8rem 2.4rem;
-      }
-
-      .modal-pdf-container {
-        max-width: 620px;
-        padding: 24px 20px 20px;
-      }
+      .panel { padding: 2.5rem 2rem; }
+      .title { font-size: 2rem; }
+      .subtitle { font-size: 1rem; }
+      .info { font-size: 1rem; }
+      button { font-size: 1.1rem; padding: .8rem 2.4rem; }
+      .modal-pdf-container { max-width: 620px; padding: 24px 20px 20px; }
     }
 
-    /* ------------- 768 PX -------------*/
     @media (max-width: 768px) {
-      main {
-        margin: 2rem auto;
-        padding: 0 1.2rem;
-      }
-
-      .panel {
-        padding: 2.2rem 1.8rem;
-        border-radius: 20px;
-      }
-
-      .title {
-        font-size: 1.9rem;
-      }
-
-      .subtitle {
-        font-size: .98rem;
-        margin-bottom: 2.5rem;
-      }
-
-      .form-group {
-        margin-bottom: 1.6rem;
-      }
-
-      .terms {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .6rem;
-        text-align: left;
-      }
-
-      .actions button {
-        width: 100%;
-      }
-
-      .modal-pdf-container {
-        width: 95%;
-        max-width: 100%;
-        max-height: 88vh;
-        padding: 20px 16px 16px;
-        border-radius: 16px;
-      }
-
-      .modal-pdf-container h2 {
-        font-size: 18px;
-      }
-
-      .modal-container {
-        width: 92%;
-        padding: 24px;
-      }
+      main { margin: 2rem auto; padding: 0 1.2rem; }
+      .panel { padding: 2.2rem 1.8rem; border-radius: 20px; }
+      .title { font-size: 1.9rem; }
+      .subtitle { font-size: .98rem; margin-bottom: 2.5rem; }
+      .form-group { margin-bottom: 1.6rem; }
+      .terms { flex-direction: column; align-items: flex-start; gap: .6rem; text-align: left; }
+      .actions button { width: 100%; }
+      .modal-pdf-container { width: 95%; max-width: 100%; max-height: 88vh; padding: 20px 16px 16px; border-radius: 16px; }
+      .modal-pdf-container h2 { font-size: 18px; }
+      .modal-container { width: 92%; padding: 24px; }
     }
 
-    /* ------------- 640 PX -------------*/
     @media (max-width: 640px) {
-      main {
-        margin: 1.5rem auto;
-        padding: 0 1rem;
-      }
-
-      .panel {
-        padding: 2rem 1.3rem;
-        border-radius: 20px;
-      }
-
-      .title {
-        font-size: 1.7rem;
-      }
-
-      .subtitle {
-        font-size: .95rem;
-        margin-bottom: 2rem;
-      }
-
-      .form-group {
-        margin-bottom: 1.5rem;
-      }
-
-      select {
-        font-size: 1rem;
-        padding: .8rem 1rem;
-      }
-
-      .terms {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .6rem;
-        text-align: left;
-      }
-
-      .info {
-        font-size: .95rem;
-        margin: 1.8rem auto;
-      }
-
-      .actions {
-        margin-top: 1.5rem;
-      }
-
-      .actions button {
-        width: 100%;
-      }
-
-      .codigo-wrapper {
-        max-width: 100%;
-        margin-top: 2rem;
-      }
-
-      .codigo-wrapper input {
-        font-size: 1.8rem;
-      }
-
-      .codigo-wrapper button {
-        width: 100%;
-        margin-top: .5rem;
-      }
-
-      .modal-pdf-container {
-        max-height: 85vh;
-        gap: 12px;
-      }
-
-      .modal-pdf-actions button {
-        padding: 12px 36px;
-        font-size: 15px;
-        width: 100%;
-      }
-
-      .modal-container {
-        width: 95%;
-        padding: 20px 16px;
-        border-radius: 16px;
-      }
-
-      .modal-actions button {
-        width: 100%;
-        padding: 12px 24px;
-      }
+      main { margin: 1.5rem auto; padding: 0 1rem; }
+      .panel { padding: 2rem 1.3rem; border-radius: 20px; }
+      .title { font-size: 1.7rem; }
+      .subtitle { font-size: .95rem; margin-bottom: 2rem; }
+      .form-group { margin-bottom: 1.5rem; }
+      select { font-size: 1rem; padding: .8rem 1rem; }
+      .terms { flex-direction: column; align-items: flex-start; gap: .6rem; text-align: left; }
+      .info { font-size: .95rem; margin: 1.8rem auto; }
+      .actions { margin-top: 1.5rem; }
+      .actions button { width: 100%; }
+      .codigo-wrapper { max-width: 100%; }
+      .codigo-wrapper p strong {
+      font-weight: 400;
     }
 
-    /* ------------- 480 PX -------------*/
+    .codigo-input-row { flex-direction: column; gap: 0.4rem; }
+      .codigo-input-row input { width: 100%; max-width: 220px; }
+      .codigo-wrapper .btn-primario { width: 100%; }
+      .modal-pdf-container { max-height: 85vh; gap: 12px; }
+      .modal-pdf-actions button { padding: 12px 36px; font-size: 15px; width: 100%; }
+      .modal-container { width: 95%; padding: 20px 16px; border-radius: 16px; }
+      .modal-actions button { width: 100%; padding: 12px 24px; }
+    }
+
     @media (max-width: 480px) {
-      main {
-        margin: 1.2rem auto;
-        padding: 0 0.8rem;
-      }
-
-      .panel {
-        padding: 1.8rem 1.1rem;
-        border-radius: 18px;
-      }
-
-      .title {
-        font-size: 1.5rem;
-        margin-bottom: .4rem;
-      }
-
-      .subtitle {
-        font-size: .9rem;
-        margin-bottom: 1.8rem;
-      }
-
-      select {
-        font-size: .95rem;
-        padding: .75rem .9rem;
-        border-radius: 12px;
-      }
-
-      .legal-text {
-        font-size: 14px;
-        gap: 10px;
-      }
-
-      .info {
-        font-size: .88rem;
-        margin: 1.5rem auto;
-      }
-
-      .send-code-btn {
-        font-size: 16px;
-        padding: 14px 32px;
-      }
-
-      .modal-pdf-container {
-        max-height: 82vh;
-        padding: 16px 14px 14px;
-        border-radius: 14px;
-        gap: 10px;
-      }
-
-      .modal-pdf-container h2 {
-        font-size: 16px;
-      }
-
-      .modal-pdf-spinner {
-        width: 40px;
-        height: 40px;
-      }
-
-      .modal-container {
-        padding: 18px 14px;
-        border-radius: 14px;
-      }
-
-      .modal-container h2 {
-        font-size: 18px;
-      }
-
-      .modal-content {
-        font-size: 14px;
-        max-height: 260px;
-      }
+      main { margin: 1.2rem auto; padding: 0 0.8rem; }
+      .panel { padding: 1.8rem 1.1rem; border-radius: 18px; }
+      .title { font-size: 1.5rem; margin-bottom: .4rem; }
+      .subtitle { font-size: .9rem; margin-bottom: 1.8rem; }
+      select { font-size: .95rem; padding: .75rem .9rem; border-radius: 12px; }
+      .legal-text { font-size: 14px; gap: 10px; }
+      .info { font-size: .88rem; margin: 1.5rem auto; }
+      .send-code-btn { font-size: 16px; padding: 14px 32px; }
+      .modal-pdf-container { max-height: 82vh; padding: 16px 14px 14px; border-radius: 14px; gap: 10px; }
+      .modal-pdf-container h2 { font-size: 16px; }
+      .modal-pdf-spinner { width: 40px; height: 40px; }
+      .modal-container { padding: 18px 14px; border-radius: 14px; }
+      .modal-container h2 { font-size: 18px; }
+      .modal-content { font-size: 14px; max-height: 260px; }
     }
 
-    /* ------------- 360 PX -------------*/
     @media (max-width: 360px) {
-      main {
-        margin: 1rem auto;
-        padding: 0 0.5rem;
-      }
-
-      .panel {
-        padding: 1.5rem .9rem;
-        border-radius: 16px;
-      }
-
-      .title {
-        font-size: 1.3rem;
-      }
-
-      .subtitle {
-        font-size: .85rem;
-        margin-bottom: 1.5rem;
-      }
-
-      select {
-        font-size: .88rem;
-        padding: .7rem .8rem;
-        border-radius: 10px;
-      }
-
-      .legal-text {
-        font-size: 13px;
-        gap: 8px;
-      }
-
-      .legal-text input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-      }
-
-      .info {
-        font-size: .83rem;
-        margin: 1.2rem auto;
-      }
-
-      .send-code-btn {
-        font-size: 15px;
-        padding: 12px 24px;
-        width: 100%;
-      }
-
-      .modal-pdf-container {
-        max-height: 80vh;
-        padding: 14px 12px 12px;
-        border-radius: 12px;
-        gap: 8px;
-      }
-
-      .modal-pdf-container h2 {
-        font-size: 15px;
-      }
-
-      .modal-pdf-actions button {
-        font-size: 14px;
-        padding: 11px 20px;
-      }
-
-      .modal-container {
-        padding: 16px 12px;
-        border-radius: 12px;
-      }
-
-      .modal-container h2 {
-        font-size: 16px;
-      }
-
-      .modal-content {
-        font-size: 13px;
-        max-height: 220px;
-      }
-
-      .modal-actions button {
-        font-size: 14px;
-        padding: 11px 20px;
-      }
-
-      .codigo-wrapper input {
-        font-size: 1.6rem;
-      }
+      main { margin: 1rem auto; padding: 0 0.5rem; }
+      .panel { padding: 1.5rem .9rem; border-radius: 16px; }
+      .title { font-size: 1.3rem; }
+      .subtitle { font-size: .85rem; margin-bottom: 1.5rem; }
+      select { font-size: .88rem; padding: .7rem .8rem; border-radius: 10px; }
+      .legal-text { font-size: 13px; gap: 8px; }
+      .legal-text input[type="checkbox"] { width: 18px; height: 18px; }
+      .info { font-size: .83rem; margin: 1.2rem auto; }
+      .send-code-btn { font-size: 15px; padding: 12px 24px; width: 100%; }
+      .modal-pdf-container { max-height: 80vh; padding: 14px 12px 12px; border-radius: 12px; gap: 8px; }
+      .modal-pdf-container h2 { font-size: 15px; }
+      .modal-pdf-actions button { font-size: 14px; padding: 11px 20px; }
+      .modal-container { padding: 16px 12px; border-radius: 12px; }
+      .modal-container h2 { font-size: 16px; }
+      .modal-content { font-size: 13px; max-height: 220px; }
+      .modal-actions button { font-size: 14px; padding: 11px 20px; }
     }
 
-    /* ------------- 320 PX -------------*/
     @media (max-width: 320px) {
-      main {
-        padding: 0 0.4rem;
-      }
-
-      .panel {
-        padding: 1.2rem .7rem;
-        border-radius: 14px;
-      }
-
-      .title {
-        font-size: 1.15rem;
-      }
-
-      .subtitle {
-        font-size: .8rem;
-        margin-bottom: 1.2rem;
-      }
-
-      select {
-        font-size: .82rem;
-        padding: .65rem .7rem;
-      }
-
-      .legal-text {
-        font-size: 12px;
-        gap: 7px;
-      }
-
-      .legal-text input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-      }
-
-      .info {
-        font-size: .78rem;
-        margin: 1rem auto;
-      }
-
-      .send-code-btn {
-        font-size: 14px;
-        padding: 11px 20px;
-      }
-
-      .modal-pdf-container {
-        max-height: 78vh;
-        padding: 12px 10px 10px;
-        border-radius: 10px;
-        gap: 7px;
-      }
-
-      .modal-pdf-container h2 {
-        font-size: 14px;
-      }
-
-      .modal-pdf-spinner {
-        width: 34px;
-        height: 34px;
-        border-width: 3px;
-      }
-
-      .modal-pdf-loading-texto {
-        font-size: .8rem;
-      }
-
-      .modal-pdf-actions button {
-        font-size: 13px;
-        padding: 10px 16px;
-      }
-
-      .modal-container {
-        padding: 14px 10px;
-        border-radius: 10px;
-      }
-
-      .modal-container h2 {
-        font-size: 15px;
-      }
-
-      .modal-content {
-        font-size: 12px;
-        max-height: 180px;
-        margin: 14px 0;
-      }
-
-      .modal-actions button {
-        font-size: 13px;
-        padding: 10px 16px;
-      }
-
-      .codigo-wrapper input {
-        font-size: 1.4rem;
-      }
+      main { padding: 0 0.4rem; }
+      .panel { padding: 1.2rem .7rem; border-radius: 14px; }
+      .title { font-size: 1.15rem; }
+      .subtitle { font-size: .8rem; margin-bottom: 1.2rem; }
+      select { font-size: .82rem; padding: .65rem .7rem; }
+      .legal-text { font-size: 12px; gap: 7px; }
+      .legal-text input[type="checkbox"] { width: 16px; height: 16px; }
+      .info { font-size: .78rem; margin: 1rem auto; }
+      .send-code-btn { font-size: 14px; padding: 11px 20px; }
+      .modal-pdf-container { max-height: 78vh; padding: 12px 10px 10px; border-radius: 10px; gap: 7px; }
+      .modal-pdf-container h2 { font-size: 14px; }
+      .modal-pdf-spinner { width: 34px; height: 34px; border-width: 3px; }
+      .modal-pdf-loading-texto { font-size: .8rem; }
+      .modal-pdf-actions button { font-size: 13px; padding: 10px 16px; }
+      .modal-container { padding: 14px 10px; border-radius: 10px; }
+      .modal-container h2 { font-size: 15px; }
+      .modal-content { font-size: 12px; max-height: 180px; margin: 14px 0; }
+      .modal-actions button { font-size: 13px; padding: 10px 16px; }
     }
 `;

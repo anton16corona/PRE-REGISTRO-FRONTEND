@@ -75,10 +75,8 @@ export const consultaFolioStyles = css`
 
     .form-actions {
       margin-top: 1rem;
-
-      /* ----------- FUENTE ------------- */
       font-family: 'Montserrat', sans-serif;
-      font-weight:600;
+      font-weight: 600;
     }
 
     button {
@@ -112,150 +110,299 @@ export const consultaFolioStyles = css`
       font-size: 1.05rem;
     }
 
-/* ===================== CARRUSEL DE FOTOS ================== */
+    /* ===================== CARRUSEL ==================== */
     .carousel {
-        position: relative;
-        width: 100%;
-        max-width: 700px; 
-        height: 270px;     
-        margin: 3rem auto 0;
-        overflow: hidden;
-        border-radius: 18px;
-    }
-
-    .carousel-track {
-        display: flex;
-        height: 100%;
-        transition: transform 0.6s ease-in-out; /* movimiento suave */
-    }
-
-    .carousel-image {
-        width: 100%;
-        height: 100%;
-        flex-shrink: 0;
-        object-fit: cover;
-        border-radius: 18px;
-    }
-
-  /* ============== 🎬 ANIMACIÓN DE ENTRADA SUTIL ============== */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-in {
-    animation: fadeInUp 0.5s ease-out;
-  }
-
-  /* ===== 1024px ===== */
-  @media (max-width: 1024px) {
-    .card {
-      padding: 3rem 2rem;
-    }
-  }
-
-  /* ===== 900px ===== */
-  @media (max-width: 900px) {
-    .carousel {
-      height: 230px;
-    }
-  }
-
-  /* ===== 768px ===== */
-  @media (max-width: 768px) {
-    .card {
-      padding: 2.5rem 1.5rem;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-    }
-
-    p {
-      font-size: 0.95rem;
-    }
-
-    .folio-linea {
-      font-size: 1.2rem;
-    }
-
-    .btn {
+      position: relative;
       width: 100%;
-    }
-  }
-
-  /* ===== 640px ===== */
-  @media (max-width: 640px) {
-    .carousel {
-      height: 200px;
-    }
-
-    .folio-linea input {
-      width: 70px;
-    }
-  }
-
-  /* ===== 480px ===== */
-  @media (max-width: 480px) {
-    .card {
-      padding: 2rem 1rem;
+      max-width: 700px;
+      height: 270px;
+      margin: 3rem auto 0;
+      overflow: hidden;
       border-radius: 18px;
     }
 
-    h2 {
-      font-size: 1.5rem;
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.6s ease-in-out;
     }
 
-    .folio-linea {
-      font-size: 1rem;
-      gap: .4rem;
-    }
-
-    .btn-secundario {
+    .carousel-image {
       width: 100%;
-      padding: 0.8rem;
-      font-size: 1rem;
+      height: 100%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border-radius: 18px;
     }
 
-    .carousel {
-      height: 180px;
-    }
-  }
-
-  /* ===== 360px ===== */
-  @media (max-width: 360px) {
-    .folio-linea input {
-      width: 60px;
-      font-size: 0.9rem;
+    /* ============== ANIMACIÓN DE ENTRADA ============== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .carousel {
-      height: 160px;
-    }
-  }
-
-  /* ===== 320px ===== */
-  @media (max-width: 320px) {
-    h2 {
-      font-size: 1.3rem;
+    .animate-in {
+      animation: fadeInUp 0.5s ease-out;
     }
 
-    p {
-      font-size: 0.85rem;
+    /* ================================================== */
+    /* ================== BREAKPOINTS =================== */
+    /* ================================================== */
+
+    /* ── 1024px ── */
+    @media (max-width: 1024px) {
+      .card {
+        padding: 3rem 2.5rem;
+        border-radius: 24px;
+      }
+      .carousel {
+        max-width: 600px;
+        height: 240px;
+      }
     }
 
-    .folio-linea {
-      font-size: 0.9rem;
+    /* ── 900px ── */
+    @media (max-width: 900px) {
+      .card {
+        padding: 2.5rem 2rem;
+        border-radius: 22px;
+      }
+      .folio-linea {
+        font-size: 1.3rem;
+        gap: 0.5rem;
+      }
+      .folio-linea input {
+        width: 80px;
+      }
+      .carousel {
+        max-width: 520px;
+        height: 210px;
+      }
     }
 
-    .carousel {
-      height: 140px;
+    /* ── 768px ── */
+    @media (max-width: 768px) {
+      .fondo {
+        padding: 2rem 0.8rem;
+      }
+      .card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+      }
+      h2 {
+        font-size: 1.7rem;
+      }
+      p {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+      }
+      .folio-linea {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 1rem;
+      }
+      .btn-secundario {
+        width: 100%;
+        max-width: 320px;
+        font-size: 1.05rem;
+        padding: 0.8rem 2rem;
+      }
+      .carousel {
+        max-width: 100%;
+        height: 200px;
+        margin-top: 2rem;
+      }
     }
-  }
+
+    /* ── 640px ── */
+    @media (max-width: 640px) {
+      .card {
+        padding: 1.8rem 1.2rem;
+        border-radius: 18px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      .folio-linea {
+        font-size: 1.05rem;
+        gap: 0.4rem;
+        margin-bottom: 1.5rem;
+      }
+      .folio-linea input {
+        width: 70px;
+        padding: 5px 8px;
+      }
+      .folio-linea select {
+        padding: 5px 6px;
+      }
+      .form-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn {
+        width: 100%;
+        max-width: 100%;
+        font-size: 0.95rem;
+      }
+      .btn-secundario {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+      }
+      .carousel {
+        height: 180px;
+        border-radius: 14px;
+      }
+      .carousel-image {
+        border-radius: 14px;
+      }
+    }
+
+    /* ── 480px ── */
+    @media (max-width: 480px) {
+      .fondo {
+        padding: 1.5rem 0.6rem;
+        align-items: flex-start;
+      }
+      .card {
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      p {
+        font-size: 0.85rem;
+        margin-bottom: 1.2rem;
+      }
+      .folio-linea {
+        font-size: 0.95rem;
+        gap: 0.3rem;
+        margin-bottom: 1.2rem;
+      }
+      .folio-linea input {
+        width: 60px;
+        padding: 4px 6px;
+      }
+      .btn {
+        height: 44px;
+        font-size: 0.9rem;
+      }
+      .btn-secundario {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
+      }
+      .carousel {
+        height: 160px;
+        border-radius: 12px;
+        margin-top: 1.5rem;
+      }
+      .carousel-image {
+        border-radius: 12px;
+      }
+    }
+
+    /* ── 360px ── */
+    @media (max-width: 360px) {
+      .card {
+        padding: 1.2rem 0.9rem;
+        border-radius: 14px;
+      }
+      h2 {
+        font-size: 1.15rem;
+      }
+      p {
+        font-size: 0.8rem;
+      }
+      .folio-linea {
+        font-size: 0.88rem;
+        gap: 0.25rem;
+        margin-bottom: 1rem;
+      }
+      .folio-linea input {
+        width: 54px;
+        padding: 4px 5px;
+        border-radius: 8px;
+      }
+      .folio-linea select {
+        padding: 4px 4px;
+        border-radius: 8px;
+      }
+      .btn {
+        height: 42px;
+        font-size: 0.85rem;
+        border-radius: 999px;
+      }
+      .btn-secundario {
+        font-size: 0.85rem;
+        padding: 0.65rem 1rem;
+        border-radius: 22px;
+      }
+      .carousel {
+        height: 140px;
+        border-radius: 10px;
+        margin-top: 1.2rem;
+      }
+      .carousel-image {
+        border-radius: 10px;
+      }
+    }
+
+    /* ── 320px ── */
+    @media (max-width: 320px) {
+      .fondo {
+        padding: 1rem 0.4rem;
+      }
+      .card {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
+      }
+      h2 {
+        font-size: 1rem;
+      }
+      p {
+        font-size: 0.76rem;
+        margin-bottom: 1rem;
+      }
+      .folio-linea {
+        font-size: 0.8rem;
+        gap: 0.2rem;
+        margin-bottom: 0.9rem;
+      }
+      .folio-linea input {
+        width: 48px;
+        padding: 3px 4px;
+        font-size: 0.8rem;
+      }
+      .folio-linea select {
+        padding: 3px 3px;
+        font-size: 0.8rem;
+      }
+      .btn {
+        height: 40px;
+        font-size: 0.8rem;
+      }
+      .btn-secundario {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.9rem;
+      }
+      .carousel {
+        height: 120px;
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
+      .carousel-image {
+        border-radius: 8px;
+      }
+    }
 `;

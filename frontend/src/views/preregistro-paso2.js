@@ -3,139 +3,66 @@ import '../components/ipes-header.js';
 
 import { preregistroDosStyles } from '../styles/preregistro-dos.styles.js';
 
-// ============ CONFIGURACIÓN DE CONVOCATORIAS CON REQUISITOS DE ESTUDIOS ============
 const CONVOCATORIAS = {
-  '/convocatoria-guardia-civica': {
-    nombre: 'GUARDIA CÍVICA',
-    edadMin: 21,
-    edadMax: 50,
-    nivelEstudiosMin: 'SECUNDARIA',
-    imagen: '/src/assets/GC.jpg'
-  },
-  '/convocatoria-guardia-vial': {
-    nombre: 'GUARDIA VIAL',
-    edadMin: 21,
-    edadMax: 50,
-    nivelEstudiosMin: 'SECUNDARIA',
-    imagen: '/src/assets/GV.jpg'
-  },
-  '/convocatoria-guardia-auxiliar': {
-    nombre: 'GUARDIA AUXILIAR',
-    edadMin: 18,
-    edadMax: 50,
-    nivelEstudiosMin: 'SECUNDARIA',
-    imagen: '/src/assets/GA.jpg'
-  },
-  '/convocatoria-auxiliar': {
-    nombre: 'POLICÍA AUXILIAR',
-    edadMin: 18,
-    edadMax: 42,
-    nivelEstudiosMin: 'SECUNDARIA',
-    imagen: '/src/assets/policia/AuxiliarL.jpeg'
-  },
-  '/convocatoria-proximidad': {
-    nombre: 'POLICÍA DE PROXIMIDAD',
-    edadMin: 18,
-    edadMax: 35,
-    nivelEstudiosMin: 'BACHILLERATO',
-    imagen: '/src/assets/proximidad/Proximidad.jpg'
-  },
-  '/convocatoria-proximidad-cibernetica': {
-    nombre: 'POLICÍA ESPECIALIZADA - CIBERNÉTICA',
-    edadMin: 18,
-    edadMax: 35,
-    nivelEstudiosMin: 'LICENCIATURA',
-    imagen: '/src/assets/proximidad/Cibernetica.jpg'
-  },
-  '/convocatoria-proximidad-seg-pub': {
-    nombre: 'POLICÍA ESPECIALIZADA - ANÁLISIS',
-    edadMin: 18,
-    edadMax: 35,
-    nivelEstudiosMin: 'LICENCIATURA',
-    imagen: '/src/assets/proximidad/SegPub.jpeg'
-  },
-  '/convocatoria-proximidad-victimas': {
-    nombre: 'POLICÍA ESPECIALIZADA - VÍCTIMAS',
-    edadMin: 18,
-    edadMax: 35,
-    nivelEstudiosMin: 'LICENCIATURA',
-    imagen: '/src/assets/proximidad/Victimas.jpg'
-  }
+  '/convocatoria-guardia-civica':       { nombre: 'GUARDIA CÍVICA',                   edadMin: 21, edadMax: 50, nivelEstudiosMin: 'SECUNDARIA',   imagen: '/src/assets/GC.jpg' },
+  '/convocatoria-guardia-vial':         { nombre: 'GUARDIA VIAL',                     edadMin: 21, edadMax: 50, nivelEstudiosMin: 'SECUNDARIA',   imagen: '/src/assets/GV.jpg' },
+  '/convocatoria-guardia-auxiliar':     { nombre: 'GUARDIA AUXILIAR',                 edadMin: 18, edadMax: 50, nivelEstudiosMin: 'SECUNDARIA',   imagen: '/src/assets/GA.jpg' },
+  '/convocatoria-auxiliar':             { nombre: 'POLICÍA AUXILIAR',                 edadMin: 18, edadMax: 42, nivelEstudiosMin: 'SECUNDARIA',   imagen: '/src/assets/policia/AuxiliarL.jpeg' },
+  '/convocatoria-proximidad':           { nombre: 'POLICÍA DE PROXIMIDAD',            edadMin: 18, edadMax: 35, nivelEstudiosMin: 'BACHILLERATO', imagen: '/src/assets/proximidad/Proximidad.jpg' },
+  '/convocatoria-proximidad-cibernetica':{ nombre: 'POLICÍA ESPECIALIZADA - CIBERNÉTICA', edadMin: 18, edadMax: 35, nivelEstudiosMin: 'LICENCIATURA', imagen: '/src/assets/proximidad/Cibernetica.jpg' },
+  '/convocatoria-proximidad-seg-pub':   { nombre: 'POLICÍA ESPECIALIZADA - ANÁLISIS', edadMin: 18, edadMax: 35, nivelEstudiosMin: 'LICENCIATURA', imagen: '/src/assets/proximidad/SegPub.jpeg' },
+  '/convocatoria-proximidad-victimas':  { nombre: 'POLICÍA ESPECIALIZADA - VÍCTIMAS', edadMin: 18, edadMax: 35, nivelEstudiosMin: 'LICENCIATURA', imagen: '/src/assets/proximidad/Victimas.jpg' }
 };
 
-// Jerarquía de niveles de estudios (de menor a mayor)
-const NIVELES_ESTUDIOS = {
-  'SECUNDARIA': 1,
-  'BACHILLERATO': 2,
-  'LICENCIATURA': 3,
-  'MAESTRIA': 4,
-  'DOCTORADO': 5
-};
+const NIVELES_ESTUDIOS = { 'SECUNDARIA': 1, 'BACHILLERATO': 2, 'LICENCIATURA': 3, 'MAESTRIA': 4, 'DOCTORADO': 5 };
 
-export class PreregistroPaso2 extends LitElement 
-{
+export class PreregistroPaso2 extends LitElement {
   static styles = [preregistroDosStyles];
 
   static properties = {
-    form: { state: true },
-    formValido: { state: true },
-    ine: { state: true },
-    ineFrenteCargado: { state: true },
-    ineReversoCargado: { state: true },
-    mostrarAlerta: { type: Boolean },
-    alertaConfig: { type: Object },
-    nivelEstudiosValido: { state: true },
-    licencia: { state: true },
-    cartilla: { state: true },
-    certificadoSecundaria: { state: true }
+    form:                    { state: true },
+    formValido:              { state: true },
+    ine:                     { state: true },
+    ineFrenteCargado:        { state: true },
+    ineReversoCargado:       { state: true },
+    mostrarAlerta:           { type: Boolean },
+    alertaConfig:            { type: Object },
+    nivelEstudiosValido:     { state: true },
+    licencia:                { state: true },
+    cartilla:                { state: true },
+    certificadoSecundaria:   { state: true }
   };
 
   constructor() {
     super();
-    this.form = {};
-    this.formValido = false;
-    this.ine = '';
-    this.ineFrenteCargado = false;
-    this.ineReversoCargado = false;
-    this.mostrarAlerta = false;
-    this.alertaConfig = {};
-    this.nivelEstudiosValido = false;
-    this.licencia = '';
-    this.cartilla = '';
+    this.form                  = {};
+    this.formValido            = false;
+    this.ine                   = '';
+    this.ineFrenteCargado      = false;
+    this.ineReversoCargado     = false;
+    this.mostrarAlerta         = false;
+    this.alertaConfig          = {};
+    this.nivelEstudiosValido   = false;
+    this.licencia              = '';
+    this.cartilla              = '';
     this.certificadoSecundaria = '';
-    this.ineFrenteArchivo = null;
-    this.ineReversoArchivo = null;
-
+    this.ineFrenteArchivo      = null;
+    this.ineReversoArchivo     = null;
 
     const guardado = sessionStorage.getItem('paso2_data');
-    if (guardado) {
-      this.form = JSON.parse(guardado);
-    }
+    if (guardado) this.form = JSON.parse(guardado);
   }
-
-  /* ================== UTILIDADES ================== */
 
   updateField(e) {
     this.form[e.target.name] = e.target.value;
-    
-    // Si el campo actualizado es nivelEstudios, validar
-    if (e.target.name === 'nivelEstudios') {
-      this.validarNivelEstudios(e.target.value);
-    }
-    
+    if (e.target.name === 'nivelEstudios') this.validarNivelEstudios(e.target.value);
     this.validateForm();
     sessionStorage.setItem('paso2_data', JSON.stringify(this.form));
   }
 
   normalizeText(e) {
-    const map = { á:'A',é:'E',í:'I',ó:'O',ú:'U',ñ:'N',
-                  Á:'A',É:'E',Í:'I',Ó:'O',Ú:'U',Ñ:'N' };
-
-    e.target.value = e.target.value
-      .replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m])
-      .toUpperCase()
-      .replaceAll(/[^A-Z\s]/g, '');
-
+    const map = { á:'A',é:'E',í:'I',ó:'O',ú:'U',ñ:'N',Á:'A',É:'E',Í:'I',Ó:'O',Ú:'U',Ñ:'N' };
+    e.target.value = e.target.value.replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m]).toUpperCase().replaceAll(/[^A-Z\s]/g, '');
     this.updateField(e);
   }
 
@@ -145,91 +72,54 @@ export class PreregistroPaso2 extends LitElement
   }
 
   interiorFormat(e) {
-    e.target.value = e.target.value
-      .toUpperCase()
-      .replaceAll(/[^A-Z0-9-]/g, '')
-      .slice(0, 5);
-
+    e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9-]/g, '').slice(0, 5);
     this.updateField(e);
   }
 
   handleMunicipioChange(e) {
     const municipio = e.target.value;
-
-    this.form = {
-      ...this.form,
-      municipio: municipio,
-      colonia: '', // Importante limpiar colonia.
-      cp: municipio === 'QUERÉTARO' ? '76000' : ''
-    };
-
-    this.requestUpdate(); // Forzamos al render.
+    this.form = { ...this.form, municipio, colonia: '', cp: municipio === 'QUERÉTARO' ? '76000' : '' };
+    this.requestUpdate();
     this.validateForm();
   }
 
   exteriorInteriorFormat(e) {
-    e.target.value = e.target.value
-      .toUpperCase()
-      .replaceAll(/[^A-Z0-9\-/]/g, '') // Solamente letras, números, y guiones. /
-      .slice(0, 5);
-
+    e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-Z0-9\-/]/g, '').slice(0, 5);
     this.updateField(e);
   }
 
-  /* ================== VALIDACIÓN DE NIVEL DE ESTUDIOS ================== */
-
   validarNivelEstudios(nivelSeleccionado) {
-    if (!nivelSeleccionado) {
-      this.nivelEstudiosValido = false;
-      return;
-    }
+    if (!nivelSeleccionado) { this.nivelEstudiosValido = false; return; }
 
-    const origen = sessionStorage.getItem('origen_convocatoria');
+    const origen       = sessionStorage.getItem('origen_convocatoria');
     const convocatoria = CONVOCATORIAS[origen];
 
-    if (!convocatoria) {
-      console.warn('No se encontró la convocatoria de origen');
-      this.nivelEstudiosValido = true;
-      return;
-    }
+    if (!convocatoria) { this.nivelEstudiosValido = true; return; }
 
-    const nivelRequerido = convocatoria.nivelEstudiosMin;
-    const nivelUsuario = nivelSeleccionado;
+    const jerarquiaRequerida = NIVELES_ESTUDIOS[convocatoria.nivelEstudiosMin];
+    const jerarquiaUsuario   = NIVELES_ESTUDIOS[nivelSeleccionado];
 
-    // Comparar niveles usando la jerarquía
-    const jerarquiaRequerida = NIVELES_ESTUDIOS[nivelRequerido];
-    const jerarquiaUsuario = NIVELES_ESTUDIOS[nivelUsuario];
-
-    // El usuario debe tener al menos el nivel requerido
     if (jerarquiaUsuario < jerarquiaRequerida) {
-      // NO CUMPLE con el nivel de estudios
-      const alternativas = this.getConvocatoriasCompatiblesEstudios(nivelUsuario)
-        .filter(c => c.path !== origen);
-
+      const alternativas = this.getConvocatoriasCompatiblesEstudios(nivelSeleccionado).filter(c => c.path !== origen);
       if (alternativas.length > 0) {
-        // Hay convocatorias alternativas
         this.mostrarAlerta = true;
-        this.alertaConfig = {
-          tipo: 'warning-redireccion',
-          titulo: 'ESTIMADO USUARIO',
+        this.alertaConfig  = {
+          tipo: 'warning-redireccion', titulo: 'ESTIMADO USUARIO',
           mensaje: 'De acuerdo a la información proporcionada, usted NO cumple con el nivel de estudios mínimo requerido para la convocatoria seleccionada.',
           extra: 'De igual manera, le invitamos a conocer las siguientes convocatorias, ajustadas a su perfil académico proporcionado.',
-          alternativas: alternativas
+          alternativas
         };
       } else {
-        // No hay convocatorias compatibles
         this.mostrarAlerta = true;
-        this.alertaConfig = {
-          tipo: 'error',
-          titulo: 'Nivel de estudios insuficiente',
-          mensaje: `Se requiere al menos ${nivelRequerido} para esta convocatoria.`,
+        this.alertaConfig  = {
+          tipo: 'error', titulo: 'Nivel de estudios insuficiente',
+          mensaje: `Se requiere al menos ${convocatoria.nivelEstudiosMin} para esta convocatoria.`,
           extra: 'Actualmente no existe ninguna convocatoria compatible con su nivel de estudios.',
           boton: 'ENTENDIDO'
         };
       }
       this.nivelEstudiosValido = false;
     } else {
-      // SÍ CUMPLE con el nivel de estudios.
       this.nivelEstudiosValido = true;
       this.mostrarAlerta = false;
     }
@@ -237,143 +127,62 @@ export class PreregistroPaso2 extends LitElement
 
   getConvocatoriasCompatiblesEstudios(nivelUsuario) {
     const jerarquiaUsuario = NIVELES_ESTUDIOS[nivelUsuario];
-    
     return Object.entries(CONVOCATORIAS)
-      .map(([path, data]) => ({
-        path,
-        nombre: data.nombre,
-        nivelEstudiosMin: data.nivelEstudiosMin,
-        imagen: data.imagen || '/assets/default-convocatoria.jpg'
-      }))
-      .filter(c => {
-        const jerarquiaRequerida = NIVELES_ESTUDIOS[c.nivelEstudiosMin];
-        return jerarquiaUsuario >= jerarquiaRequerida;
-      });
+      .map(([path, data]) => ({ path, nombre: data.nombre, nivelEstudiosMin: data.nivelEstudiosMin, imagen: data.imagen || '/assets/default-convocatoria.jpg' }))
+      .filter(c => jerarquiaUsuario >= NIVELES_ESTUDIOS[c.nivelEstudiosMin]);
   }
 
   get requiereCertificadoSecundaria() {
     const origen = sessionStorage.getItem('origen_convocatoria');
-    const convocatoria = CONVOCATORIAS[origen];
-
-    if (!convocatoria) return false;
-
-    return (
-      convocatoria.nivelEstudiosMin === 'SECUNDARIA' &&
-      this.form.nivelEstudios
-    );
+    const conv   = CONVOCATORIAS[origen];
+    return conv ? conv.nivelEstudiosMin === 'SECUNDARIA' && this.form.nivelEstudios : false;
   }
-
-  /* ================== INE ================== */
 
   handleIneFrente(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      this.ineFrenteCargado = true;
-      this.ineFrenteArchivo = e.target.files[0].name;     // ---- Se guarda el nombre del archivo (próximamente ruta o URL).
-      this.validateForm();
-    }
+    if (e.target.files?.length > 0) { this.ineFrenteCargado = true; this.ineFrenteArchivo = e.target.files[0].name; this.validateForm(); }
   }
 
-handleIneReverso(e) {
-  if (e.target.files && e.target.files.length > 0) {
-    this.ineReversoCargado = true;
-    this.ineReversoArchivo = e.target.files[0].name;      // ---- Se guarda el nombre del archivo (próximamente ruta o URL).
-    this.validateForm();
+  handleIneReverso(e) {
+    if (e.target.files?.length > 0) { this.ineReversoCargado = true; this.ineReversoArchivo = e.target.files[0].name; this.validateForm(); }
   }
-}
 
   get ineValido() {
-    if (this.ine === 'si') {
-      return this.ineFrenteCargado && this.ineReversoCargado;
-    }
-    return true;
+    return this.ine === 'si' ? this.ineFrenteCargado && this.ineReversoCargado : true;
   }
 
-  /* ================== VALIDACIÓN GENERAL ================== */
   validateForm() {
-      const f = this.form;
+    const f = this.form;
+    const certificadoValido = !this.requiereCertificadoSecundaria || this.certificadoSecundaria !== '';
+    const documentosValidos = this.licencia !== '' && this.cartilla !== '' && this.ine !== '' && this.ineValido && certificadoValido;
 
-      const certificadoValido =
-        !this.requiereCertificadoSecundaria ||
-        this.certificadoSecundaria !== '';
-
-      const documentosValidos =
-        (this.licencia !== '') &&     // Obligatorio seleccionar.
-        (this.cartilla !== '') &&     // Obligatorio seleccionar.
-        (this.ine !== '') &&          // Obligatorio seleccionar.
-        this.ineValido &&             // Si dijo sí, debe subir archivos.
-        certificadoValido;            
-
-      this.formValido =
-        f.municipio &&
-        f.cp?.length === 5 &&
-        f.colonia &&
-        f.calle &&
-        f.exterior &&
-        f.nivelEstudios &&
-        f.contactoAlterno &&
-        f.telAlterno?.length === 10 &&
-        documentosValidos &&
-        this.nivelEstudiosValido;
-    }
-
-  /* ================== NAVEGACIÓN ================== */
-
-  goBack() {
-    globalThis.location.href = '/preregistro';
+    this.formValido =
+      f.municipio && f.cp?.length === 5 && f.colonia && f.calle && f.exterior &&
+      f.nivelEstudios && f.contactoAlterno && f.telAlterno?.length === 10 &&
+      documentosValidos && this.nivelEstudiosValido;
   }
+
+  goBack()   { globalThis.location.href = '/preregistro'; }
+  cancelar() { const origen = sessionStorage.getItem('origen_convocatoria'); sessionStorage.clear(); globalThis.location.href = origen || '/convocatorias-view'; }
 
   irACorreo() {
-
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
-
     data.paso2 = {
-      ...this.form,
-      licencia: this.licencia,
-      cartilla: this.cartilla,
+      ...this.form, licencia: this.licencia, cartilla: this.cartilla,
       certificadoSecundaria: this.certificadoSecundaria,
-
-      ine: {
-        tieneINE: this.ine === 'si',
-        frente: this.ine === 'si' ? this.ineFrenteArchivo : null,
-        reverso: this.ine === 'si' ? this.ineReversoArchivo : null
-      }
+      ine: { tieneINE: this.ine === 'si', frente: this.ine === 'si' ? this.ineFrenteArchivo : null, reverso: this.ine === 'si' ? this.ineReversoArchivo : null }
     };
-
-    sessionStorage.setItem(
-      'preregistro_data',
-      JSON.stringify(data)
-    );
-
+    sessionStorage.setItem('preregistro_data', JSON.stringify(data));
     globalThis.location.href = '/preregistro-envio';
   }
 
-  /* ================== BOTÓN DE CANCELACIÓN ================== */
-  cancelar() {
-    const origen = sessionStorage.getItem('origen_convocatoria');
-    sessionStorage.clear();
-    globalThis.location.href = origen || '/convocatorias-view';
-  }
-
-  /* ================== CONTROL DE ALERTA ================== */
-  cerrarAlerta() {
-    this.mostrarAlerta = false;
-  }
-
-  handleAlertaAceptar() {
-    this.mostrarAlerta = false;
-  }
+  cerrarAlerta()       { this.mostrarAlerta = false; }
+  handleAlertaAceptar(){ this.mostrarAlerta = false; }
 
   connectedCallback() {
     super.connectedCallback();
-
-    const data = sessionStorage.getItem('preregistro_data');
-
-    if (!data) {
-      globalThis.location.href = '/preregistro';
-    }
+    if (!sessionStorage.getItem('preregistro_data')) globalThis.location.href = '/preregistro';
   }
 
-  /* ========================================= HTML ======================================== */
   render() {
     return html`
       ${this.mostrarAlerta ? html`
@@ -382,11 +191,11 @@ handleIneReverso(e) {
           .tipo=${this.alertaConfig.tipo}
           .titulo=${this.alertaConfig.titulo}
           .mensaje=${this.alertaConfig.mensaje}
-          .extra=${this.alertaConfig.extra}
-          .boton=${this.alertaConfig.boton}
+          .extra=${this.alertaConfig.extra || ''}
+          .boton=${this.alertaConfig.boton || 'ENTENDIDO'}
           .alternativas=${this.alertaConfig.alternativas || []}
-          @cerrar=${this.cerrarAlerta}
-          @aceptar=${this.handleAlertaAceptar}
+          @alerta-cerrar=${() => this.cerrarAlerta()}
+          @alerta-aceptar=${() => this.handleAlertaAceptar()}
         ></alerta-view>
       ` : ''}
 
@@ -401,9 +210,8 @@ handleIneReverso(e) {
           <div class="grid">
             <div>
               <label><span class="required">*</span> Nombre Completo: </label>
-              <input name="contactoAlterno" placeholder="NOMBRE DEL CONTACTO" @input=${this.normalizeText} />
+              <input name="contactoAlterno" placeholder="NOMBRE DEL CONTACTO" @input=${e => this.normalizeText(e)} />
             </div>
-
             <div>
               <label><span class="required">*</span> No. Teléfono: </label>
               <input name="telAlterno" placeholder="(55) 1234-5678" maxlength="10" @input=${e => this.onlyNumbers(e,10)} />
@@ -414,224 +222,95 @@ handleIneReverso(e) {
           <div class="grid">
             <div>
               <label><span class="required">*</span> Municipio: </label>
-              <select name="municipio" @change=${this.handleMunicipioChange}>
+              <select name="municipio" @change=${e => this.handleMunicipioChange(e)}>
                 <option value="">Selecciona un municipio</option>
-                <option>AMEALCO DE BONFIL</option>
-                <option>ARROYO SECO</option>
-                <option>CADEREYTA DE MONTES</option>
-                <option>COLÓN</option>
-                <option>CORREGIDORA</option>
-                <option>EL MARQUÉS</option>
-                <option>EZEQUIEL MONTES</option>
-                <option>HUIMILPAN</option>
-                <option>JALPAN DE SERRA</option>
-                <option>LANDA DE MATAMOROS</option>
-                <option>PEDRO ESCOBEDO</option>
-                <option>PEÑAMILLER</option>
-                <option>PINAL DE AMOLES</option>
-                <option>QUERÉTARO</option>
-                <option>SAN JOAQUÍN</option>
-                <option>SAN JUAN DEL RÍO</option>
-                <option>TEQUISQUIAPAN</option>
-                <option>TOLIMÁN</option>
+                <option>AMEALCO DE BONFIL</option><option>ARROYO SECO</option>
+                <option>CADEREYTA DE MONTES</option><option>COLÓN</option>
+                <option>CORREGIDORA</option><option>EL MARQUÉS</option>
+                <option>EZEQUIEL MONTES</option><option>HUIMILPAN</option>
+                <option>JALPAN DE SERRA</option><option>LANDA DE MATAMOROS</option>
+                <option>PEDRO ESCOBEDO</option><option>PEÑAMILLER</option>
+                <option>PINAL DE AMOLES</option><option>QUERÉTARO</option>
+                <option>SAN JOAQUÍN</option><option>SAN JUAN DEL RÍO</option>
+                <option>TEQUISQUIAPAN</option><option>TOLIMÁN</option>
               </select>
             </div>
-
             <div class="short">
               <label><span class="required">*</span> C.P.: </label>
-                <input 
-                  type="text"
-                  name="cp"
-                  .value=${this.form.cp}
-                  @input=${e => this.onlyNumbers(e,5)}
-                  maxlength="5"
-                  ?disabled=${!this.form.municipio || this.form.municipio === 'QUERÉTARO'}
-                  placeholder="Ingrese código postal"
-                />
+              <input type="text" name="cp" .value=${this.form.cp} @input=${e => this.onlyNumbers(e,5)} maxlength="5"
+                ?disabled=${!this.form.municipio || this.form.municipio === 'QUERÉTARO'} placeholder="Ingrese código postal" />
             </div>
-
             <div>
               <label><span class="required">*</span> Colonia: </label>
-
               ${this.form.municipio === 'QUERÉTARO' ? html`
-                <select name="colonia" @change=${this.updateField}>
+                <select name="colonia" @change=${e => this.updateField(e)}>
                   <option value="">Selecciona una colonia</option>
-                  <option>JURICA</option>
-                  <option>EL REFUGIO</option>
-                  <option>CENTRO</option>
-                  <option>MILENIO</option>
-                  <option>LA PRADERA</option>
+                  <option>JURICA</option><option>EL REFUGIO</option>
+                  <option>CENTRO</option><option>MILENIO</option><option>LA PRADERA</option>
                 </select>
-              ` : html`
-                <input 
-                  name="colonia" 
-                  placeholder="CENTRO"
-                  @input=${this.normalizeText} />
-              `}
+              ` : html`<input name="colonia" placeholder="CENTRO" @input=${e => this.normalizeText(e)} />`}
             </div>
-
             <div>
               <label><span class="required">*</span> Calle: </label>
-              <input name="calle" placeholder="AV PRINCIPAL" @input=${this.normalizeText} />
+              <input name="calle" placeholder="AV PRINCIPAL" @input=${e => this.normalizeText(e)} />
             </div>
-
             <div class="short">
               <label><span class="required">*</span> No. Exterior: </label>
-              <input name="exterior" placeholder="123-A" maxlength="5" @input=${this.exteriorInteriorFormat} />
+              <input name="exterior" placeholder="123-A" maxlength="5" @input=${e => this.exteriorInteriorFormat(e)} />
             </div>
-
             <div class="short">
               <label>No. Interior: </label>
-              <input name="interior" placeholder="A-1" maxlength="5" @input=${this.exteriorInteriorFormat} />
+              <input name="interior" placeholder="A-1" maxlength="5" @input=${e => this.exteriorInteriorFormat(e)} />
             </div>
           </div>
 
           <h2>DOCUMENTACIÓN</h2>
           <div>
             <label><span class="required">*</span> Último nivel de estudios concluidos</label>
-            <select name="nivelEstudios" @change=${this.updateField}>
+            <select name="nivelEstudios" @change=${e => this.updateField(e)}>
               <option value="">Selecciona una opción</option>
-              <option>SECUNDARIA</option>
-              <option>BACHILLERATO</option>
-              <option>LICENCIATURA</option>
-              <option>MAESTRIA</option>
-              <option>DOCTORADO</option>
+              <option>SECUNDARIA</option><option>BACHILLERATO</option>
+              <option>LICENCIATURA</option><option>MAESTRIA</option><option>DOCTORADO</option>
             </select>
           </div>
 
-          <!-- GRUPO DE CERTIFICADOS Y DOCUMENTOS PARA PREGUNTAR SI CUENTA CON ELLOS. -->
-          <div class="radio-line">  
-            <!-- CERTIFICADO DE SECUNDARIA -->
+          <div class="radio-line">
             <div class="radio-group">
-              <span class="radio-label">
-                Certificado de Secundaria:
-              </span>
-
-              <label>
-                <input
-                  type="radio"
-                  name="certificadoSecundaria"
-                  value="si"
-                  @change=${e => {
-                    this.certificadoSecundaria = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>Sí</span>
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="certificadoSecundaria"
-                  value="no"
-                  @change=${e => {
-                    this.certificadoSecundaria = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>No</span>
-              </label>
+              <span class="radio-label">Certificado de Secundaria:</span>
+              <label><input type="radio" name="certificadoSecundaria" value="si" @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); }}><span>Sí</span></label>
+              <label><input type="radio" name="certificadoSecundaria" value="no" @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); }}><span>No</span></label>
             </div>
-
-            <!-- LICENCIA -->
             <div class="radio-group">
               <span class="radio-label">Licencia de Conducir:</span>
-              <label>
-                <input type="radio"
-                  name="licencia"
-                  value="si"
-                  @change=${e => {
-                    this.licencia = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>Sí</span>
-              </label>
-              <label>
-                <input type="radio"
-                  name="licencia"
-                  value="no"
-                  @change=${e => {
-                    this.licencia = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>No</span>
-              </label>
+              <label><input type="radio" name="licencia" value="si" @change=${e => { this.licencia = e.target.value; this.validateForm(); }}><span>Sí</span></label>
+              <label><input type="radio" name="licencia" value="no" @change=${e => { this.licencia = e.target.value; this.validateForm(); }}><span>No</span></label>
             </div>
-
-            <!-- CARTILLA -->
             <div class="radio-group">
               <span class="radio-label">Cartilla Servicio Militar:</span>
-              <label>
-                <input type="radio"
-                  name="cartilla"
-                  value="si"
-                  @change=${e => {
-                    this.cartilla = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>Sí</span>
-              </label>
-              <label>
-                <input type="radio"
-                  name="cartilla"
-                  value="no"
-                  @change=${e => {
-                    this.cartilla = e.target.value;
-                    this.validateForm();
-                  }}>
-                <span>No</span>
-              </label>
+              <label><input type="radio" name="cartilla" value="si" @change=${e => { this.cartilla = e.target.value; this.validateForm(); }}><span>Sí</span></label>
+              <label><input type="radio" name="cartilla" value="no" @change=${e => { this.cartilla = e.target.value; this.validateForm(); }}><span>No</span></label>
             </div>
-
-            <!-- INE -->
             <div class="radio-group">
               <span class="radio-label">INE:</span>
-              <label>
-                <input type="radio"
-                  name="ine"
-                  value="si"
-                  @change=${() => {
-                    this.ine = 'si';
-                    this.ineFrenteCargado = false;
-                    this.ineReversoCargado = false;
-                    this.validateForm();
-                  }}>
-                <span>Sí</span>
-              </label>
-              <label>
-                <input type="radio"
-                  name="ine"
-                  value="no"
-                  @change=${() => {
-                    this.ine = 'no';
-                    this.ineFrenteCargado = false;
-                    this.ineReversoCargado = false;
-                    this.validateForm();
-                  }}>
-                <span>No</span>
-              </label>
+              <label><input type="radio" name="ine" value="si" @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>Sí</span></label>
+              <label><input type="radio" name="ine" value="no" @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>No</span></label>
             </div>
           </div>
 
-          <label class="note">
-            <span class="required">Nota: </span>
-            En caso de indicar "SI" en INE, por favor, anexe una imagen del Anverso (Frente) y Reverso de la misma.
-          </label>
+          <label class="note"><span class="required">Nota: </span>En caso de indicar "SI" en INE, por favor, anexe una imagen del Anverso (Frente) y Reverso de la misma.</label>
 
-          <!-- INE -->
           ${this.ine === 'si' ? html`
             <div class="docs">
-              <input type="file" accept="image/*" @change=${this.handleIneFrente} placeholder="Frente INE">
-              <input type="file" accept="image/*" @change=${this.handleIneReverso} placeholder="Reverso INE">
+              <input type="file" accept="image/*" @change=${e => this.handleIneFrente(e)} placeholder="Frente INE">
+              <input type="file" accept="image/*" @change=${e => this.handleIneReverso(e)} placeholder="Reverso INE">
             </div>
           ` : ''}
 
           <div class="form-actions">
-            <button class="btn-secundario" @click=${this.goBack}>VOLVER</button>
-            <button class="btn-cancelar" @click=${this.cancelar}>CANCELAR</button>
+            <button class="btn-secundario" @click=${() => this.goBack()}>VOLVER</button>
+            <button class="btn-cancelar"   @click=${() => this.cancelar()}>CANCELAR</button>
             ${this.formValido ? html`
-              <button class="btn-primario" @click=${this.irACorreo}>
-                CONTINUAR
-              </button>
+              <button class="btn-primario" @click=${() => this.irACorreo()}>CONTINUAR</button>
             ` : ''}
           </div>
         </div>

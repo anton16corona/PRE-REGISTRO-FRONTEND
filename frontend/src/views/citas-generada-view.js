@@ -6,46 +6,39 @@ import { citasGeneradaStyles } from '../styles/citas-generada.styles.js';
 export class CitasGeneradaView extends LitElement {
 
   static styles = [citasGeneradaStyles];
-  
+
   static properties = {
-    folio: { type: String },
+    folio:         { type: String },
     mostrarAlerta: { type: Boolean },
-    alertaConfig: { type: Object }
+    alertaConfig:  { type: Object }
   };
 
   constructor() {
     super();
-
-    const folioGuardado = sessionStorage.getItem('folio_preregistro');
-
-    this.folio = folioGuardado || '---';
-
+    this.folio         = sessionStorage.getItem('folio_preregistro') || '---';
     this.mostrarAlerta = false;
-    this.alertaConfig = {};
+    this.alertaConfig  = {};
   }
 
   aceptar() {
     this.mostrarAlerta = true;
-    this.alertaConfig = {
-      tipo: 'success',
-      titulo: 'Cita registrada exitosamente',
-      mensaje:
-        'La información de tu cita fue enviada correctamente al correo electrónico proporcionado.',
-      extra: `Tu folio de seguimiento es: ${this.folio}`,
-      boton: 'ENTENDIDO'
+    this.alertaConfig  = {
+      tipo:    'exito',
+      titulo:  'Cita registrada exitosamente',
+      mensaje: 'La información de tu cita fue enviada correctamente al correo electrónico proporcionado.',
+      extra:   `Tu folio de seguimiento es: ${this.folio}`,
+      boton:   'ENTENDIDO'
     };
   }
 
   consultarFolio() {
     sessionStorage.setItem('folio_consulta', this.folio);
-
     globalThis.history.pushState({}, '', '/consulta-folio');
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
 
   cerrarAlerta() {
     this.mostrarAlerta = false;
-
     globalThis.history.pushState({}, '', '/convocatorias');
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
@@ -58,9 +51,10 @@ export class CitasGeneradaView extends LitElement {
           .tipo=${this.alertaConfig.tipo}
           .titulo=${this.alertaConfig.titulo}
           .mensaje=${this.alertaConfig.mensaje}
-          .extra=${this.alertaConfig.extra}
+          .extra=${this.alertaConfig.extra || ''}
           .boton=${this.alertaConfig.boton}
-          @aceptar=${this.cerrarAlerta}
+          @alerta-cerrar=${() => this.cerrarAlerta()}
+          @alerta-aceptar=${() => this.cerrarAlerta()}
         ></alerta-view>
       ` : ''}
 
@@ -70,9 +64,7 @@ export class CitasGeneradaView extends LitElement {
         <div class="card">
           <div class="icono">
             <svg viewBox="0 0 24 24">
-              <path
-                d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"
-              />
+              <path d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/>
             </svg>
           </div>
 
@@ -89,13 +81,8 @@ export class CitasGeneradaView extends LitElement {
           </div>
 
           <div class="acciones">
-            <div class="btn primario" @click=${this.aceptar}>
-              ACEPTAR
-            </div>
-
-            <div class="btn secundario" @click=${this.consultarFolio}>
-              CONSULTAR CON FOLIO
-            </div>
+            <div class="btn primario"   @click=${() => this.aceptar()}>ACEPTAR</div>
+            <div class="btn secundario" @click=${() => this.consultarFolio()}>CONSULTAR CON FOLIO</div>
           </div>
         </div>
       </div>

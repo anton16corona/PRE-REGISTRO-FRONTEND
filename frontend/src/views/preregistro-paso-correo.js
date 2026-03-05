@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import '../components/ipes-header.js';
 import './pdf-zoom-viewer.js';
+import './alerta-view.js'; // ✅ AGREGADO
 
 import { preregistroTresStyles } from '../styles/preregistro-tres.styles.js';
 
@@ -60,22 +61,16 @@ export class PreregistroPasoCorreo extends LitElement
   }
 
   async generarFolio(siglas) {
-
     const resp = await fetch(`http://localhost:3000/preregistros?siglas=${siglas}`);
     const registros = await resp.json();
-
     const siguiente = registros.length + 1;
-
     const consecutivo = String(siguiente).padStart(3, '0');
-
     return `SSPMQ/IPES/${siglas}/6-${consecutivo}`;
   }
 
   async validarCURPExistente(curp) {
-
     const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`);
     const data = await resp.json();
-
     return data.length > 0;
   }
 
@@ -108,31 +103,25 @@ export class PreregistroPasoCorreo extends LitElement
   }
 
   finalizar() {
-    //SIMULACIÓN: código incorrecto
     if (this.codigo === '000000') {
       this.mostrarAlerta = true;
       this.alertaConfig = {
         tipo: 'info',
         titulo: 'Código no válido',
-        mensaje:
-          'El código ingresado no coincide con el enviado a tu correo electrónico.',
-        extra:
-          'Por favor, verifica que sea el mismo que se te ha enviado en tu dirección de correo.',
+        mensaje: 'El código ingresado no coincide con el enviado a tu correo electrónico.',
+        extra: 'Por favor, verifica que sea el mismo que se te ha enviado en tu dirección de correo.',
         boton: 'ENTENDIDO'
       };
       return;
     }
 
-    //Leer objeto maestro
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
 
-    //Agregar paso 3
     data.paso3 = {
       medio: this.medio,
       fechaEnvio: new Date().toISOString()
     };
 
-    //Construir objeto final limpio
     const preregistroFinal = {
       ...data.paso1,
       ...data.paso2,
@@ -140,19 +129,13 @@ export class PreregistroPasoCorreo extends LitElement
       estatus: 'PENDIENTE'
     };
 
-    //Guardar JSON final (temporalmente)
-    sessionStorage.setItem(
-      'preregistro_final',
-      JSON.stringify(preregistroFinal)
-    );
+    sessionStorage.setItem('preregistro_final', JSON.stringify(preregistroFinal));
 
-    //Simular folio dinámico
     const folio = `GC-${Math.floor(100000 + Math.random() * 900000)}`;
 
     sessionStorage.setItem('preregistro_completado', 'true');
     sessionStorage.setItem('folio_preregistro', folio);
 
-    //Redirigir
     globalThis.location.href = '/preregistro-completado';
   }
 
@@ -160,7 +143,6 @@ export class PreregistroPasoCorreo extends LitElement
     super.connectedCallback();
 
     const data = sessionStorage.getItem('preregistro_data');
-
     if (!data) {
       globalThis.location.href = '/preregistro';
     }
@@ -169,14 +151,13 @@ export class PreregistroPasoCorreo extends LitElement
   cerrarAlerta() {
     this.mostrarAlerta = false;
 
-    // si fue error de código, reabrimos modal
     if (this.alertaConfig?.titulo === 'Código no válido') {
       this.codigo = '';
       this.showCodigoModal = true;
     }
   }
 
-  /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
+  /* =========================== TÉRMINOS Y AVISOS =========================== */
   get allAccepted() {
     return this.termsAccepted && this.privacyAccepted;
   }
@@ -204,19 +185,15 @@ export class PreregistroPasoCorreo extends LitElement
       this.termsAccepted = true;
       this.showTermsModal = false;
     }
-
     if (type === 'privacy') {
       this.privacyAccepted = true;
       this.showPrivacyModal = false;
     }
-
     this.requestUpdate();
   }
 
-  async validarDesdeModal() 
-  {
+  async validarDesdeModal() {
     if (this.codigo === '000000') {
-
       this.alertaConfig = {
         tipo: 'info',
         titulo: 'Código no válido',
@@ -224,7 +201,6 @@ export class PreregistroPasoCorreo extends LitElement
         extra: 'Verifica el código enviado a tu correo.',
         boton: 'INTENTAR DE NUEVO'
       };
-
       this.showCodigoModal = false;
       this.mostrarAlerta = true;
       return;
@@ -240,12 +216,9 @@ export class PreregistroPasoCorreo extends LitElement
     };
 
     const curp = data.paso1.curp;
-
-    //VALIDAR CURP DUPLICADA
     const existe = await this.validarCURPExistente(curp);
 
     if (existe) {
-
       this.alertaConfig = {
         tipo: 'info',
         titulo: 'CURP ya registrada',
@@ -253,17 +226,13 @@ export class PreregistroPasoCorreo extends LitElement
         extra: 'No es posible realizar más de un preregistro.',
         boton: 'ENTENDIDO'
       };
-
       this.mostrarAlerta = true;
       return;
     }
 
-    //OBTENER CONVOCATORIA
     const origen = sessionStorage.getItem('origen_convocatoria');
     const siglas = this.getSiglasConvocatoria(origen);
-
-    //GENERAR FOLIO
-    const folio = await this.generarFolio(siglas);
+    const folio  = await this.generarFolio(siglas);
 
     const preregistroFinal = {
       ...data.paso1,
@@ -275,12 +244,9 @@ export class PreregistroPasoCorreo extends LitElement
       fechaRegistro: new Date().toISOString()
     };
 
-    //GUARDAR
     await fetch('http://localhost:3000/preregistros', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(preregistroFinal)
     });
 
@@ -290,18 +256,13 @@ export class PreregistroPasoCorreo extends LitElement
     globalThis.location.href = '/preregistro-completado';
   }
 
-
-/* ============================================= HTML ============================================= */
+  /* ============================================= HTML ============================================= */
   renderLegalModal(type) {
     const isPrivacy = type === 'privacy';
-    const title = isPrivacy ? 'Aviso de Privacidad' : 'Términos y Condiciones';
-    const pdfUrl = isPrivacy
-      ? '/convocatoria/AvisoPrivacidad.pdf'
-      : '/convocatoria/TerminosCondiciones.pdf';
-    const loaded = isPrivacy ? this.privacyPdfCargado : this.termsPdfCargado;
-    const onLoaded = isPrivacy
-      ? this.onPrivacyPdfLoaded.bind(this)
-      : this.onTermsPdfLoaded.bind(this);
+    const title   = isPrivacy ? 'Aviso de Privacidad' : 'Términos y Condiciones';
+    const pdfUrl  = isPrivacy ? '/convocatoria/AvisoPrivacidad.pdf' : '/convocatoria/TerminosCondiciones.pdf';
+    const loaded  = isPrivacy ? this.privacyPdfCargado : this.termsPdfCargado;
+    const onLoaded = isPrivacy ? this.onPrivacyPdfLoaded.bind(this) : this.onTermsPdfLoaded.bind(this);
 
     return html`
       <div class="modal-pdf-overlay">
@@ -330,10 +291,7 @@ export class PreregistroPasoCorreo extends LitElement
           </div>
 
           <div class="modal-pdf-actions">
-            <button
-              ?disabled=${!loaded}
-              @click=${() => this.acceptLegal(type)}
-            >
+            <button ?disabled=${!loaded} @click=${() => this.acceptLegal(type)}>
               Aceptar
             </button>
           </div>
@@ -341,8 +299,6 @@ export class PreregistroPasoCorreo extends LitElement
       </div>
     `;
   }
-
-
 
   render() {
     return html`
@@ -352,9 +308,10 @@ export class PreregistroPasoCorreo extends LitElement
           .tipo=${this.alertaConfig.tipo}
           .titulo=${this.alertaConfig.titulo}
           .mensaje=${this.alertaConfig.mensaje}
-          .extra=${this.alertaConfig.extra}
+          .extra=${this.alertaConfig.extra || ''}
           .boton=${this.alertaConfig.boton}
-          @aceptar=${this.cerrarAlerta}
+          @alerta-cerrar=${() => this.cerrarAlerta()}
+          @alerta-aceptar=${() => this.cerrarAlerta()}
         ></alerta-view>
       ` : ''}
 
@@ -363,32 +320,33 @@ export class PreregistroPasoCorreo extends LitElement
           modal
           tipo="info"
           titulo="Validación de correo electrónico"
-          mensaje="Estimado aspirante, hemos recibido tu solicitud para realizar un pre-registro como participante en alguno de los 
-          perfiles del Instituto Policial de Estudios Superiores de la Secretaría de Seguridad Pública Municipal de Querétaro. 
-          Para poder continuar con tu pre-registro, es necesario validar el correo electrónico proporcionado. 
-          Por favor introduce el siguiente Código de Verificación en el campo señalado:"
+          mensaje=""
           boton=""
-          @aceptar=${() => {}}
+          @alerta-cerrar=${() => { this.showCodigoModal = false; }}
+          @alerta-aceptar=${() => {}}
         >
-
           <div class="codigo-wrapper">
-            <label class="code">CÓDIGO</label>
+            <p><strong>Estimado aspirante, hemos recibido tu solicitud para realizar un pre-registro como participante en alguno de los perfiles del Instituto Policial de Estudios Superiores de la Secretaría de Seguridad Pública Municipal de Querétaro.</strong></p>
+            <p><strong>Para poder continuar con tu pre-registro, es necesario validar el correo electrónico proporcionado.</strong></p>
+            <p><strong>Por favor introduce el siguiente Código de Verificación en el campo señalado:</strong></p>
 
-            <input
-              maxlength="6"
-              .value=${this.codigo}
-              @input=${this.handleCodigo}
-            />
+            <div class="codigo-input-row">
+              <label class="code"><strong>CÓDIGO DE VERIFICACIÓN:</strong></label>
+              <input
+                maxlength="6"
+                .value=${this.codigo}
+                @input=${e => this.handleCodigo(e)}
+              />
+            </div>
 
             <button
               class="btn-primario"
               ?disabled=${!this.codigoValido}
-              @click=${this.validarDesdeModal}
+              @click=${() => this.validarDesdeModal()}
             >
               VALIDAR Y CONTINUAR
             </button>
           </div>
-
         </alerta-view>
       ` : ''}
 
@@ -401,7 +359,7 @@ export class PreregistroPasoCorreo extends LitElement
 
           <div class="form-group">
             <label>Medio por el cual se enteró de la convocatoria:</label>
-            <select @change=${this.onChangeMedio}>
+            <select @change=${e => this.onChangeMedio(e)}>
               <option value="">Selecciona una opción...</option>
               <option value="redes">Redes Sociales</option>
               <option value="radio">Radio</option>
@@ -411,32 +369,15 @@ export class PreregistroPasoCorreo extends LitElement
           </div>
 
           <div class="terms">
-          <!-- TÉRMINOS Y AVISO -->
             <div class="legal-text ${this.allAccepted ? 'active' : ''}">
-              <input
-                type="checkbox"
-                .checked=${this.allAccepted}
-                disabled
-              />
-
+              <input type="checkbox" .checked=${this.allAccepted} disabled />
               He leído y acepto los
-              <span
-                class="legal-link"
-                @click=${this.openTermsModal}
-              >
-                Términos y Condiciones
-              </span>
+              <span class="legal-link" @click=${() => this.openTermsModal()}>Términos y Condiciones</span>
               y el
-              <span
-                class="legal-link"
-                @click=${this.openPrivacyModal}
-              >
-                Aviso de Privacidad
-              </span>
+              <span class="legal-link" @click=${() => this.openPrivacyModal()}>Aviso de Privacidad</span>
             </div>
 
-            <!-- MODALES -->
-            ${this.showTermsModal ? this.renderLegalModal('terms') : ''}
+            ${this.showTermsModal   ? this.renderLegalModal('terms')   : ''}
             ${this.showPrivacyModal ? this.renderLegalModal('privacy') : ''}
           </div>
 
@@ -447,7 +388,7 @@ export class PreregistroPasoCorreo extends LitElement
           <div class="actions">
             <button
               ?disabled=${!(this.medio !== '' && this.allAccepted)}
-              @click=${this.enviarCodigo}
+              @click=${() => this.enviarCodigo()}
             >
               ENVIAR CÓDIGO
             </button>
