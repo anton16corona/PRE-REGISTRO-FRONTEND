@@ -50,19 +50,47 @@ export class PreregistroPaso2 extends LitElement {
     this.ineReversoArchivo     = null;
 
     const guardado = sessionStorage.getItem('paso2_data');
-    if (guardado) this.form = JSON.parse(guardado);
+    if (guardado) {
+      const saved = JSON.parse(guardado);
+      this.form = saved;
+
+      // Restaurar radios y documentación
+      if (saved._licencia)              this.licencia              = saved._licencia;
+      if (saved._cartilla)              this.cartilla              = saved._cartilla;
+      if (saved._ine)                   this.ine                   = saved._ine;
+      if (saved._certificadoSecundaria) this.certificadoSecundaria = saved._certificadoSecundaria;
+      if (saved._ineFrenteCargado)      this.ineFrenteCargado      = saved._ineFrenteCargado;
+      if (saved._ineReversoCargado)     this.ineReversoCargado     = saved._ineReversoCargado;
+    }
+  }
+  saveProgress() {
+    sessionStorage.setItem('paso2_data', JSON.stringify({
+      ...this.form,
+      _licencia:              this.licencia,
+      _cartilla:              this.cartilla,
+      _ine:                   this.ine,
+      _certificadoSecundaria: this.certificadoSecundaria,
+      _ineFrenteCargado:      this.ineFrenteCargado,
+      _ineReversoCargado:     this.ineReversoCargado
+    }));
   }
 
   updateField(e) {
     this.form[e.target.name] = e.target.value;
     if (e.target.name === 'nivelEstudios') this.validarNivelEstudios(e.target.value);
     this.validateForm();
-    sessionStorage.setItem('paso2_data', JSON.stringify(this.form));
+    this.saveProgress();
   }
 
   normalizeText(e) {
     const map = { á:'A',é:'E',í:'I',ó:'O',ú:'U',ñ:'N',Á:'A',É:'E',Í:'I',Ó:'O',Ú:'U',Ñ:'N' };
     e.target.value = e.target.value.replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m]).toUpperCase().replaceAll(/[^A-Z\s]/g, '');
+    this.updateField(e);
+  }
+
+  normalizeCalle(e) {
+    const map = { á:'A',é:'E',í:'I',ó:'O',ú:'U',ñ:'N',Á:'A',É:'E',Í:'I',Ó:'O',Ú:'U',Ñ:'N' };
+    e.target.value = e.target.value.replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m]).toUpperCase().replaceAll(/[^A-Z0-9\s.]/g, '');
     this.updateField(e);
   }
 
@@ -81,6 +109,7 @@ export class PreregistroPaso2 extends LitElement {
     this.form = { ...this.form, municipio, colonia: '', cp: municipio === 'QUERÉTARO' ? '76000' : '' };
     this.requestUpdate();
     this.validateForm();
+    this.saveProgress();
   }
 
   exteriorInteriorFormat(e) {
@@ -139,11 +168,11 @@ export class PreregistroPaso2 extends LitElement {
   }
 
   handleIneFrente(e) {
-    if (e.target.files?.length > 0) { this.ineFrenteCargado = true; this.ineFrenteArchivo = e.target.files[0].name; this.validateForm(); }
+    if (e.target.files?.length > 0) { this.ineFrenteCargado = true; this.ineFrenteArchivo = e.target.files[0].name; this.validateForm(); this.saveProgress(); }
   }
 
   handleIneReverso(e) {
-    if (e.target.files?.length > 0) { this.ineReversoCargado = true; this.ineReversoArchivo = e.target.files[0].name; this.validateForm(); }
+    if (e.target.files?.length > 0) { this.ineReversoCargado = true; this.ineReversoArchivo = e.target.files[0].name; this.validateForm(); this.saveProgress(); }
   }
 
   get ineValido() {
@@ -181,6 +210,8 @@ export class PreregistroPaso2 extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     if (!sessionStorage.getItem('preregistro_data')) globalThis.location.href = '/preregistro';
+    // Recalcular si había progreso guardado
+    this.validateForm();
   }
 
   render() {
@@ -210,11 +241,11 @@ export class PreregistroPaso2 extends LitElement {
           <div class="grid">
             <div>
               <label><span class="required">*</span> Nombre Completo: </label>
-              <input name="contactoAlterno" placeholder="NOMBRE DEL CONTACTO" @input=${e => this.normalizeText(e)} />
+              <input name="contactoAlterno" placeholder="NOMBRE DEL CONTACTO" .value=${this.form.contactoAlterno || ''} @input=${e => this.normalizeText(e)} />
             </div>
             <div>
               <label><span class="required">*</span> No. Teléfono: </label>
-              <input name="telAlterno" placeholder="(55) 1234-5678" maxlength="10" @input=${e => this.onlyNumbers(e,10)} />
+              <input name="telAlterno" placeholder="(55) 1234-5678" maxlength="10" .value=${this.form.telAlterno || ''} @input=${e => this.onlyNumbers(e,10)} />
             </div>
           </div>
 
@@ -222,7 +253,7 @@ export class PreregistroPaso2 extends LitElement {
           <div class="grid">
             <div>
               <label><span class="required">*</span> Municipio: </label>
-              <select name="municipio" @change=${e => this.handleMunicipioChange(e)}>
+              <select name="municipio" .value=${this.form.municipio || ''} @change=${e => this.handleMunicipioChange(e)}>
                 <option value="">Selecciona un municipio</option>
                 <option>AMEALCO DE BONFIL</option><option>ARROYO SECO</option>
                 <option>CADEREYTA DE MONTES</option><option>COLÓN</option>
@@ -248,26 +279,26 @@ export class PreregistroPaso2 extends LitElement {
                   <option>JURICA</option><option>EL REFUGIO</option>
                   <option>CENTRO</option><option>MILENIO</option><option>LA PRADERA</option>
                 </select>
-              ` : html`<input name="colonia" placeholder="CENTRO" @input=${e => this.normalizeText(e)} />`}
+              ` : html`<input name="colonia" placeholder="CENTRO" .value=${this.form.colonia || ''} @input=${e => this.normalizeText(e)} />`}
             </div>
             <div>
               <label><span class="required">*</span> Calle: </label>
-              <input name="calle" placeholder="AV PRINCIPAL" @input=${e => this.normalizeText(e)} />
+              <input name="calle" placeholder="AV. PRINCIPAL" .value=${this.form.calle || ''} @input=${e => this.normalizeCalle(e)} />
             </div>
             <div class="short">
               <label><span class="required">*</span> No. Exterior: </label>
-              <input name="exterior" placeholder="123-A" maxlength="5" @input=${e => this.exteriorInteriorFormat(e)} />
+              <input name="exterior" placeholder="123-A" maxlength="5" .value=${this.form.exterior || ''} @input=${e => this.exteriorInteriorFormat(e)} />
             </div>
             <div class="short">
               <label>No. Interior: </label>
-              <input name="interior" placeholder="A-1" maxlength="5" @input=${e => this.exteriorInteriorFormat(e)} />
+              <input name="interior" placeholder="A-1" maxlength="5" .value=${this.form.interior || ''} @input=${e => this.exteriorInteriorFormat(e)} />
             </div>
           </div>
 
           <h2>DOCUMENTACIÓN</h2>
           <div>
             <label><span class="required">*</span> Último nivel de estudios concluidos</label>
-            <select name="nivelEstudios" @change=${e => this.updateField(e)}>
+            <select name="nivelEstudios" .value=${this.form.nivelEstudios || ''} @change=${e => this.updateField(e)}>
               <option value="">Selecciona una opción</option>
               <option>SECUNDARIA</option><option>BACHILLERATO</option>
               <option>LICENCIATURA</option><option>MAESTRIA</option><option>DOCTORADO</option>
@@ -277,23 +308,23 @@ export class PreregistroPaso2 extends LitElement {
           <div class="radio-line">
             <div class="radio-group">
               <span class="radio-label">Certificado de Secundaria:</span>
-              <label><input type="radio" name="certificadoSecundaria" value="si" @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); }}><span>Sí</span></label>
-              <label><input type="radio" name="certificadoSecundaria" value="no" @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); }}><span>No</span></label>
+              <label><input type="radio" name="certificadoSecundaria" value="si" .checked=${this.certificadoSecundaria === 'si'} @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); this.saveProgress(); }}><span>Sí</span></label>
+              <label><input type="radio" name="certificadoSecundaria" value="no" .checked=${this.certificadoSecundaria === 'no'} @change=${e => { this.certificadoSecundaria = e.target.value; this.validateForm(); this.saveProgress(); }}><span>No</span></label>
             </div>
             <div class="radio-group">
               <span class="radio-label">Licencia de Conducir:</span>
-              <label><input type="radio" name="licencia" value="si" @change=${e => { this.licencia = e.target.value; this.validateForm(); }}><span>Sí</span></label>
-              <label><input type="radio" name="licencia" value="no" @change=${e => { this.licencia = e.target.value; this.validateForm(); }}><span>No</span></label>
+              <label><input type="radio" name="licencia" value="si" .checked=${this.licencia === 'si'} @change=${e => { this.licencia = e.target.value; this.validateForm(); this.saveProgress(); }}><span>Sí</span></label>
+              <label><input type="radio" name="licencia" value="no" .checked=${this.licencia === 'no'} @change=${e => { this.licencia = e.target.value; this.validateForm(); this.saveProgress(); }}><span>No</span></label>
             </div>
             <div class="radio-group">
               <span class="radio-label">Cartilla Servicio Militar:</span>
-              <label><input type="radio" name="cartilla" value="si" @change=${e => { this.cartilla = e.target.value; this.validateForm(); }}><span>Sí</span></label>
-              <label><input type="radio" name="cartilla" value="no" @change=${e => { this.cartilla = e.target.value; this.validateForm(); }}><span>No</span></label>
+              <label><input type="radio" name="cartilla" value="si" .checked=${this.cartilla === 'si'} @change=${e => { this.cartilla = e.target.value; this.validateForm(); this.saveProgress(); }}><span>Sí</span></label>
+              <label><input type="radio" name="cartilla" value="no" .checked=${this.cartilla === 'no'} @change=${e => { this.cartilla = e.target.value; this.validateForm(); this.saveProgress(); }}><span>No</span></label>
             </div>
             <div class="radio-group">
               <span class="radio-label">INE:</span>
-              <label><input type="radio" name="ine" value="si" @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>Sí</span></label>
-              <label><input type="radio" name="ine" value="no" @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); }}><span>No</span></label>
+              <label><input type="radio" name="ine" value="si" .checked=${this.ine === 'si'} @change=${() => { this.ine = 'si'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); this.saveProgress(); }}><span>Sí</span></label>
+              <label><input type="radio" name="ine" value="no" .checked=${this.ine === 'no'} @change=${() => { this.ine = 'no'; this.ineFrenteCargado = false; this.ineReversoCargado = false; this.validateForm(); this.saveProgress(); }}><span>No</span></label>
             </div>
           </div>
 
@@ -308,10 +339,10 @@ export class PreregistroPaso2 extends LitElement {
 
           <div class="form-actions">
             <button class="btn-secundario" @click=${() => this.goBack()}>VOLVER</button>
-            <button class="btn-cancelar"   @click=${() => this.cancelar()}>CANCELAR</button>
             ${this.formValido ? html`
               <button class="btn-primario" @click=${() => this.irACorreo()}>CONTINUAR</button>
             ` : ''}
+            <button class="btn-cancelar"   @click=${() => this.cancelar()}>CANCELAR</button>
           </div>
         </div>
       </main>

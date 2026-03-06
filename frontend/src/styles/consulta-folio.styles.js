@@ -32,6 +32,7 @@ export const consultaFolioStyles = css`
 
     h2 {
       font-size: clamp(2rem, 3vw, 2.6rem);
+      font-weight: 700;
       margin-bottom: 1rem;
       color:#0d253a;
     }
@@ -49,28 +50,64 @@ export const consultaFolioStyles = css`
       justify-content: center;
       align-items: center;
       gap: .6rem;
-      font-family: 'Consolas', monospace;
       font-size: 1.5rem;
       margin-bottom: 2.5rem;
       flex-wrap: wrap;
       color: #2e3032;
     }
 
+    /* Texto fijo (prefijo SSPMQ/IPES/...) */
+    .folio-linea .folio-fijo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      letter-spacing: 0.03em;
+      color: #0d253a;
+      text-transform: uppercase;
+    }
+
+    /* Separadores / */
+    .folio-linea .folio-sep {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: #0d253a;
+    }
+
     .folio-linea input,
     .folio-linea select {
-      font-family: inherit;
-      font-size: inherit;
+      font-family: 'Consolas', monospace;
+      font-size: 1.5rem;
       padding: 6px 10px;
       border-radius: 10px;
-      border: 1px solid #bbb;
+      border: 1.5px solid #d0d5dd;
       text-align: center;
-      color: #2e3032;
+      color: #0d1117;
+      background: #f8f9fb;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .folio-linea input:focus,
+    .folio-linea select:focus {
+      border-color: #285dc0;
       background: #ffffff;
+      outline: none;
+    }
+
+    .folio-linea input::placeholder {
+      color: rgba(13, 17, 23, 0.25);
+    }
+
+    /* Cuando el input está vacío se ve más tenue */
+    .folio-linea input:placeholder-shown,
+    .folio-linea select:not(:valid) {
+      color: #b0b8c4;
+      background: #f2f4f8;
+      border-color: #e2e6ec;
     }
 
     .folio-linea input {
       width: 90px;
-      color: #2e3032;
     }
 
     .form-actions {
@@ -171,6 +208,14 @@ export const consultaFolioStyles = css`
         font-size: 1.3rem;
         gap: 0.5rem;
       }
+      .folio-linea .folio-fijo,
+      .folio-linea .folio-sep {
+        font-size: 1.4rem;
+      }
+      .folio-linea input,
+      .folio-linea select {
+        font-size: 1.3rem;
+      }
       .folio-linea input {
         width: 80px;
       }
@@ -199,6 +244,14 @@ export const consultaFolioStyles = css`
       .folio-linea {
         font-size: 1.2rem;
         margin-bottom: 2rem;
+      }
+      .folio-linea .folio-fijo,
+      .folio-linea .folio-sep {
+        font-size: 1.25rem;
+      }
+      .folio-linea input,
+      .folio-linea select {
+        font-size: 1.2rem;
       }
       .btn {
         width: 100%;
@@ -235,6 +288,14 @@ export const consultaFolioStyles = css`
         font-size: 1.05rem;
         gap: 0.4rem;
         margin-bottom: 1.5rem;
+      }
+      .folio-linea .folio-fijo,
+      .folio-linea .folio-sep {
+        font-size: 1.1rem;
+      }
+      .folio-linea input,
+      .folio-linea select {
+        font-size: 1.05rem;
       }
       .folio-linea input {
         width: 70px;

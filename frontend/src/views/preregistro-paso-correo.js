@@ -94,6 +94,16 @@ export class PreregistroPasoCorreo extends LitElement
     this.aceptaTerminos = e.target.checked;
   }
 
+  goBack() {
+    globalThis.location.href = '/preregistro-paso2';
+  }
+
+  cancelar() {
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    sessionStorage.clear();
+    globalThis.location.href = origen || '/convocatorias-view';
+  }
+
   enviarCodigo() {
     this.showCodigoModal = true;
   }
@@ -386,12 +396,14 @@ export class PreregistroPasoCorreo extends LitElement
           </p>
 
           <div class="actions">
+            <button class="btn-secundario" @click=${() => this.goBack()}>VOLVER</button>
             <button
               ?disabled=${!(this.medio !== '' && this.allAccepted)}
               @click=${() => this.enviarCodigo()}
             >
               ENVIAR CÓDIGO
             </button>
+            <button class="btn-cancelar" @click=${() => this.cancelar()}>CANCELAR</button>
           </div>
         </section>
       </main>

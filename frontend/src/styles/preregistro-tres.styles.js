@@ -117,6 +117,13 @@ export const preregistroTresStyles = css`
     }
 
     button {
+      font-family: 'Montserrat', sans-serif;
+      color: #fff;
+      margin-right:1rem;
+    }
+
+    button {
+      font-size: 'Montserrat', sans-serif;
       background: #7aa7c8;
       border: none;
       border-radius: 28px;
@@ -129,6 +136,28 @@ export const preregistroTresStyles = css`
     button:disabled {
       opacity: .4;
       cursor: not-allowed;
+    }
+
+    .btn-secundario {
+      font-size: 'Montserrat', sans-serif;
+      background: #d7a23f;
+      border: none;
+      border-radius: 28px;
+      padding: 0.8rem 3rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancelar {
+      font-size: 'Montserrat', sans-serif;
+      background: #d73f3f;
+      border: none;
+      border-radius: 28px;
+      padding: 0.8rem 3rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     /* ===== CÓDIGO WRAPPER ===== */

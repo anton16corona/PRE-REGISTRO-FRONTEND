@@ -464,9 +464,10 @@ export class ConsultaFolioView extends LitElement {
           .tipo=${this.alertaConfig.tipo}
           .titulo=${this.alertaConfig.titulo}
           .mensaje=${this.alertaConfig.mensaje}
-          .extra=${this.alertaConfig.extra}
-          .boton=${this.alertaConfig.boton}
-          @aceptar=${this.pasoCodigo ? this.validarCodigo : this.cerrarAlerta}
+          .extra=${this.alertaConfig.extra ?? ''}
+          .boton=${this.alertaConfig.boton ?? 'ENTENDIDO'}
+          @alerta-cerrar=${() => this.cerrarAlerta()}
+          @alerta-aceptar=${() => this.pasoCodigo ? this.validarCodigo() : this.cerrarAlerta()}
         >
           ${this.pasoCodigo ? html`
             <div style="margin-top: 1rem; text-align: center;">
@@ -489,13 +490,13 @@ export class ConsultaFolioView extends LitElement {
                   color: ${this.campoBloqueado ? '#999' : '#2e3032'};
                   cursor: ${this.campoBloqueado ? 'not-allowed' : 'text'};
                 "
-                @input=${this.handleCodigoInput}
+                @input=${e => this.handleCodigoInput(e)}
                 @paste=${(e) => this.handlePaste(e, 7)}
                 @keypress=${(e) => {
-                  // Solo permitir números
-                  if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                  }
+                  if (!/[0-9]/.test(e.key)) e.preventDefault();
+                }}
+                @keydown=${(e) => {
+                  if (e.key === 'Enter' && !this.campoBloqueado) this.validarCodigo();
                 }}
               />
               
@@ -526,7 +527,7 @@ export class ConsultaFolioView extends LitElement {
           </p>
 
           <div class="folio-linea">
-            <span>SSPMQ</span>/<span>IPES</span>/
+            <span class="folio-fijo">SSPMQ</span><span class="folio-sep">/</span><span class="folio-fijo">IPES</span><span class="folio-sep">/</span>
             <select @change=${e => this.perfil = e.target.value} ?disabled=${this.campoBloqueado}>
               <option value="GC">GC</option>
               <option value="GA">GA</option>
@@ -537,7 +538,7 @@ export class ConsultaFolioView extends LitElement {
               <option value="AV">AV</option>
               <option value="PC">PC</option>
             </select>
-            /
+            <span class="folio-sep">/</span>
             <input 
               type="text"
               inputmode="numeric"
@@ -554,7 +555,7 @@ export class ConsultaFolioView extends LitElement {
                 }
               }}
             />
-            -
+            <span class="folio-sep">-</span>
             <input 
               type="text"
               inputmode="numeric"

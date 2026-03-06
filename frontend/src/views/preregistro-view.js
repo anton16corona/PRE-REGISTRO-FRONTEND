@@ -42,7 +42,13 @@ export class PreregistroView extends LitElement {
     tel2Error:              { state: true },
     curpExiste:             { state: true },
     validandoCurp:          { state: true },
-    rfcCurpMismatch:        { state: true }
+    rfcCurpMismatch:        { state: true },
+    curpTouched:            { state: true },
+    rfcTouched:             { state: true },
+    nombreTouched:          { state: true },
+    apellido1Touched:       { state: true },
+    curpFormatError:        { state: true },
+    rfcFormatError:         { state: true }
   };
 
   constructor() {
@@ -70,6 +76,12 @@ export class PreregistroView extends LitElement {
     this.curpExiste             = false;
     this.validandoCurp          = false;
     this.rfcCurpMismatch        = false;
+    this.curpTouched            = false;
+    this.rfcTouched             = false;
+    this.nombreTouched          = false;
+    this.apellido1Touched       = false;
+    this.curpFormatError        = false;
+    this.rfcFormatError         = false;
 
     const origenActual = sessionStorage.getItem('origen_convocatoria');
     const guardado     = sessionStorage.getItem('paso1_data');
@@ -86,6 +98,10 @@ export class PreregistroView extends LitElement {
         if (this.form.email2) this.email2Touched = true;
         if (this.form.tel)    this.telTouched    = true;
         if (this.form.tel2)   this.tel2Touched   = true;
+        if (this.form.curp)   { this.curpTouched = true; this.curpFormatError = !this.validarCURP(this.form.curp); }
+        if (this.form.rfc)    { this.rfcTouched  = true; this.rfcFormatError  = !this.validarRFC(this.form.rfc); }
+        if (this.form.nombre)   this.nombreTouched   = true;
+        if (this.form.apellido1) this.apellido1Touched = true;
 
         const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
         if (this.form.email  && !regexEmail.test(this.form.email))  this.emailError  = 'format';
@@ -175,7 +191,7 @@ export class PreregistroView extends LitElement {
 
   normalizeText(e) {
     const map = { á:'A',é:'E',í:'I',ó:'O',ú:'U',ñ:'N',Á:'A',É:'E',Í:'I',Ó:'O',Ú:'U',Ñ:'N' };
-    e.target.value = e.target.value.replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m]).toUpperCase().replaceAll(/[^A-Z\s]/g, '');
+    e.target.value = e.target.value.replaceAll(/[áéíóúñÁÉÍÓÚÑ]/g, m => map[m]).toUpperCase().replaceAll(/[^A-Z\s.]/g, '');
     this.updateField(e);
   }
 
@@ -406,21 +422,35 @@ export class PreregistroView extends LitElement {
                   this.form.curp     = e.target.value;
                   this.curpExiste    = false;
                   this.mostrarAlerta = false;
+                  this.curpFormatError = false;
                   this.updateField(e);
                   if (e.target.value.length === 18) await this.verificarCurpExistente(e.target.value);
                   this.validateForm();
                 }}
+                @blur=${() => {
+                  this.curpTouched = true;
+                  const curp = this.form.curp || '';
+                  this.curpFormatError = curp.length > 0 && !this.validarCURP(curp);
+                }}
               />
+              ${this.curpTouched && !(this.form.curp?.length > 0) ? html`<small class="msg msg-gray">Campo obligatorio</small>` : ''}
+              ${this.curpTouched && this.curpFormatError ? html`<small class="msg msg-orange">CURP con formato inválido</small>` : ''}
             </div>
 
             <div>
               <label><span class="required">*</span>Nombre(s): </label>
-              <input name="nombre" placeholder="INGRESA TU NOMBRE" .value=${this.form.nombre || ''} @input=${e => this.normalizeText(e)} />
+              <input name="nombre" placeholder="INGRESA TU NOMBRE" .value=${this.form.nombre || ''}
+                @input=${e => this.normalizeText(e)}
+                @blur=${() => { this.nombreTouched = true; }} />
+              ${this.nombreTouched && !(this.form.nombre?.length > 0) ? html`<small class="msg msg-gray">Campo obligatorio</small>` : ''}
             </div>
 
             <div>
               <label><span class="required">*</span>Primer Apellido: </label>
-              <input name="apellido1" placeholder="APELLIDO" .value=${this.form.apellido1 || ''} @input=${e => this.normalizeText(e)} />
+              <input name="apellido1" placeholder="APELLIDO" .value=${this.form.apellido1 || ''}
+                @input=${e => this.normalizeText(e)}
+                @blur=${() => { this.apellido1Touched = true; }} />
+              ${this.apellido1Touched && !(this.form.apellido1?.length > 0) ? html`<small class="msg msg-gray">Campo obligatorio</small>` : ''}
             </div>
 
             <div>
@@ -434,9 +464,16 @@ export class PreregistroView extends LitElement {
                 .value=${this.form.rfc || ''}
                 @input=${e => {
                   e.target.value = e.target.value.toUpperCase().replaceAll(/[^A-ZÑ&0-9]/g, '');
+                  this.rfcFormatError = false;
                   this.updateField(e);
                 }}
+                @blur=${() => {
+                  this.rfcTouched = true;
+                  const rfc = this.form.rfc || '';
+                  this.rfcFormatError = rfc.length > 0 && !this.validarRFC(rfc);
+                }}
               />
+              ${this.rfcTouched && !(this.form.rfc?.length > 0) ? html`<small class="msg msg-gray">Campo obligatorio</small>` : ''}
               ${this.form.rfc && !this.validarRFC(this.form.rfc) ? html`<small class="msg msg-orange">RFC con formato inválido</small>` : ''}
               ${this.rfcCurpMismatch ? html`<small class="msg msg-red">Los primeros 10 caracteres del RFC no coinciden con la CURP</small>` : ''}
             </div>
