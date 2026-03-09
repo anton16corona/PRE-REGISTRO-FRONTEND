@@ -235,6 +235,21 @@ export const preregistroTresStyles = css`
       transform: translateY(-2px);
     }
 
+    .correo-destino {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f0f4ff;
+      border: 1.5px solid #c0ccee;
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      margin: 0.8rem 0 1rem 0;
+      flex-wrap: wrap;
+    }
+    .correo-label { font-size: 0.9rem; color: #444; }
+    .correo-valor { font-weight: 700; color: #1a2e6e; font-size: 0.95rem; word-break: break-all; }
+    .correo-icono { font-size: 1.1rem; }
+
     /* =========================== TÉRMINOS Y AVISOS ESTILOS =========================== */
     .legal-text {
       margin-top: 24px;

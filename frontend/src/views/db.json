@@ -750,6 +750,52 @@
       "folio": "SSPMQ/IPES/PA/6-006",
       "estatus": "PENDIENTE",
       "fechaRegistro": "2026-03-05T20:41:19.551Z"
+    },
+    {
+      "id": "7ea1",
+      "curp": "FECJ951209HQTRBL07",
+      "nombre": "JULIAN HECTOR",
+      "apellido1": "FERRUSCA",
+      "apellido2": "CABRERA",
+      "rfc": "FECJ951209G4R",
+      "fechaNacimiento": "1995-12-09",
+      "edad": 30,
+      "sexo": "H",
+      "civil": "Soltero",
+      "email": "julihectorin@gmail.com",
+      "tel": "4421002626",
+      "email2": "julihectorin@gmail.com",
+      "tel2": "4421002626",
+      "_convocatoria": "/convocatoria-proximidad-cibernetica",
+      "contactoAlterno": "TATIANA ALCANTARA",
+      "telAlterno": "4469050506",
+      "municipio": "QUERÉTARO",
+      "colonia": "CENTRO",
+      "cp": "76000",
+      "calle": "AV DE LAS CIENCIAS",
+      "exterior": "56",
+      "interior": "B4",
+      "nivelEstudios": "LICENCIATURA",
+      "_licencia": "si",
+      "_cartilla": "si",
+      "_ine": "no",
+      "_certificadoSecundaria": "si",
+      "_ineFrenteCargado": false,
+      "_ineReversoCargado": false,
+      "licencia": "si",
+      "cartilla": "si",
+      "certificadoSecundaria": "si",
+      "ine": {
+        "tieneINE": false,
+        "frente": null,
+        "reverso": null
+      },
+      "medio": "redes",
+      "fechaEnvio": "2026-03-09T16:49:40.705Z",
+      "siglas": "PC",
+      "folio": "SSPMQ/IPES/PC/6-002",
+      "estatus": "PENDIENTE",
+      "fechaRegistro": "2026-03-09T16:49:40.720Z"
     }
   ],
   "citas": [
@@ -1046,6 +1092,18 @@
       "folio": "SSPMQ/IPES/PA/6-006",
       "fecha": "2026-03-27",
       "hora": "12:00"
+    },
+    {
+      "id": "94ea",
+      "folio": "SSPMQ/IPES/PC/6-002",
+      "fecha": "2026-04-02",
+      "hora": "12:00"
+    },
+    {
+      "id": "66c6",
+      "folio": "SSPMQ/IPES/PC/6-003",
+      "fecha": "2026-03-14",
+      "hora": "09:00"
     }
   ],
   "agenda": [
@@ -1849,7 +1907,7 @@
         },
         {
           "hora": "12:00",
-          "ocupados": 0,
+          "ocupados": 1,
           "capacidad": 10
         },
         {
@@ -1898,6 +1956,22 @@
           "hora": "15:00",
           "ocupados": 0,
           "capacidad": 10
+        }
+      ]
+    },
+    {
+      "id": "5d32",
+      "fecha": "2026-03-14",
+      "horarios": [
+        {
+          "hora": "09:00",
+          "ocupados": 1,
+          "capacidad": 6
+        },
+        {
+          "hora": "11:00",
+          "ocupados": 0,
+          "capacidad": 6
         }
       ]
     }

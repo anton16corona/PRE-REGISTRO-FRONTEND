@@ -24,6 +24,21 @@ export class PreregistroCompletado extends LitElement {
     globalThis.dispatchEvent(new PopStateEvent('popstate'));
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    // Al salir de la pantalla de completado (cerrar pestaña) limpiar lo que queda
+    this._beforeUnloadHandler = () => {
+      sessionStorage.removeItem('folio_preregistro');
+      sessionStorage.removeItem('preregistro_completado');
+    };
+    globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
+  }
+
   render() {
     return html`
       <ipes-header></ipes-header>

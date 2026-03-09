@@ -61,6 +61,9 @@ export class PreregistroPaso2 extends LitElement {
       if (saved._certificadoSecundaria) this.certificadoSecundaria = saved._certificadoSecundaria;
       if (saved._ineFrenteCargado)      this.ineFrenteCargado      = saved._ineFrenteCargado;
       if (saved._ineReversoCargado)     this.ineReversoCargado     = saved._ineReversoCargado;
+      // Restaurar base64 de los archivos INE (para que irACorreo los tenga disponibles)
+      if (saved._ineFrenteBase64)       this.ineFrenteArchivo      = saved._ineFrenteBase64;
+      if (saved._ineReversoBase64)      this.ineReversoArchivo     = saved._ineReversoBase64;
 
       // Recalcular nivelEstudiosValido para que el botón CONTINUAR se reactive correctamente
       if (saved.nivelEstudios) this._recalcularNivelEstudios(saved.nivelEstudios);
@@ -85,7 +88,9 @@ export class PreregistroPaso2 extends LitElement {
       _ine:                   this.ine,
       _certificadoSecundaria: this.certificadoSecundaria,
       _ineFrenteCargado:      this.ineFrenteCargado,
-      _ineReversoCargado:     this.ineReversoCargado
+      _ineReversoCargado:     this.ineReversoCargado,
+      _ineFrenteBase64:       typeof this.ineFrenteArchivo === 'string' ? this.ineFrenteArchivo : null,
+      _ineReversoBase64:      typeof this.ineReversoArchivo === 'string' ? this.ineReversoArchivo : null
     }));
   }
 
@@ -182,11 +187,29 @@ export class PreregistroPaso2 extends LitElement {
   }
 
   handleIneFrente(e) {
-    if (e.target.files?.length > 0) { this.ineFrenteCargado = true; this.ineFrenteArchivo = e.target.files[0].name; this.validateForm(); this.saveProgress(); }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      this.ineFrenteArchivo = ev.target.result; // base64 data URL
+      this.ineFrenteCargado = true;
+      this.validateForm();
+      this.saveProgress();
+    };
+    reader.readAsDataURL(file);
   }
 
   handleIneReverso(e) {
-    if (e.target.files?.length > 0) { this.ineReversoCargado = true; this.ineReversoArchivo = e.target.files[0].name; this.validateForm(); this.saveProgress(); }
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      this.ineReversoArchivo = ev.target.result; // base64 data URL
+      this.ineReversoCargado = true;
+      this.validateForm();
+      this.saveProgress();
+    };
+    reader.readAsDataURL(file);
   }
 
   get ineValido() {
@@ -204,25 +227,30 @@ export class PreregistroPaso2 extends LitElement {
       documentosValidos && this.nivelEstudiosValido;
   }
 
+  // Limpia SOLO los datos del flujo, nunca origen_convocatoria
+  _limpiarFlujo() {
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+    sessionStorage.removeItem('folio_preregistro');
+    sessionStorage.removeItem('preregistro_completado');
+    sessionStorage.removeItem('preregistro_final');
+  }
+
   goBack() {
-    // Al volver al paso anterior no se limpian los datos (navegación interna del flujo)
+    // Volver al paso 1: conservar datos del flujo
+    this._navegandoDentroDelFlujo = true;
     globalThis.location.href = '/preregistro';
   }
 
   cancelar() {
+    this._navegandoDentroDelFlujo = true;
+    this._limpiarFlujo();
     const origen = sessionStorage.getItem('origen_convocatoria');
-    // Limpiar únicamente los datos del preregistro, no toda la sesión
-    sessionStorage.removeItem('paso1_data');
-    sessionStorage.removeItem('paso2_data');
-    sessionStorage.removeItem('preregistro_data');
     globalThis.location.href = origen || '/convocatorias-view';
   }
 
-  _limpiarDatosPreregistro() {
-    sessionStorage.removeItem('paso1_data');
-    sessionStorage.removeItem('paso2_data');
-    sessionStorage.removeItem('preregistro_data');
-  }
+  _limpiarDatosPreregistro() { this._limpiarFlujo(); }
 
   irACorreo() {
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
@@ -232,6 +260,7 @@ export class PreregistroPaso2 extends LitElement {
       ine: { tieneINE: this.ine === 'si', frente: this.ine === 'si' ? this.ineFrenteArchivo : null, reverso: this.ine === 'si' ? this.ineReversoArchivo : null }
     };
     sessionStorage.setItem('preregistro_data', JSON.stringify(data));
+    this._navegandoDentroDelFlujo = true;
     globalThis.location.href = '/preregistro-envio';
   }
 
@@ -241,11 +270,11 @@ export class PreregistroPaso2 extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     if (!sessionStorage.getItem('preregistro_data')) globalThis.location.href = '/preregistro';
-    // Recalcular si había progreso guardado
     this.validateForm();
-
-    // Limpiar datos si el usuario cierra la pestaña o navega fuera del flujo de preregistro
-    this._beforeUnloadHandler = () => this._limpiarDatosPreregistro();
+    this._navegandoDentroDelFlujo = false;
+    this._beforeUnloadHandler = () => {
+      if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
+    };
     globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
   }
 
@@ -314,7 +343,7 @@ export class PreregistroPaso2 extends LitElement {
             <div>
               <label><span class="required">*</span> Colonia: </label>
               ${this.form.municipio === 'QUERÉTARO' ? html`
-                <select name="colonia" @change=${e => this.updateField(e)}>
+                <select name="colonia" .value=${this.form.colonia || ''} @change=${e => this.updateField(e)}>
                   <option value="">Selecciona una colonia</option>
                   <option>JURICA</option><option>EL REFUGIO</option>
                   <option>CENTRO</option><option>MILENIO</option><option>LA PRADERA</option>
@@ -372,8 +401,14 @@ export class PreregistroPaso2 extends LitElement {
 
           ${this.ine === 'si' ? html`
             <div class="docs">
-              <input type="file" accept="image/*" @change=${e => this.handleIneFrente(e)} placeholder="Frente INE">
-              <input type="file" accept="image/*" @change=${e => this.handleIneReverso(e)} placeholder="Reverso INE">
+              <div class="file-upload-wrapper">
+                <input type="file" accept="image/*" @change=${e => this.handleIneFrente(e)} placeholder="Frente INE">
+                ${this.ineFrenteCargado ? html`<span class="file-ok">✔ Frente cargado</span>` : ''}
+              </div>
+              <div class="file-upload-wrapper">
+                <input type="file" accept="image/*" @change=${e => this.handleIneReverso(e)} placeholder="Reverso INE">
+                ${this.ineReversoCargado ? html`<span class="file-ok">✔ Reverso cargado</span>` : ''}
+              </div>
             </div>
           ` : ''}
 

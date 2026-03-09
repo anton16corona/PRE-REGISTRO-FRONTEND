@@ -136,6 +136,50 @@ export class AlertaView extends LitElement {
     }
     .warning .icono { background: #b8742a; }
 
+    .warning-cancelar {
+      background: #ffe0c2;
+      color: #5a2800;
+    }
+    .warning-cancelar .icono { background: #e06000; color: #fff; }
+    .warning-cancelar h2 { color: #5a2800; }
+    .warning-cancelar p { color: #6b3500; }
+    .warning-cancelar .extra { color: #7a3d00; }
+    .warning-cancelar .btn-confirmar {
+      background: #e06000;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.7rem 2.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-block;
+      border: none;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    .warning-cancelar .btn-confirmar:hover { background: #c45200; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .warning-cancelar .btn-volver {
+      background: transparent;
+      color: #5a2800;
+      border: 2px solid #b8742a;
+      border-radius: 999px;
+      padding: 0.65rem 2.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-block;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    .warning-cancelar .btn-volver:hover { background: rgba(224,96,0,0.1); transform: translateY(-2px); }
+    .warning-cancelar .acciones-cancelar {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
     .error {
       background: #ffe3a3;
       color: #6b4b00;
@@ -159,6 +203,62 @@ export class AlertaView extends LitElement {
     .warning-menor h2 { color: #6a4f00; }
     .warning-menor .btn { background: #f2b705; color: #5a4200; }
     .warning-menor .btn:hover { background: #e0a800; }
+
+    /* ===== VARIANTE CANCELAR PREREGISTRO (naranja) ===== */
+    .cancelar-preregistro {
+      background: #fff0e0;
+      color: #5c2800;
+    }
+    .cancelar-preregistro .icono {
+      background: #e07020;
+      color: #fff;
+    }
+    .cancelar-preregistro h2 { color: #7a3a00; }
+    .cancelar-preregistro p  { color: #5c2800; }
+    .cancelar-preregistro .extra { color: #7a3a00; }
+
+    .acciones-dos-botones {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-confirmar-cancelar {
+      background: #e07020;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 2.2rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-confirmar-cancelar:hover {
+      background: #c45e10;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-volver-cancelar {
+      background: transparent;
+      color: #7a3a00;
+      border: 2px solid #e07020;
+      border-radius: 999px;
+      padding: 0.7rem 2.2rem;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-volver-cancelar:hover {
+      background: rgba(224,112,32,0.10);
+      transform: translateY(-2px);
+    }
 
     .warning-folio {
       background: #b8d3ff;
@@ -525,7 +625,14 @@ export class AlertaView extends LitElement {
 
         <slot></slot>
 
-        ${this.boton && this.tipo !== 'warning-redireccion' && !this.alternativas?.length ? html`
+        ${this.tipo === 'cancelar-preregistro' ? html`
+          <div class="acciones-dos-botones">
+            <button class="btn-volver-cancelar" @click=${() => this.cerrar()}>NO, VOLVER</button>
+            <button class="btn-confirmar-cancelar" @click=${() => this.aceptar()}>SÍ, CANCELAR</button>
+          </div>
+        ` : ''}
+
+        ${this.boton && this.tipo !== 'warning-redireccion' && this.tipo !== 'cancelar-preregistro' && !this.alternativas?.length ? html`
           <div class="acciones">
             <div class="btn" @click=${() => this.aceptar()}>
               ${this.boton}

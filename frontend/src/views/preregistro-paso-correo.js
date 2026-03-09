@@ -24,7 +24,9 @@ export class PreregistroPasoCorreo extends LitElement
     showPrivacyModal: { state: true },
     showCodigoModal: { state: true },
     privacyPdfCargado: { state: true },
-    termsPdfCargado: { state: true }
+    termsPdfCargado: { state: true },
+    mostrarAlertaCancelar: { state: true },
+    checkboxManual: { state: true }
   };
 
   constructor() {
@@ -43,6 +45,8 @@ export class PreregistroPasoCorreo extends LitElement
     this.showCodigoModal = false;
     this.privacyPdfCargado = false;
     this.termsPdfCargado = false;
+    this.mostrarAlertaCancelar = false;
+    this.checkboxManual = false;
   }
 
   getSiglasConvocatoria(origen) {
@@ -94,13 +98,30 @@ export class PreregistroPasoCorreo extends LitElement
     this.aceptaTerminos = e.target.checked;
   }
 
+  // Limpia SOLO los datos del flujo, nunca origen_convocatoria
+  _limpiarFlujo() {
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+    sessionStorage.removeItem('folio_preregistro');
+    sessionStorage.removeItem('preregistro_completado');
+    sessionStorage.removeItem('preregistro_final');
+  }
+
   goBack() {
-    globalThis.location.href = '/preregistro-paso2';
+    this._navegandoDentroDelFlujo = true;
+    globalThis.location.href = '/preregistro-continuacion';
   }
 
   cancelar() {
+    this.mostrarAlertaCancelar = true;
+  }
+
+  confirmarCancelacion() {
+    this.mostrarAlertaCancelar = false;
+    this._navegandoDentroDelFlujo = true;
+    this._limpiarFlujo();
     const origen = sessionStorage.getItem('origen_convocatoria');
-    sessionStorage.clear();
     globalThis.location.href = origen || '/convocatorias-view';
   }
 
@@ -143,6 +164,14 @@ export class PreregistroPasoCorreo extends LitElement
 
     const folio = `GC-${Math.floor(100000 + Math.random() * 900000)}`;
 
+    // Remover beforeunload para que no limpie el folio al redirigir
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
+
+    // Limpiar datos del flujo, conservar folio y completado
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+
     sessionStorage.setItem('preregistro_completado', 'true');
     sessionStorage.setItem('folio_preregistro', folio);
 
@@ -151,11 +180,21 @@ export class PreregistroPasoCorreo extends LitElement
 
   connectedCallback() {
     super.connectedCallback();
-
     const data = sessionStorage.getItem('preregistro_data');
     if (!data) {
       globalThis.location.href = '/preregistro';
+      return;
     }
+    this._navegandoDentroDelFlujo = false;
+    this._beforeUnloadHandler = () => {
+      if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
+    };
+    globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
   }
 
   cerrarAlerta() {
@@ -169,7 +208,7 @@ export class PreregistroPasoCorreo extends LitElement
 
   /* =========================== TÉRMINOS Y AVISOS =========================== */
   get allAccepted() {
-    return this.termsAccepted && this.privacyAccepted;
+    return (this.termsAccepted && this.privacyAccepted) || this.checkboxManual;
   }
 
   openTermsModal() {
@@ -260,6 +299,15 @@ export class PreregistroPasoCorreo extends LitElement
       body: JSON.stringify(preregistroFinal)
     });
 
+    // Remover beforeunload para que no limpie el folio al redirigir
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
+
+    // Limpiar datos del flujo (ya guardados en BD), conservar folio y completado
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+    sessionStorage.removeItem('preregistro_final');
+
     sessionStorage.setItem('preregistro_completado', 'true');
     sessionStorage.setItem('folio_preregistro', folio);
 
@@ -311,7 +359,44 @@ export class PreregistroPasoCorreo extends LitElement
   }
 
   render() {
+    // Leer el correo del paso 1 para mostrarlo en el modal de verificación
+    const correoRegistrado = (() => {
+      try {
+        const d = JSON.parse(sessionStorage.getItem('preregistro_data'))?.paso1 || {};
+        return d.correoElectronico || d.correo || d.email || '';
+      }
+      catch { return ''; }
+    })();
+
     return html`
+      ${this.mostrarAlertaCancelar ? html`
+        <alerta-view
+          modal
+          tipo="warning-cancelar"
+          titulo="¿Cancelar preregistro?"
+          mensaje="Se perderá todo el progreso e información proporcionada hasta este momento."
+          extra="Esta acción no se puede deshacer."
+          boton=""
+          @alerta-cerrar=${() => { this.mostrarAlertaCancelar = false; }}
+          @alerta-aceptar=${() => { this.mostrarAlertaCancelar = false; }}
+        >
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;">
+            <button
+              style="background:transparent;color:#5a2800;border:2px solid #b8742a;border-radius:999px;padding:0.65rem 1.8rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.95rem;transition:all 0.2s;"
+              @click=${() => { this.mostrarAlertaCancelar = false; }}
+            >
+              SEGUIR CON MI PREREGISTRO
+            </button>
+            <button
+              style="background:#e06000;color:#fff;border:none;border-radius:999px;padding:0.7rem 2rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.95rem;transition:all 0.2s;"
+              @click=${() => this.confirmarCancelacion()}
+            >
+              SÍ, CANCELAR
+            </button>
+          </div>
+        </alerta-view>
+      ` : ''}
+
       ${this.mostrarAlerta ? html`
         <alerta-view
           modal
@@ -339,6 +424,13 @@ export class PreregistroPasoCorreo extends LitElement
             <p><strong>Estimado aspirante, hemos recibido tu solicitud para realizar un pre-registro como participante en alguno de los perfiles del Instituto Policial de Estudios Superiores de la Secretaría de Seguridad Pública Municipal de Querétaro.</strong></p>
             <p><strong>Para poder continuar con tu pre-registro, es necesario validar el correo electrónico proporcionado.</strong></p>
             <p><strong>Por favor introduce el siguiente Código de Verificación en el campo señalado:</strong></p>
+
+            ${correoRegistrado ? html`
+              <div class="correo-destino">
+                <span class="correo-label">El código será enviado a:</span>
+                <span class="correo-valor">${correoRegistrado}</span>
+              </div>
+            ` : ''}
 
             <div class="codigo-input-row">
               <label class="code"><strong>CÓDIGO DE VERIFICACIÓN:</strong></label>
@@ -380,7 +472,19 @@ export class PreregistroPasoCorreo extends LitElement
 
           <div class="terms">
             <div class="legal-text ${this.allAccepted ? 'active' : ''}">
-              <input type="checkbox" .checked=${this.allAccepted} disabled />
+              <input
+                type="checkbox"
+                .checked=${this.allAccepted}
+                @change=${(e) => {
+                  this.checkboxManual = e.target.checked;
+                  // Si desmarca manualmente, resetear también los PDFs
+                  if (!e.target.checked) {
+                    this.termsAccepted = false;
+                    this.privacyAccepted = false;
+                  }
+                  this.requestUpdate();
+                }}
+              />
               He leído y acepto los
               <span class="legal-link" @click=${() => this.openTermsModal()}>Términos y Condiciones</span>
               y el

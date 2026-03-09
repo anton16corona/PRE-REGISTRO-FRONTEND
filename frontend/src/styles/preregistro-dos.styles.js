@@ -241,6 +241,18 @@ export const preregistroDosStyles = css`
       cursor: not-allowed;
     }
 
+    .file-upload-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .file-ok {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #2e7d32;
+    }
+
     /* ================= ANIMACIÓN ================= */
     @keyframes slideUpFade {
       from {

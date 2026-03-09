@@ -313,24 +313,47 @@ export class PreregistroView extends LitElement {
     this.phoneMatchError = !!(this.form.tel && this.form.tel2 && this.form.tel !== this.form.tel2);
   }
 
+  // Limpia SOLO los datos del flujo de preregistro, nunca origen_convocatoria
+  _limpiarFlujo() {
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+    sessionStorage.removeItem('folio_preregistro');
+    sessionStorage.removeItem('preregistro_completado');
+    sessionStorage.removeItem('preregistro_final');
+  }
+
   submitForm() {
     sessionStorage.setItem('preregistro_data', JSON.stringify({ paso1: { ...this.form } }));
+    this._navegandoDentroDelFlujo = true;
     globalThis.location.href = '/preregistro-continuacion';
   }
 
   connectedCallback() {
     super.connectedCallback();
-    console.log('ORIGEN AL ENTRAR A PREREGISTRO:', sessionStorage.getItem('origen_convocatoria'));
+    this._navegandoDentroDelFlujo = false;
+    this._beforeUnloadHandler = () => {
+      if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
+    };
+    globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
   }
 
   goBack() {
+    this._navegandoDentroDelFlujo = true;
+    this._limpiarFlujo();
     const origen = sessionStorage.getItem('origen_convocatoria');
     globalThis.location.href = origen || '/convocatorias-view';
   }
 
   cancelar() {
+    this._navegandoDentroDelFlujo = true;
+    this._limpiarFlujo();
     const origen = sessionStorage.getItem('origen_convocatoria');
-    sessionStorage.clear();
     globalThis.location.href = origen || '/convocatorias-view';
   }
 
