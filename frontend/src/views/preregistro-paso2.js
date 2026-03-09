@@ -61,8 +61,22 @@ export class PreregistroPaso2 extends LitElement {
       if (saved._certificadoSecundaria) this.certificadoSecundaria = saved._certificadoSecundaria;
       if (saved._ineFrenteCargado)      this.ineFrenteCargado      = saved._ineFrenteCargado;
       if (saved._ineReversoCargado)     this.ineReversoCargado     = saved._ineReversoCargado;
+
+      // Recalcular nivelEstudiosValido para que el botón CONTINUAR se reactive correctamente
+      if (saved.nivelEstudios) this._recalcularNivelEstudios(saved.nivelEstudios);
     }
   }
+  // Versión silenciosa: recalcula nivelEstudiosValido sin mostrar alertas (usada al restaurar datos)
+  _recalcularNivelEstudios(nivelSeleccionado) {
+    if (!nivelSeleccionado) { this.nivelEstudiosValido = false; return; }
+    const origen       = sessionStorage.getItem('origen_convocatoria');
+    const convocatoria = CONVOCATORIAS[origen];
+    if (!convocatoria) { this.nivelEstudiosValido = true; return; }
+    const jerarquiaRequerida = NIVELES_ESTUDIOS[convocatoria.nivelEstudiosMin];
+    const jerarquiaUsuario   = NIVELES_ESTUDIOS[nivelSeleccionado];
+    this.nivelEstudiosValido = jerarquiaUsuario >= jerarquiaRequerida;
+  }
+
   saveProgress() {
     sessionStorage.setItem('paso2_data', JSON.stringify({
       ...this.form,
@@ -190,8 +204,25 @@ export class PreregistroPaso2 extends LitElement {
       documentosValidos && this.nivelEstudiosValido;
   }
 
-  goBack()   { globalThis.location.href = '/preregistro'; }
-  cancelar() { const origen = sessionStorage.getItem('origen_convocatoria'); sessionStorage.clear(); globalThis.location.href = origen || '/convocatorias-view'; }
+  goBack() {
+    // Al volver al paso anterior no se limpian los datos (navegación interna del flujo)
+    globalThis.location.href = '/preregistro';
+  }
+
+  cancelar() {
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    // Limpiar únicamente los datos del preregistro, no toda la sesión
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+    globalThis.location.href = origen || '/convocatorias-view';
+  }
+
+  _limpiarDatosPreregistro() {
+    sessionStorage.removeItem('paso1_data');
+    sessionStorage.removeItem('paso2_data');
+    sessionStorage.removeItem('preregistro_data');
+  }
 
   irACorreo() {
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
@@ -212,6 +243,15 @@ export class PreregistroPaso2 extends LitElement {
     if (!sessionStorage.getItem('preregistro_data')) globalThis.location.href = '/preregistro';
     // Recalcular si había progreso guardado
     this.validateForm();
+
+    // Limpiar datos si el usuario cierra la pestaña o navega fuera del flujo de preregistro
+    this._beforeUnloadHandler = () => this._limpiarDatosPreregistro();
+    globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
   }
 
   render() {
