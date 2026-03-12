@@ -70,6 +70,7 @@ export const preregistroCompletadoStyles = css`
     /* =============== BOTONES ================ */
     button {
       font-family: 'Montserrat', sans-serif;
+      color: #ffffff;
     }
 
     .btn-cita {

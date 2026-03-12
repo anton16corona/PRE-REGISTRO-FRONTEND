@@ -164,8 +164,14 @@ export class PreregistroView extends LitElement {
 
     let existe = false;
     try {
-      const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`, { signal: this._curpAbortController.signal });
-      if (resp.ok) { const data = await resp.json(); existe = data.length > 0; }
+      const resp = await fetch(
+        `http://localhost:8080/api-conexion/api/preregistro/curp/${curp}`,
+        { signal: this._curpAbortController.signal }
+      );
+      if (resp.ok) {
+        const data = await resp.json();
+        existe = data !== null && data !== undefined && data !== '';
+      }
     } catch (e) {
       if (e.name === 'AbortError') return;
       existe = false;

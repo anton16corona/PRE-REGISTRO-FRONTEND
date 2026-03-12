@@ -14,9 +14,14 @@
  */
 
 // ── MODO ACTIVO: cambia entre json-server y Payara aquí ──────────────────────
-export const API_BASE = 'http://localhost:3000';
+export const API_BASE = 'http://localhost:8080/api-conexion/api';
 
 // ── ENDPOINTS disponibles en la API Java ─────────────────────────────────────
 export const ENDPOINTS = {
-  convocatorias: `${API_BASE}/convocatoria`,
+  convocatorias:  `${API_BASE}/convocatoria`,
+  escolaridades:  `${API_BASE}/escolaridad`,
+  perfiles:       `${API_BASE}/perfil`,
+  sedes:          `${API_BASE}/sede`,
+  horarios:       (idSede) => `${API_BASE}/horario/${idSede}`,
+  preregistro:    `${API_BASE}/preregistro`,
 };

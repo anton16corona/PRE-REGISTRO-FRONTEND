@@ -2,6 +2,24 @@ import { LitElement, html, css } from 'lit';
 import '../components/ipes-header.js';
 
 export class ConvocatoriasView extends LitElement {
+  static properties = { convocatorias: { type: Array } };
+
+  constructor() {
+    super();
+    this.convocatorias = [];
+  }
+
+  async connectedCallback() {
+    super.connectedCallback();
+    try {
+      const resp = await fetch('http://localhost:8080/api-conexion/api/convocatoria');
+      this.convocatorias = await resp.json();
+      console.log('✅ API respondió:', this.convocatorias);
+    } catch (err) {
+      console.error('❌ Error al conectar con la API:', err);
+    }
+  }
+
   static styles = css`
     :host {
       display: block;

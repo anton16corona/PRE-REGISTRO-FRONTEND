@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import './alerta-view.js';
 import '../components/ipes-header.js';
+import { ENDPOINTS } from '../config/api.config.js';
 
 import { consultaFolioStyles } from '../styles/consulta-folio.styles.js';
 
@@ -21,6 +22,8 @@ export class ConsultaFolioView extends LitElement {
 
     intentosFallidos: { type: Number },
     bloqueadoHasta: { type: Number },
+    rondaActual: { type: Number },
+    bloqueadoDefinitivamente: { type: Boolean },
     
     campoBloqueado: { type: Boolean },
     segundosRestantes: { type: Number }
@@ -39,6 +42,8 @@ export class ConsultaFolioView extends LitElement {
 
     this.intentosFallidos = 0;
     this.bloqueadoHasta = 0;
+    this.rondaActual = 1;
+    this.bloqueadoDefinitivamente = false;
     
     this.campoBloqueado = false;
     this.segundosRestantes = 0;
@@ -56,21 +61,37 @@ export class ConsultaFolioView extends LitElement {
       
       if (bloqueoGuardado) {
         const datos = JSON.parse(bloqueoGuardado);
+
+        // Bloqueo definitivo — no expira nunca
+        if (datos.bloqueadoDefinitivamente) {
+          this.bloqueadoDefinitivamente = true;
+          this.campoBloqueado = true;
+          this.rondaActual = datos.rondaActual || 3;
+          return;
+        }
         
-        // Verificar si el bloqueo sigue vigente
+        // Bloqueo temporal vigente
         if (datos.bloqueadoHasta && Date.now() < datos.bloqueadoHasta) {
-          console.log('Restaurando estado de bloqueo desde localStorage');
-          
           this.bloqueadoHasta = datos.bloqueadoHasta;
           this.intentosFallidos = datos.intentosFallidos || 0;
+          this.rondaActual = datos.rondaActual || 1;
           this.campoBloqueado = true;
-          
-          // Iniciar cuenta regresiva
           this.iniciarCuentaRegresiva();
         } else {
-          // El bloqueo ya expiró, limpiar
-          console.log('Bloqueo expirado, limpiando localStorage');
-          localStorage.removeItem('consulta_folio_bloqueo');
+          // Bloqueo temporal expirado
+          const rondaSiguiente = (datos.rondaActual || 1) + 1;
+          // Si ya completó las 3 rondas y el bloqueo expiró → bloqueo definitivo
+          if (rondaSiguiente > 3) {
+            this.bloqueadoDefinitivamente = true;
+            this.campoBloqueado = true;
+            this.rondaActual = 3;
+            // Re-guardar como definitivo
+            this.guardarEstadoBloqueo();
+          } else {
+            // Pasar a la siguiente ronda
+            this.rondaActual = rondaSiguiente;
+            localStorage.removeItem('consulta_folio_bloqueo');
+          }
         }
       }
     } catch (e) {
@@ -83,11 +104,12 @@ export class ConsultaFolioView extends LitElement {
       const datos = {
         bloqueadoHasta: this.bloqueadoHasta,
         intentosFallidos: this.intentosFallidos,
+        rondaActual: this.rondaActual,
+        bloqueadoDefinitivamente: this.bloqueadoDefinitivamente,
         timestamp: Date.now()
       };
       
       localStorage.setItem('consulta_folio_bloqueo', JSON.stringify(datos));
-      console.log('Estado de bloqueo guardado en localStorage');
     } catch (e) {
       console.error('Error al guardar estado de bloqueo:', e);
     }
@@ -96,10 +118,31 @@ export class ConsultaFolioView extends LitElement {
   limpiarEstadoBloqueo() {
     try {
       localStorage.removeItem('consulta_folio_bloqueo');
-      console.log('Estado de bloqueo eliminado de localStorage');
     } catch (e) {
       console.error('Error al limpiar estado de bloqueo:', e);
     }
+  }
+
+  // Guarda el folio en la lista permanente de folios bloqueados definitivamente
+  registrarFolioBloqueado(folio) {
+    try {
+      const raw = localStorage.getItem('consulta_folio_bloqueados');
+      const lista = raw ? JSON.parse(raw) : [];
+      if (!lista.includes(folio)) {
+        lista.push(folio);
+        localStorage.setItem('consulta_folio_bloqueados', JSON.stringify(lista));
+      }
+    } catch (e) {
+      console.error('Error al registrar folio bloqueado:', e);
+    }
+  }
+
+  folioEstaBloqueadoDefinitivamente(folio) {
+    try {
+      const raw = localStorage.getItem('consulta_folio_bloqueados');
+      if (!raw) return false;
+      return JSON.parse(raw).includes(folio);
+    } catch { return false; }
   }
 
   get folioCompleto() {
@@ -109,9 +152,13 @@ export class ConsultaFolioView extends LitElement {
 
   async validarFolioExistente() {
     try {
-      const resp = await fetch(`http://localhost:3000/preregistros?folio=${this.folioCompleto}`);
+      const url  = `${ENDPOINTS.preregistro}/folio/${encodeURIComponent(this.folioCompleto)}`;
+      const resp = await fetch(url);
+      if (resp.status === 404) return false;   // folio no existe
+      if (!resp.ok) return false;
       const data = await resp.json();
-      return data.length > 0;
+      // La API puede devolver un objeto (candidato) o null
+      return data !== null && data !== undefined;
     } catch(e) {
       console.error('Error consultando folio:', e);
       return false;
@@ -120,24 +167,9 @@ export class ConsultaFolioView extends LitElement {
 
   /* ============== NAVEGACIÓN DE RETORNO ============== */
   goBack() {
-    let origen = sessionStorage.getItem('origen_convocatoria');
-    
-    console.log('Volviendo desde consulta folio. Origen guardado:', origen);
-
-    // NUNCA permitir regresar a progreso-folio
-    if (origen?.includes('progreso-folio')) {
-      console.log('Origen era progreso-folio, limpiando...');
-      origen = null;
-      sessionStorage.removeItem('origen_convocatoria');
-    }
-
-    if (origen) {
-      console.log('Navegando a:', origen);
-      globalThis.location.href = origen;
-    } else {
-      console.log('Sin origen válido, navegando a convocatorias');
-      globalThis.location.href = '/';
-    }
+    const origen = sessionStorage.getItem('consulta_folio_origen');
+    sessionStorage.removeItem('consulta_folio_origen');
+    globalThis.location.href = origen || '/';
   }
 
   /* ============== INICIAR CUENTA REGRESIVA ============== */
@@ -152,17 +184,30 @@ export class ConsultaFolioView extends LitElement {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
       
       if (segundos <= 0) {
-        // Tiempo cumplido, desbloquear
+        clearInterval(this.intervaloCuentaRegresiva);
+        this.intervaloCuentaRegresiva = null;
+
+        // Avanzar a la siguiente ronda
+        this.rondaActual++;
         this.campoBloqueado = false;
         this.segundosRestantes = 0;
         this.bloqueadoHasta = 0;
-        clearInterval(this.intervaloCuentaRegresiva);
-        this.intervaloCuentaRegresiva = null;
-        
-        // Limpiar localStorage
+        this.intentosFallidos = 0;
+
+        // Limpiar bloqueo temporal del localStorage
         this.limpiarEstadoBloqueo();
-        
-        console.log('Campo desbloqueado');
+
+        // Reabrir automáticamente la alerta de código con indicador de ronda
+        this.pasoCodigo = true;
+        this.codigoIngresado = '';
+        this.mostrarAlerta = true;
+        this.alertaConfig = {
+          tipo: 'info',
+          titulo: 'Verificación de seguridad',
+          mensaje: 'Puedes volver a intentarlo. Ingresa el código de verificación.',
+          extra: `Puedes intentarlo nuevamente.`,
+          boton: 'VALIDAR CÓDIGO'
+        };
       } else {
         this.segundosRestantes = segundos;
       }
@@ -173,14 +218,22 @@ export class ConsultaFolioView extends LitElement {
 
   /* ==============ACTIVAR BLOQUEO ============== */
   activarBloqueo() {
-    this.bloqueadoHasta = Date.now() + 60000; // 1 minuto
-    this.campoBloqueado = true;
     this.intentosFallidos = 0;
+    this.campoBloqueado = true;
 
-    //  Guardar en localStorage
+    // Ronda 3 → bloqueo definitivo (ya no hay más intentos)
+    if (this.rondaActual >= 3) {
+      this.bloqueadoDefinitivamente = true;
+      this.registrarFolioBloqueado(this.folioCompleto);
+      this.guardarEstadoBloqueo();
+      return;
+    }
+
+    // Ronda 1 → 1 minuto / Ronda 2 → 3 minutos
+    const duracionMs = this.rondaActual === 1 ? 60_000 : 180_000;
+    this.bloqueadoHasta = Date.now() + duracionMs;
+
     this.guardarEstadoBloqueo();
-
-    // Iniciar cuenta regresiva visual
     this.iniciarCuentaRegresiva();
   }
 
@@ -212,6 +265,22 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
+    // VERIFICAR SI ESTE FOLIO YA ESTÁ BLOQUEADO DEFINITIVAMENTE
+    if (this.folioEstaBloqueadoDefinitivamente(this.folioCompleto)) {
+      this.bloqueadoDefinitivamente = true;
+      this.campoBloqueado = true;
+      this.pasoCodigo = false;
+      this.mostrarAlerta = true;
+      this.alertaConfig = {
+        tipo: 'inexistente-folio',
+        titulo: 'Folio bloqueado definitivamente',
+        mensaje: 'Este folio ha alcanzado el número máximo de intentos de verificación.',
+        extra: 'Para resolver esta situación comunícate directamente con la institución.',
+        boton: 'ENTENDIDO'
+      };
+      return;
+    }
+
     //CONSULTAR DB.JSON
     const existe = await this.validarFolioExistente();
 
@@ -222,14 +291,27 @@ export class ConsultaFolioView extends LitElement {
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
-        this.mostrarAlerta = true;
-        this.alertaConfig = {
-          tipo: 'error',
-          titulo: 'Sistema bloqueado',
-          mensaje: 'Has realizado 3 intentos incorrectos.',
-          extra: 'El sistema se ha inhabilitado por 1 minuto.',
-          boton: 'ENTENDIDO'
-        };
+        if (this.bloqueadoDefinitivamente) {
+          this.pasoCodigo = false;
+          this.mostrarAlerta = true;
+          this.alertaConfig = {
+            tipo: 'inexistente-folio',
+            titulo: 'Folio bloqueado definitivamente',
+            mensaje: 'Has alcanzado el número máximo de intentos de verificación.',
+            extra: 'Para resolver esta situación comunícate directamente con la institución.',
+            boton: 'ENTENDIDO'
+          };
+        } else {
+          const minutos = this.rondaActual === 2 ? 3 : 1;
+          this.mostrarAlerta = true;
+          this.alertaConfig = {
+            tipo: 'error',
+            titulo: 'Sistema bloqueado',
+            mensaje: `Has realizado 3 intentos incorrectos.`,
+            extra: `El sistema se ha inhabilitado por ${minutos} minuto${minutos > 1 ? 's' : ''}. Podrás intentarlo de nuevo automáticamente.`,
+            boton: 'ENTENDIDO'
+          };
+        }
         return;
       }
 
@@ -298,13 +380,25 @@ export class ConsultaFolioView extends LitElement {
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
-        this.alertaConfig = {
-          tipo: 'error',
-          titulo: 'Sistema bloqueado',
-          mensaje: 'Has ingresado 3 códigos incorrectos.',
-          extra: 'El sistema se ha inhabilitado por 1 minuto.',
-          boton: 'ENTENDIDO'
-        };
+        if (this.bloqueadoDefinitivamente) {
+          this.pasoCodigo = false;
+          this.alertaConfig = {
+            tipo: 'inexistente-folio',
+            titulo: 'Folio bloqueado definitivamente',
+            mensaje: 'Has alcanzado el número máximo de intentos de verificación.',
+            extra: 'Para resolver esta situación comunícate directamente con la institución.',
+            boton: 'ENTENDIDO'
+          };
+        } else {
+          const minutos = this.rondaActual === 2 ? 3 : 1;
+          this.alertaConfig = {
+            tipo: 'error',
+            titulo: 'Sistema bloqueado',
+            mensaje: `Has ingresado 3 códigos incorrectos.`,
+            extra: `El sistema se ha inhabilitado por ${minutos} minuto${minutos > 1 ? 's' : ''}. Podrás intentarlo de nuevo automáticamente.`,
+            boton: 'ENTENDIDO'
+          };
+        }
         this.requestUpdate();
         return;
       }
@@ -433,6 +527,11 @@ export class ConsultaFolioView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    // Capturar la ruta desde donde se llegó a esta pantalla, para el botón VOLVER
+    const origenActual = sessionStorage.getItem('origen_convocatoria');
+    if (origenActual && !origenActual.includes('progreso-folio') && !origenActual.includes('consulta-folio')) {
+      sessionStorage.setItem('consulta_folio_origen', origenActual);
+    }
     this.startAutoplay();
   }
 
@@ -574,7 +673,23 @@ export class ConsultaFolioView extends LitElement {
             />
           </div>
 
-          ${this.campoBloqueado ? html`
+          ${this.bloqueadoDefinitivamente ? html`
+            <div style="
+              text-align: center;
+              color: #b71c1c;
+              font-weight: 700;
+              font-size: 0.95rem;
+              margin-top: 1rem;
+              padding: 1rem;
+              background: rgba(183, 28, 28, 0.08);
+              border: 1.5px solid rgba(183, 28, 28, 0.25);
+              border-radius: 12px;
+              line-height: 1.5;
+            ">
+              🔒 Folio bloqueado definitivamente por exceder el número de intentos permitidos.<br>
+              <span style="font-weight: 400; font-size: 0.9rem;">Comunícate con la institución para solucionar esta situación.</span>
+            </div>
+          ` : this.campoBloqueado ? html`
             <div style="
               text-align: center;
               color: #d32f2f;

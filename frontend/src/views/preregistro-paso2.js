@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
 import '../components/ipes-header.js';
+import { ENDPOINTS } from '../config/api.config.js';
 
 import { preregistroDosStyles } from '../styles/preregistro-dos.styles.js';
 
@@ -30,7 +31,8 @@ export class PreregistroPaso2 extends LitElement {
     nivelEstudiosValido:     { state: true },
     licencia:                { state: true },
     cartilla:                { state: true },
-    certificadoSecundaria:   { state: true }
+    certificadoSecundaria:   { state: true },
+    escolaridades:           { state: true }   // ← NUEVO: catálogo desde la API
   };
 
   constructor() {
@@ -48,6 +50,7 @@ export class PreregistroPaso2 extends LitElement {
     this.certificadoSecundaria = '';
     this.ineFrenteArchivo      = null;
     this.ineReversoArchivo     = null;
+    this.escolaridades         = [];   // ← NUEVO
 
     const guardado = sessionStorage.getItem('paso2_data');
     if (guardado) {
@@ -276,6 +279,29 @@ export class PreregistroPaso2 extends LitElement {
       if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
     };
     globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+
+    // ← NUEVO: carga el catálogo de escolaridades desde la API
+    this._cargarCatalogos();
+  }
+
+  // Método separado para mantener connectedCallback síncrono (requerido por LitElement)
+  async _cargarCatalogos() {
+    try {
+      const resp = await fetch(ENDPOINTS.escolaridades);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      this.escolaridades = await resp.json();
+      console.log('✅ Escolaridades cargadas:', this.escolaridades);
+    } catch (err) {
+      console.error('❌ Error al cargar escolaridades:', err);
+      // Fallback: usar opciones estáticas si la API falla
+      this.escolaridades = [
+        { idEscolaridad: 1, descripcion: 'SECUNDARIA' },
+        { idEscolaridad: 2, descripcion: 'BACHILLERATO' },
+        { idEscolaridad: 3, descripcion: 'LICENCIATURA' },
+        { idEscolaridad: 4, descripcion: 'MAESTRIA' },
+        { idEscolaridad: 5, descripcion: 'DOCTORADO' }
+      ];
+    }
   }
 
   disconnectedCallback() {
@@ -369,8 +395,12 @@ export class PreregistroPaso2 extends LitElement {
             <label><span class="required">*</span> Último nivel de estudios concluidos</label>
             <select name="nivelEstudios" .value=${this.form.nivelEstudios || ''} @change=${e => this.updateField(e)}>
               <option value="">Selecciona una opción</option>
-              <option>SECUNDARIA</option><option>BACHILLERATO</option>
-              <option>LICENCIATURA</option><option>MAESTRIA</option><option>DOCTORADO</option>
+              ${this.escolaridades.length > 0
+                ? this.escolaridades.map(esc => html`
+                    <option value=${esc.descripcion}>${esc.descripcion}</option>
+                  `)
+                : html`<option disabled>Cargando opciones...</option>`
+              }
             </select>
           </div>
 

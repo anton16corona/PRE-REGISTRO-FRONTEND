@@ -1,8 +1,8 @@
 import { LitElement, html } from 'lit';
 import '../components/ipes-header.js';
 import './pdf-zoom-viewer.js';
-import './alerta-view.js'; // ✅ AGREGADO
-
+import './alerta-view.js';
+import { ENDPOINTS } from '../config/api.config.js';
 import { preregistroTresStyles } from '../styles/preregistro-tres.styles.js';
 
 export class PreregistroPasoCorreo extends LitElement 
@@ -64,18 +64,21 @@ export class PreregistroPasoCorreo extends LitElement
     return 'GC';
   }
 
-  async generarFolio(siglas) {
-    const resp = await fetch(`http://localhost:3000/preregistros?siglas=${siglas}`);
-    const registros = await resp.json();
-    const siguiente = registros.length + 1;
-    const consecutivo = String(siguiente).padStart(3, '0');
+  generarFolio(siglas) {
+    const consecutivo = String(Math.floor(Math.random() * 900) + 100);
     return `SSPMQ/IPES/${siglas}/6-${consecutivo}`;
   }
 
+  // DESPUÉS — consulta tu API real
   async validarCURPExistente(curp) {
-    const resp = await fetch(`http://localhost:3000/preregistros?curp=${curp}`);
-    const data = await resp.json();
-    return data.length > 0;
+    try {
+      const resp = await fetch(`http://localhost:8080/api-conexion/api/preregistro/curp/${curp}`);
+      if (!resp.ok) return false;
+      const data = await resp.json();
+      return data !== null && data !== undefined;
+    } catch {
+      return false;
+    }
   }
 
   get formValido() {
@@ -180,6 +183,8 @@ export class PreregistroPasoCorreo extends LitElement
 
   connectedCallback() {
     super.connectedCallback();
+
+    // ── Validación de flujo (lo que ya tenías) ──────────────────────────
     const data = sessionStorage.getItem('preregistro_data');
     if (!data) {
       globalThis.location.href = '/preregistro';
@@ -190,6 +195,20 @@ export class PreregistroPasoCorreo extends LitElement
       if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
     };
     globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
+
+    // ── Carga de datos desde la API (nuevo) ─────────────────────────────
+    this._cargarDatosAPI();
+  }
+
+  // Método separado para mantener connectedCallback limpio y ordenado
+  async _cargarDatosAPI() {
+    try {
+      const resp = await fetch(ENDPOINTS.convocatorias);
+      const convocatorias = await resp.json();
+      console.log('✅ Convocatorias:', convocatorias);
+    } catch (err) {
+      console.error('❌ Error al cargar convocatorias:', err);
+    }
   }
 
   disconnectedCallback() {
@@ -281,7 +300,7 @@ export class PreregistroPasoCorreo extends LitElement
 
     const origen = sessionStorage.getItem('origen_convocatoria');
     const siglas = this.getSiglasConvocatoria(origen);
-    const folio  = await this.generarFolio(siglas);
+    const folio  = this.generarFolio(siglas);
 
     const preregistroFinal = {
       ...data.paso1,
@@ -293,10 +312,19 @@ export class PreregistroPasoCorreo extends LitElement
       fechaRegistro: new Date().toISOString()
     };
 
-    await fetch('http://localhost:3000/preregistros', {
+    await fetch(ENDPOINTS.preregistro, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(preregistroFinal)
+      body: JSON.stringify({
+        curp:            data.paso1.curp,
+        folio:           folio,
+        nombre:          data.paso1.nombre,
+        primerApellido:  data.paso1.apellido1,
+        segundoApellido: data.paso1.apellido2  || '',
+        fechaNacimiento: data.paso1.fechaNacimiento,
+        idPerfil:        data.paso1.idPerfil   || 1,
+        idEscolaridad:   data.paso2.nivelEstudios ? 1 : 1  // ← cuando conectes escolaridad pon el id real
+      })
     });
 
     // Remover beforeunload para que no limpie el folio al redirigir

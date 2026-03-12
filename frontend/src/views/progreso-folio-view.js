@@ -23,7 +23,9 @@ export class ProgresoFolioView extends LitElement {
     pasoSeleccionado: { type: Number },
     mostrarAlerta:    { type: Boolean },
     alertaConfig:     { type: Object },
-    pasos:            { type: Array }
+    pasos:            { type: Array },
+    candidato:        { type: Object },
+    cargando:         { type: Boolean }
   };
 
   constructor() {
@@ -38,6 +40,8 @@ export class ProgresoFolioView extends LitElement {
     this.colorPerfil  = this.getColorPerfil(this.perfil);
 
     this.inicializarPasos();
+    this.candidato = null;
+    this.cargando  = true;
   }
 
   getColorPerfil(perfil) {
@@ -80,17 +84,6 @@ export class ProgresoFolioView extends LitElement {
   cerrarAlerta() { this.mostrarAlerta = false; }
   aceptar()      { globalThis.location.href = '/consulta-folio'; }
 
-  async obtenerProceso() {
-    try {
-      const resp = await fetch(`http://localhost:3000/candidatos?folio=${this.folio}`);
-      const data = await resp.json();
-      if (!data.length) return;
-      this.actualizarPasos(data[0].estatusProceso);
-    } catch (error) {
-      console.error('Error al obtener proceso:', error);
-    }
-  }
-
   actualizarPasos(nivel) {
     this.pasos = this.pasos.map((paso, index) => ({
       ...paso,
@@ -99,14 +92,39 @@ export class ProgresoFolioView extends LitElement {
     this.pasoSeleccionado = nivel;
   }
 
-  firstUpdated() { this.obtenerProceso(); }
-
   iconoUbicacion() {
     return svg`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/></svg>`;
   }
 
   iconoDocumento() {
     return svg`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2z"/></svg>`;
+  }
+
+  // AÑADIR este connectedCallback completo:
+  connectedCallback() {
+    super.connectedCallback();
+    this._cargarCandidato();
+  }
+
+  // Método separado para mantener connectedCallback síncrono (requerido por LitElement)
+  async _cargarCandidato() {
+    try {
+      const resp = await fetch(
+        `http://localhost:8080/api-conexion/api/consulta/folio/${encodeURIComponent(this.folio)}`
+      );
+      if (!resp.ok) { this.cargando = false; return; }
+      this.candidato = await resp.json();
+      console.log('✅ Candidato:', this.candidato);
+
+      // Si la API devuelve el nivel de proceso, actualizar los pasos visualmente
+      if (this.candidato?.estatusProceso !== undefined) {
+        this.actualizarPasos(this.candidato.estatusProceso);
+      }
+    } catch (err) {
+      console.error('❌ Error al cargar candidato:', err);
+    } finally {
+      this.cargando = false;
+    }
   }
 
   render() {
