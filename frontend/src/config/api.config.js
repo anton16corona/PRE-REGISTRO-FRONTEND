@@ -16,6 +16,9 @@
 // ── MODO ACTIVO: cambia entre json-server y Payara aquí ──────────────────────
 export const API_BASE = 'http://localhost:8080/api-conexion/api';
 
+// ── Base de la Email API (desplegada como WAR separado en Payara) ─────────────
+const EMAIL_API_BASE = 'http://localhost:8080/email-api/api/email';
+
 // ── ENDPOINTS disponibles en la API Java ─────────────────────────────────────
 export const ENDPOINTS = {
   convocatorias:  `${API_BASE}/convocatoria`,
@@ -24,4 +27,13 @@ export const ENDPOINTS = {
   sedes:          `${API_BASE}/sede`,
   horarios:       (idSede) => `${API_BASE}/horario/${idSede}`,
   preregistro:    `${API_BASE}/preregistro`,
+
+  // ── Email API ────────────────────────────────────────────────────────────────
+  // Genera un código de 6 dígitos y lo envía al correo del aspirante.
+  // Devuelve el código en la respuesta para que el frontend lo valide.
+  emailCodigoVerificacion: `${EMAIL_API_BASE}/codigo-verificacion`,
+
+  // Envía el correo completo de confirmación con datos del candidato,
+  // fecha/hora de cita, sede y documentación requerida.
+  emailConfirmacionCita:   `${EMAIL_API_BASE}/confirmacion-cita`,
 };

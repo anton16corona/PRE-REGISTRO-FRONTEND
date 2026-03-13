@@ -5,62 +5,64 @@ import './alerta-view.js';
 import { ENDPOINTS } from '../config/api.config.js';
 import { preregistroTresStyles } from '../styles/preregistro-tres.styles.js';
 
-export class PreregistroPasoCorreo extends LitElement 
+export class PreregistroPasoCorreo extends LitElement
 {
   static styles = [preregistroTresStyles];
 
   /* ============================================= JAVASCRIPT ============================================= */
   static properties = {
-    medio: { state: true },
-    aceptaTerminos: { state: true },
-    codigoEnviado: { state: true },
-    codigo: { state: true },
-    mostrarAlerta: { state: true },
-    alertaConfig: { state: true },
-
-    termsAccepted: { state: true },
-    privacyAccepted: { state: true },
-    showTermsModal: { state: true },
-    showPrivacyModal: { state: true },
-    showCodigoModal: { state: true },
-    privacyPdfCargado: { state: true },
-    termsPdfCargado: { state: true },
-    mostrarAlertaCancelar: { state: true },
-    checkboxManual: { state: true }
+    medio:                { state: true },
+    aceptaTerminos:       { state: true },
+    codigoEnviado:        { state: true },
+    codigo:               { state: true },
+    mostrarAlerta:        { state: true },
+    alertaConfig:         { state: true },
+    termsAccepted:        { state: true },
+    privacyAccepted:      { state: true },
+    showTermsModal:       { state: true },
+    showPrivacyModal:     { state: true },
+    showCodigoModal:      { state: true },
+    privacyPdfCargado:    { state: true },
+    termsPdfCargado:      { state: true },
+    mostrarAlertaCancelar:{ state: true },
+    checkboxManual:       { state: true },
+    enviandoCodigo:       { state: true }   // ← nuevo: muestra spinner mientras llama a la API
   };
 
   constructor() {
     super();
-    this.medio = '';
-    this.aceptaTerminos = false;
-    this.codigoEnviado = false;
-    this.codigo = '';
-    this.mostrarAlerta = false;
-    this.alertaConfig = {};
-
-    this.termsAccepted = false;
-    this.privacyAccepted = false;
-    this.showTermsModal = false;
-    this.showPrivacyModal = false;
-    this.showCodigoModal = false;
-    this.privacyPdfCargado = false;
-    this.termsPdfCargado = false;
+    this.medio                 = '';
+    this.aceptaTerminos        = false;
+    this.codigoEnviado         = false;
+    this.codigo                = '';
+    this.mostrarAlerta         = false;
+    this.alertaConfig          = {};
+    this.termsAccepted         = false;
+    this.privacyAccepted       = false;
+    this.showTermsModal        = false;
+    this.showPrivacyModal      = false;
+    this.showCodigoModal       = false;
+    this.privacyPdfCargado     = false;
+    this.termsPdfCargado       = false;
     this.mostrarAlertaCancelar = false;
-    this.checkboxManual = false;
+    this.checkboxManual        = false;
+    this.enviandoCodigo        = false;
   }
+
+  /* ─────────────────────────────────────────────────────────────
+   *  HELPERS
+   * ───────────────────────────────────────────────────────────── */
 
   getSiglasConvocatoria(origen) {
     if (!origen) return 'GC';
-
-    if (origen.includes('guardia-civica')) return 'GC';
-    if (origen.includes('guardia-vial')) return 'GV';
-    if (origen.includes('guardia-auxiliar')) return 'GA';
-    if (origen.includes('auxiliar')) return 'PA';
-    if (origen.includes('proximidad-cibernetica')) return 'PC';
-    if (origen.includes('proximidad-victimas')) return 'AV';
-    if (origen.includes('proximidad-seg-pub')) return 'UA';
-    if (origen.includes('proximidad')) return 'PP';
-
+    if (origen.includes('guardia-civica'))           return 'GC';
+    if (origen.includes('guardia-vial'))             return 'GV';
+    if (origen.includes('guardia-auxiliar'))         return 'GA';
+    if (origen.includes('auxiliar'))                 return 'PA';
+    if (origen.includes('proximidad-cibernetica'))   return 'PC';
+    if (origen.includes('proximidad-victimas'))      return 'AV';
+    if (origen.includes('proximidad-seg-pub'))       return 'UA';
+    if (origen.includes('proximidad'))               return 'PP';
     return 'GC';
   }
 
@@ -69,7 +71,6 @@ export class PreregistroPasoCorreo extends LitElement
     return `SSPMQ/IPES/${siglas}/6-${consecutivo}`;
   }
 
-  // DESPUÉS — consulta tu API real
   async validarCURPExistente(curp) {
     try {
       const resp = await fetch(`http://localhost:8080/api-conexion/api/preregistro/curp/${curp}`);
@@ -81,27 +82,20 @@ export class PreregistroPasoCorreo extends LitElement
     }
   }
 
-  get formValido() {
-    return this.medio !== '' && this.aceptaTerminos;
-  }
-
-  get codigoValido() {
-    return this.codigo.length === 6;
-  }
+  get formValido()  { return this.medio !== '' && this.aceptaTerminos; }
+  get codigoValido(){ return this.codigo.length === 6; }
 
   handleCodigo(e) {
     this.codigo = e.target.value.replaceAll(/\D/g, '').slice(0, 6);
   }
 
-  onChangeMedio(e) {
-    this.medio = e.target.value;
-  }
+  onChangeMedio(e)    { this.medio = e.target.value; }
+  onToggleTerminos(e) { this.aceptaTerminos = e.target.checked; }
 
-  onToggleTerminos(e) {
-    this.aceptaTerminos = e.target.checked;
-  }
+  /* ─────────────────────────────────────────────────────────────
+   *  FLUJO / NAVEGACIÓN
+   * ───────────────────────────────────────────────────────────── */
 
-  // Limpia SOLO los datos del flujo, nunca origen_convocatoria
   _limpiarFlujo() {
     sessionStorage.removeItem('paso1_data');
     sessionStorage.removeItem('paso2_data');
@@ -109,6 +103,7 @@ export class PreregistroPasoCorreo extends LitElement
     sessionStorage.removeItem('folio_preregistro');
     sessionStorage.removeItem('preregistro_completado');
     sessionStorage.removeItem('preregistro_final');
+    sessionStorage.removeItem('codigo_verificacion');
   }
 
   goBack() {
@@ -116,9 +111,7 @@ export class PreregistroPasoCorreo extends LitElement
     globalThis.location.href = '/preregistro-continuacion';
   }
 
-  cancelar() {
-    this.mostrarAlertaCancelar = true;
-  }
+  cancelar() { this.mostrarAlertaCancelar = true; }
 
   confirmarCancelacion() {
     this.mostrarAlertaCancelar = false;
@@ -128,52 +121,133 @@ export class PreregistroPasoCorreo extends LitElement
     globalThis.location.href = origen || '/convocatorias-view';
   }
 
-  enviarCodigo() {
-    this.showCodigoModal = true;
+  /* ─────────────────────────────────────────────────────────────
+   *  ENVÍO DE CÓDIGO  ← integración con Email API
+   * ───────────────────────────────────────────────────────────── */
+
+  async enviarCodigo() {
+    // Leer correo y nombre del aspirante desde sessionStorage
+    const data  = JSON.parse(sessionStorage.getItem('preregistro_data') || '{}');
+    const paso1 = data?.paso1 || {};
+    const correo = paso1.correoElectronico || paso1.correo || paso1.email || '';
+    const nombre = `${paso1.nombre || ''} ${paso1.apellido1 || ''}`.trim();
+
+    this.enviandoCodigo = true;
+
+    try {
+      const resp = await fetch(ENDPOINTS.emailCodigoVerificacion, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: correo, nombreAspirante: nombre })
+      });
+
+      const result = await resp.json();
+
+      if (result.success) {
+        // Guardar el código generado por la API para compararlo al validar
+        sessionStorage.setItem('codigo_verificacion', result.codigo);
+        console.log('✅ Código de verificación enviado a:', correo);
+      } else {
+        console.error('⚠️ La API no pudo enviar el código:', result.message);
+        // Aun así abrimos el modal; el candidato puede intentar de nuevo
+      }
+    } catch (err) {
+      console.error('⚠️ Error al conectar con la Email API:', err);
+    } finally {
+      this.enviandoCodigo = false;
+      this.showCodigoModal = true;
+    }
   }
 
   onlyNumbers(e) {
     this.codigo = e.target.value.replaceAll(/\D/g, '').slice(0, 6);
   }
 
-  finalizar() {
-    if (this.codigo === '000000') {
-      this.mostrarAlerta = true;
+  /* ─────────────────────────────────────────────────────────────
+   *  VALIDACIÓN DEL CÓDIGO Y FINALIZACIÓN DEL PREREGISTRO
+   * ───────────────────────────────────────────────────────────── */
+
+  async validarDesdeModal() {
+    // Comparar contra el código real recibido de la Email API
+    const codigoEsperado = sessionStorage.getItem('codigo_verificacion') || '';
+
+    if (!codigoEsperado || this.codigo !== codigoEsperado) {
       this.alertaConfig = {
-        tipo: 'info',
-        titulo: 'Código no válido',
+        tipo:    'info',
+        titulo:  'Código no válido',
         mensaje: 'El código ingresado no coincide con el enviado a tu correo electrónico.',
-        extra: 'Por favor, verifica que sea el mismo que se te ha enviado en tu dirección de correo.',
-        boton: 'ENTENDIDO'
+        extra:   'Por favor, verifica que sea el mismo que se te ha enviado.',
+        boton:   'INTENTAR DE NUEVO'
       };
+      this.showCodigoModal = false;
+      this.mostrarAlerta   = true;
       return;
     }
+
+    this.showCodigoModal = false;
 
     const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
 
     data.paso3 = {
-      medio: this.medio,
+      medio:      this.medio,
       fechaEnvio: new Date().toISOString()
     };
 
-    const preregistroFinal = {
+    // Validar que la CURP no esté ya registrada
+    const curp   = data.paso1.curp;
+    const existe = await this.validarCURPExistente(curp);
+
+    if (existe) {
+      this.alertaConfig = {
+        tipo:    'info',
+        titulo:  'CURP ya registrada',
+        mensaje: 'Ya existe un preregistro con esta CURP.',
+        extra:   'No es posible realizar más de un preregistro.',
+        boton:   'ENTENDIDO'
+      };
+      this.mostrarAlerta = true;
+      return;
+    }
+
+    // Generar folio y guardar preregistro en BD
+    const origen = sessionStorage.getItem('origen_convocatoria');
+    const siglas = this.getSiglasConvocatoria(origen);
+    const folio  = this.generarFolio(siglas);
+
+    await fetch(ENDPOINTS.preregistro, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        curp:            data.paso1.curp,
+        folio:           folio,
+        nombre:          data.paso1.nombre,
+        primerApellido:  data.paso1.apellido1,
+        segundoApellido: data.paso1.apellido2  || '',
+        fechaNacimiento: data.paso1.fechaNacimiento,
+        idPerfil:        data.paso1.idPerfil   || 1,
+        idEscolaridad:   data.paso2.nivelEstudios ? 1 : 1
+      })
+    });
+
+    // ── Conservar datos del candidato para el correo de confirmación de cita
+    // (citas-generada-view los leerá cuando el candidato presione ACEPTAR)
+    sessionStorage.setItem('candidato_paso1', JSON.stringify({
       ...data.paso1,
-      ...data.paso2,
-      ...data.paso3,
-      estatus: 'PENDIENTE'
-    };
+      siglas: siglas,
+      folio:  folio
+    }));
 
-    sessionStorage.setItem('preregistro_final', JSON.stringify(preregistroFinal));
-
-    const folio = `GC-${Math.floor(100000 + Math.random() * 900000)}`;
+    // Limpiar código ya usado
+    sessionStorage.removeItem('codigo_verificacion');
 
     // Remover beforeunload para que no limpie el folio al redirigir
     globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
 
-    // Limpiar datos del flujo, conservar folio y completado
+    // Limpiar datos del flujo (ya guardados en BD), conservar folio y completado
     sessionStorage.removeItem('paso1_data');
     sessionStorage.removeItem('paso2_data');
     sessionStorage.removeItem('preregistro_data');
+    sessionStorage.removeItem('preregistro_final');
 
     sessionStorage.setItem('preregistro_completado', 'true');
     sessionStorage.setItem('folio_preregistro', folio);
@@ -181,10 +255,12 @@ export class PreregistroPasoCorreo extends LitElement
     globalThis.location.href = '/preregistro-completado';
   }
 
+  /* ─────────────────────────────────────────────────────────────
+   *  LIFECYCLE
+   * ───────────────────────────────────────────────────────────── */
+
   connectedCallback() {
     super.connectedCallback();
-
-    // ── Validación de flujo (lo que ya tenías) ──────────────────────────
     const data = sessionStorage.getItem('preregistro_data');
     if (!data) {
       globalThis.location.href = '/preregistro';
@@ -195,12 +271,9 @@ export class PreregistroPasoCorreo extends LitElement
       if (!this._navegandoDentroDelFlujo) this._limpiarFlujo();
     };
     globalThis.addEventListener('beforeunload', this._beforeUnloadHandler);
-
-    // ── Carga de datos desde la API (nuevo) ─────────────────────────────
     this._cargarDatosAPI();
   }
 
-  // Método separado para mantener connectedCallback limpio y ordenado
   async _cargarDatosAPI() {
     try {
       const resp = await fetch(ENDPOINTS.convocatorias);
@@ -218,149 +291,55 @@ export class PreregistroPasoCorreo extends LitElement
 
   cerrarAlerta() {
     this.mostrarAlerta = false;
-
     if (this.alertaConfig?.titulo === 'Código no válido') {
       this.codigo = '';
       this.showCodigoModal = true;
     }
   }
 
-  /* =========================== TÉRMINOS Y AVISOS =========================== */
+  /* ─────────────────────────────────────────────────────────────
+   *  TÉRMINOS Y AVISOS
+   * ───────────────────────────────────────────────────────────── */
+
   get allAccepted() {
     return (this.termsAccepted && this.privacyAccepted) || this.checkboxManual;
   }
 
   openTermsModal() {
     this.termsPdfCargado = false;
-    this.showTermsModal = true;
+    this.showTermsModal  = true;
   }
 
-  onTermsPdfLoaded() {
-    this.termsPdfCargado = true;
-  }
+  onTermsPdfLoaded() { this.termsPdfCargado = true; }
 
   openPrivacyModal() {
     this.privacyPdfCargado = false;
-    this.showPrivacyModal = true;
+    this.showPrivacyModal  = true;
   }
 
-  onPrivacyPdfLoaded() {
-    this.privacyPdfCargado = true;
-  }
+  onPrivacyPdfLoaded() { this.privacyPdfCargado = true; }
 
   acceptLegal(type) {
-    if (type === 'terms') {
-      this.termsAccepted = true;
-      this.showTermsModal = false;
-    }
-    if (type === 'privacy') {
-      this.privacyAccepted = true;
-      this.showPrivacyModal = false;
-    }
+    if (type === 'terms')   { this.termsAccepted   = true; this.showTermsModal   = false; }
+    if (type === 'privacy') { this.privacyAccepted = true; this.showPrivacyModal = false; }
     this.requestUpdate();
   }
 
-  async validarDesdeModal() {
-    if (this.codigo === '000000') {
-      this.alertaConfig = {
-        tipo: 'info',
-        titulo: 'Código no válido',
-        mensaje: 'El código ingresado no coincide con el enviado.',
-        extra: 'Verifica el código enviado a tu correo.',
-        boton: 'INTENTAR DE NUEVO'
-      };
-      this.showCodigoModal = false;
-      this.mostrarAlerta = true;
-      return;
-    }
-
-    this.showCodigoModal = false;
-
-    const data = JSON.parse(sessionStorage.getItem('preregistro_data'));
-
-    data.paso3 = {
-      medio: this.medio,
-      fechaEnvio: new Date().toISOString()
-    };
-
-    const curp = data.paso1.curp;
-    const existe = await this.validarCURPExistente(curp);
-
-    if (existe) {
-      this.alertaConfig = {
-        tipo: 'info',
-        titulo: 'CURP ya registrada',
-        mensaje: 'Ya existe un preregistro con esta CURP.',
-        extra: 'No es posible realizar más de un preregistro.',
-        boton: 'ENTENDIDO'
-      };
-      this.mostrarAlerta = true;
-      return;
-    }
-
-    const origen = sessionStorage.getItem('origen_convocatoria');
-    const siglas = this.getSiglasConvocatoria(origen);
-    const folio  = this.generarFolio(siglas);
-
-    const preregistroFinal = {
-      ...data.paso1,
-      ...data.paso2,
-      ...data.paso3,
-      siglas: siglas,
-      folio: folio,
-      estatus: 'PENDIENTE',
-      fechaRegistro: new Date().toISOString()
-    };
-
-    await fetch(ENDPOINTS.preregistro, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        curp:            data.paso1.curp,
-        folio:           folio,
-        nombre:          data.paso1.nombre,
-        primerApellido:  data.paso1.apellido1,
-        segundoApellido: data.paso1.apellido2  || '',
-        fechaNacimiento: data.paso1.fechaNacimiento,
-        idPerfil:        data.paso1.idPerfil   || 1,
-        idEscolaridad:   data.paso2.nivelEstudios ? 1 : 1  // ← cuando conectes escolaridad pon el id real
-      })
-    });
-
-    // Remover beforeunload para que no limpie el folio al redirigir
-    globalThis.removeEventListener('beforeunload', this._beforeUnloadHandler);
-
-    // Limpiar datos del flujo (ya guardados en BD), conservar folio y completado
-    sessionStorage.removeItem('paso1_data');
-    sessionStorage.removeItem('paso2_data');
-    sessionStorage.removeItem('preregistro_data');
-    sessionStorage.removeItem('preregistro_final');
-
-    sessionStorage.setItem('preregistro_completado', 'true');
-    sessionStorage.setItem('folio_preregistro', folio);
-
-    globalThis.location.href = '/preregistro-completado';
-  }
-
   /* ============================================= HTML ============================================= */
+
   renderLegalModal(type) {
     const isPrivacy = type === 'privacy';
-    const title   = isPrivacy ? 'Aviso de Privacidad' : 'Términos y Condiciones';
-    const pdfUrl  = isPrivacy ? '/convocatoria/AvisoPrivacidad.pdf' : '/convocatoria/TerminosCondiciones.pdf';
-    const loaded  = isPrivacy ? this.privacyPdfCargado : this.termsPdfCargado;
+    const title    = isPrivacy ? 'Aviso de Privacidad'    : 'Términos y Condiciones';
+    const pdfUrl   = isPrivacy ? '/convocatoria/AvisoPrivacidad.pdf' : '/convocatoria/TerminosCondiciones.pdf';
+    const loaded   = isPrivacy ? this.privacyPdfCargado   : this.termsPdfCargado;
     const onLoaded = isPrivacy ? this.onPrivacyPdfLoaded.bind(this) : this.onTermsPdfLoaded.bind(this);
 
     return html`
       <div class="modal-pdf-overlay">
         <div class="modal-pdf-container">
           <h2>${title}</h2>
-
           <div class="modal-pdf-viewer">
-            <pdf-zoom-viewer
-              pdfUrl="${pdfUrl}"
-              @pdf-loaded=${onLoaded}
-            ></pdf-zoom-viewer>
-
+            <pdf-zoom-viewer pdfUrl="${pdfUrl}" @pdf-loaded=${onLoaded}></pdf-zoom-viewer>
             ${!loaded ? html`
               <div class="modal-pdf-loading">
                 <div class="modal-pdf-spinner"></div>
@@ -375,7 +354,6 @@ export class PreregistroPasoCorreo extends LitElement
               </div>
             `}
           </div>
-
           <div class="modal-pdf-actions">
             <button ?disabled=${!loaded} @click=${() => this.acceptLegal(type)}>
               Aceptar
@@ -387,13 +365,11 @@ export class PreregistroPasoCorreo extends LitElement
   }
 
   render() {
-    // Leer el correo del paso 1 para mostrarlo en el modal de verificación
     const correoRegistrado = (() => {
       try {
         const d = JSON.parse(sessionStorage.getItem('preregistro_data'))?.paso1 || {};
         return d.correoElectronico || d.correo || d.email || '';
-      }
-      catch { return ''; }
+      } catch { return ''; }
     })();
 
     return html`
@@ -451,11 +427,11 @@ export class PreregistroPasoCorreo extends LitElement
           <div class="codigo-wrapper">
             <p><strong>Estimado aspirante, hemos recibido tu solicitud para realizar un pre-registro como participante en alguno de los perfiles del Instituto Policial de Estudios Superiores de la Secretaría de Seguridad Pública Municipal de Querétaro.</strong></p>
             <p><strong>Para poder continuar con tu pre-registro, es necesario validar el correo electrónico proporcionado.</strong></p>
-            <p><strong>Por favor introduce el siguiente Código de Verificación en el campo señalado:</strong></p>
+            <p><strong>Por favor introduce el Código de Verificación enviado a tu correo en el campo señalado:</strong></p>
 
             ${correoRegistrado ? html`
               <div class="correo-destino">
-                <span class="correo-label">El código será enviado a:</span>
+                <span class="correo-label">Código enviado a:</span>
                 <span class="correo-valor">${correoRegistrado}</span>
               </div>
             ` : ''}
@@ -505,9 +481,8 @@ export class PreregistroPasoCorreo extends LitElement
                 .checked=${this.allAccepted}
                 @change=${(e) => {
                   this.checkboxManual = e.target.checked;
-                  // Si desmarca manualmente, resetear también los PDFs
                   if (!e.target.checked) {
-                    this.termsAccepted = false;
+                    this.termsAccepted   = false;
                     this.privacyAccepted = false;
                   }
                   this.requestUpdate();
@@ -530,10 +505,10 @@ export class PreregistroPasoCorreo extends LitElement
           <div class="actions">
             <button class="btn-secundario" @click=${() => this.goBack()}>VOLVER</button>
             <button
-              ?disabled=${!(this.medio !== '' && this.allAccepted)}
+              ?disabled=${!(this.medio !== '' && this.allAccepted) || this.enviandoCodigo}
               @click=${() => this.enviarCodigo()}
             >
-              ENVIAR CÓDIGO
+              ${this.enviandoCodigo ? 'ENVIANDO...' : 'ENVIAR CÓDIGO'}
             </button>
             <button class="btn-cancelar" @click=${() => this.cancelar()}>CANCELAR</button>
           </div>
