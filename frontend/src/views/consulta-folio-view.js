@@ -123,7 +123,6 @@ export class ConsultaFolioView extends LitElement {
     }
   }
 
-  // Guarda el folio en la lista permanente de folios bloqueados definitivamente
   registrarFolioBloqueado(folio) {
     try {
       const raw = localStorage.getItem('consulta_folio_bloqueados');
@@ -154,14 +153,14 @@ export class ConsultaFolioView extends LitElement {
     try {
       const url  = `${ENDPOINTS.preregistro}/folio/${encodeURIComponent(this.folioCompleto)}`;
       const resp = await fetch(url);
-      if (resp.status === 404) return false;   // folio no existe
-      if (!resp.ok) return false;
+      if (resp.status === 404) return { existe: false, candidato: null };
+      if (!resp.ok)            return { existe: false, candidato: null };
       const data = await resp.json();
-      // La API puede devolver un objeto (candidato) o null
-      return data !== null && data !== undefined;
+      if (data === null || data === undefined) return { existe: false, candidato: null };
+      return { existe: true, candidato: data };
     } catch(e) {
       console.error('Error consultando folio:', e);
-      return false;
+      return { existe: false, candidato: null };
     }
   }
 
@@ -187,17 +186,14 @@ export class ConsultaFolioView extends LitElement {
         clearInterval(this.intervaloCuentaRegresiva);
         this.intervaloCuentaRegresiva = null;
 
-        // Avanzar a la siguiente ronda
         this.rondaActual++;
         this.campoBloqueado = false;
         this.segundosRestantes = 0;
         this.bloqueadoHasta = 0;
         this.intentosFallidos = 0;
 
-        // Limpiar bloqueo temporal del localStorage
         this.limpiarEstadoBloqueo();
 
-        // Reabrir automáticamente la alerta de código con indicador de ronda
         this.pasoCodigo = true;
         this.codigoIngresado = '';
         this.mostrarAlerta = true;
@@ -216,12 +212,11 @@ export class ConsultaFolioView extends LitElement {
     }, 1000);
   }
 
-  /* ==============ACTIVAR BLOQUEO ============== */
+  /* ============== ACTIVAR BLOQUEO ============== */
   activarBloqueo() {
     this.intentosFallidos = 0;
     this.campoBloqueado = true;
 
-    // Ronda 3 → bloqueo definitivo (ya no hay más intentos)
     if (this.rondaActual >= 3) {
       this.bloqueadoDefinitivamente = true;
       this.registrarFolioBloqueado(this.folioCompleto);
@@ -229,7 +224,6 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // Ronda 1 → 1 minuto / Ronda 2 → 3 minutos
     const duracionMs = this.rondaActual === 1 ? 60_000 : 180_000;
     this.bloqueadoHasta = Date.now() + duracionMs;
 
@@ -237,11 +231,11 @@ export class ConsultaFolioView extends LitElement {
     this.iniciarCuentaRegresiva();
   }
 
+  /* ============== CONSULTAR — llama a la API y envía el código por correo ============== */
   async consultar() {
-    //VALIDAR BLOQUEO ANTES DE CONSULTAR
+    // Validar bloqueo activo
     if (Date.now() < this.bloqueadoHasta) {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
-
       this.mostrarAlerta = true;
       this.alertaConfig = {
         tipo: 'error',
@@ -253,7 +247,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    //VALIDAR CAMPOS
+    // Validar campos completos
     if (!this.convocatoria || !this.consecutivo) {
       this.mostrarAlerta = true;
       this.alertaConfig = {
@@ -265,7 +259,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // VERIFICAR SI ESTE FOLIO YA ESTÁ BLOQUEADO DEFINITIVAMENTE
+    // Verificar bloqueo definitivo en localStorage
     if (this.folioEstaBloqueadoDefinitivamente(this.folioCompleto)) {
       this.bloqueadoDefinitivamente = true;
       this.campoBloqueado = true;
@@ -281,13 +275,12 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    //CONSULTAR DB.JSON
-    const existe = await this.validarFolioExistente();
+    // Consultar folio en la API (ahora también devuelve el candidato)
+    const { existe, candidato } = await this.validarFolioExistente();
 
     if (!existe) {
       this.intentosFallidos++;
 
-      //INTENTOS → BLOQUEAR COMPLETAMENTE
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
@@ -326,24 +319,56 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    //Folio válido → pedir código
-    this.pasoCodigo = true;
+    // ── Folio válido → enviar código de acceso por correo ─────────────────────
     this.intentosFallidos = 0;
+
+    // Extraer correo del candidato devuelto por la API
+    const correo = candidato?.correoElectronico || candidato?.correo || candidato?.email || '';
+    const nombre = candidato?.nombre || '';
+
+    try {
+      const resp = await fetch(ENDPOINTS.emailCodigoAcceso, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to:              correo,
+          folio:           this.folioCompleto,
+          nombreAspirante: nombre
+        })
+      });
+
+      const result = await resp.json();
+
+      if (result.success) {
+        // Guardar código para compararlo en validarCodigo()
+        sessionStorage.setItem('codigo_acceso_folio', result.codigo);
+        console.log('✅ Código de acceso enviado a:', correo);
+      } else {
+        console.error('⚠️ No se pudo enviar el código:', result.message);
+      }
+    } catch (err) {
+      console.error('⚠️ Error al contactar la Email API:', err);
+    }
+
+    // Abrir modal de código sin importar si el envío falló
+    this.pasoCodigo = true;
     this.mostrarAlerta = true;
     this.alertaConfig = {
       tipo: 'info',
       titulo: 'Verificación de seguridad',
-      mensaje: 'Enviamos un código de verificación a tu correo electrónico.',
+      mensaje: correo
+        ? `Enviamos un código de verificación a: ${correo}`
+        : 'Enviamos un código de verificación a tu correo electrónico registrado.',
       extra: 'Ingresa el código de 7 dígitos para continuar.',
       boton: 'VALIDAR CÓDIGO'
     };
   }
 
+  /* ============== VALIDAR CÓDIGO — compara contra el generado por la API ============== */
   validarCodigo() {
-    //VALIDAR BLOQUEO ANTES DE VALIDAR CÓDIGO
+    // Validar bloqueo activo
     if (Date.now() < this.bloqueadoHasta) {
       const segundos = Math.ceil((this.bloqueadoHasta - Date.now()) / 1000);
-
       this.alertaConfig = {
         tipo: 'error',
         titulo: 'Sistema bloqueado',
@@ -355,7 +380,7 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    // Validar que se ingresó un código
+    // Validar longitud mínima
     if (!this.codigoIngresado || this.codigoIngresado.length < 7) {
       this.alertaConfig = {
         tipo: 'warning',
@@ -367,16 +392,11 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    const codigosValidos = [
-      '1234567',
-      '9876543',
-      '1111111'
-    ];
-
-    if (!codigosValidos.includes(this.codigoIngresado)) {
+    // Comparar contra el código real generado por la Email API
+    const codigoEsperado = sessionStorage.getItem('codigo_acceso_folio') || '';
+    if (!codigoEsperado || this.codigoIngresado !== codigoEsperado) {
       this.intentosFallidos++;
 
-      //3 INTENTOS → BLOQUEAR CAMPO Y SISTEMA
       if (this.intentosFallidos >= 3) {
         this.activarBloqueo();
 
@@ -414,14 +434,15 @@ export class ConsultaFolioView extends LitElement {
       return;
     }
 
-    //CÓDIGO CORRECTO
+    // ── CÓDIGO CORRECTO ────────────────────────────────────────────────────────
     this.mostrarAlerta = false;
     this.pasoCodigo = false;
     this.intentosFallidos = 0;
     this.codigoIngresado = '';
 
-    // Limpiar bloqueo si existía
+    // Limpiar bloqueo y código ya usado (expira al usarse)
     this.limpiarEstadoBloqueo();
+    sessionStorage.removeItem('codigo_acceso_folio');
 
     sessionStorage.setItem('folio_consulta', this.folioCompleto);
     sessionStorage.removeItem('origen_convocatoria');
@@ -433,59 +454,34 @@ export class ConsultaFolioView extends LitElement {
     this.mostrarAlerta = false;
   }
 
-  /* ==============VALIDACIÓN ESTRICTA DE SOLO NÚMEROS ============== */
+  /* ============== VALIDACIÓN ESTRICTA DE SOLO NÚMEROS ============== */
   handleConvocatoriaInput(e) {
     if (this.campoBloqueado) return;
-    
-    // Filtrar solo números
     const valor = e.target.value.replace(/\D/g, '');
-    
-    // Limitar a 2 dígitos
     this.convocatoria = valor.substring(0, 2);
-    
-    // Actualizar el input visualmente
     e.target.value = this.convocatoria;
   }
 
   handleConsecutivoInput(e) {
     if (this.campoBloqueado) return;
-    
-    // Filtrar solo números
     const valor = e.target.value.replace(/\D/g, '');
-    
-    // Limitar a 3 dígitos
     this.consecutivo = valor.substring(0, 3);
-    
-    // Actualizar el input visualmente
     e.target.value = this.consecutivo;
   }
 
   handleCodigoInput(e) {
     if (this.campoBloqueado) return;
-    
-    // Filtrar solo números
     const valor = e.target.value.replace(/\D/g, '');
-    
-    // Limitar a 7 dígitos
     this.codigoIngresado = valor.substring(0, 7);
-    
-    // Actualizar el input visualmente
     e.target.value = this.codigoIngresado;
   }
 
   /* ============== EVITAR PEGAR TEXTO NO NUMÉRICO ============== */
   handlePaste(e, maxLength) {
     e.preventDefault();
-    
     if (this.campoBloqueado) return;
-    
-    // Obtener texto del portapapeles
     const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-    
-    // Filtrar solo números y limitar longitud
     const numeros = pastedText.replace(/\D/g, '').substring(0, maxLength);
-    
-    // Determinar qué campo está siendo pegado
     const input = e.target;
     if (input.maxLength === 2) {
       this.convocatoria = numeros;
@@ -527,7 +523,6 @@ export class ConsultaFolioView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    // Capturar la ruta desde donde se llegó a esta pantalla, para el botón VOLVER
     const origenActual = sessionStorage.getItem('origen_convocatoria');
     if (origenActual && !origenActual.includes('progreso-folio') && !origenActual.includes('consulta-folio')) {
       sessionStorage.setItem('consulta_folio_origen', origenActual);
@@ -542,7 +537,6 @@ export class ConsultaFolioView extends LitElement {
       } else if (this.index === 0) {
         this.direction = 1;
       }
-
       this.index += this.direction;
       this.updateCarousel();
     }, 1500);
