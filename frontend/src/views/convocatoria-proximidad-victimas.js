@@ -24,12 +24,12 @@ export class ConvocatoriaProximidadVictimas extends ConvocatoriaProximidadBase {
     // ========== CONFIGURACIÓN DE CARRUSEL SIMPLE ==========
     this.tipoCarrusel = 'simple';
     this.carouselImages = [
-      '/src/assets/proximidad/VictimasA.jpg',
-      '/src/assets/proximidad/VictimasB.jpg',
-      '/src/assets/proximidad/VictimasC.jpg',
-      '/src/assets/proximidad/VictimasD.jpg',
-      '/src/assets/proximidad/VictimasE.jpg',
-      '/src/assets/proximidad/VictimasF.jpg'
+      '/assets/proximidad/VictimasA.jpg',
+      '/assets/proximidad/VictimasB.jpg',
+      '/assets/proximidad/VictimasC.jpg',
+      '/assets/proximidad/VictimasD.jpg',
+      '/assets/proximidad/VictimasE.jpg',
+      '/assets/proximidad/VictimasF.jpg'
     ];
 
     // ========== RUTAS ==========

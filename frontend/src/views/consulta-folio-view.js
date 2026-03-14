@@ -508,13 +508,13 @@ export class ConsultaFolioView extends LitElement {
 
   /* ============== CARRUSEL DE FOTOS ============== */
   images = [
-    '/src/assets/estatus/EstatusA.jpg',
-    '/src/assets/estatus/EstatusB.jpg',
-    '/src/assets/estatus/EstatusC.jpg',
-    '/src/assets/estatus/EstatusD.jpg',
-    '/src/assets/estatus/EstatusE.jpg',
-    '/src/assets/estatus/EstatusF.jpg',
-    '/src/assets/estatus/EstatusG.jpg'
+    '/assets/estatus/EstatusA.jpg',
+    '/assets/estatus/EstatusB.jpg',
+    '/assets/estatus/EstatusC.jpg',
+    '/assets/estatus/EstatusD.jpg',
+    '/assets/estatus/EstatusE.jpg',
+    '/assets/estatus/EstatusF.jpg',
+    '/assets/estatus/EstatusG.jpg'
   ];
 
   index = 0;

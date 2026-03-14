@@ -228,7 +228,7 @@ export class PerfilesProximidad extends LitElement {
       <section class="cards">
         ${this.renderCard({
           title: 'Policía de Proximidad',
-          image: '/src/assets/proximidad/Proximidad.jpg',
+          image: '/assets/proximidad/Proximidad.jpg',
           registroPath: '/convocatoria-proximidad',
           consultaPath: '/consulta-folio',
           registroClass: 'proximidad-registro',
@@ -237,7 +237,7 @@ export class PerfilesProximidad extends LitElement {
 
         ${this.renderCard({
           title: 'Policía de Proximidad Especializada para Analista en Seguridad Pública',
-          image: '/src/assets/proximidad/SegPub.jpeg',
+          image: '/assets/proximidad/SegPub.jpeg',
           registroPath: '/convocatoria-proximidad-seg-pub',
           consultaPath: '/consulta-folio',
           registroClass: 'seg-pub-registro',
@@ -246,7 +246,7 @@ export class PerfilesProximidad extends LitElement {
 
         ${this.renderCard({
           title: 'Policía de Proximidad Especializada para Policía Cibernética',
-          image: '/src/assets/proximidad/Cibernetica.jpg',
+          image: '/assets/proximidad/Cibernetica.jpg',
           registroPath: '/convocatoria-proximidad-cibernetica',
           consultaPath: '/consulta-folio',
           registroClass: 'cibernetica-registro',
@@ -255,7 +255,7 @@ export class PerfilesProximidad extends LitElement {
 
         ${this.renderCard({
           title: 'Policía de Proximidad Especializada para Atención a Víctimas de Violencia Familiar y de Género',
-          image: '/src/assets/proximidad/Victimas.jpg',
+          image: '/assets/proximidad/Victimas.jpg',
           registroPath: '/convocatoria-proximidad-victimas',
           consultaPath: '/consulta-folio',
           registroClass: 'victimas-registro',

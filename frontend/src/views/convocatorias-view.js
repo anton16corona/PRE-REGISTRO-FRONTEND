@@ -174,7 +174,7 @@ export class ConvocatoriasView extends LitElement {
       <section class="cards">
         <!-- PROXIMIDAD -->
         <article class="card">
-          <img src="/src/assets/Proximidad.jpg" />
+          <img src="/assets/Proximidad.JPG" />
           <h3>Policía de Proximidad</h3>
           <button
             class="perfilesbtn"
@@ -186,7 +186,7 @@ export class ConvocatoriasView extends LitElement {
 
         <!-- AUXILIAR -->
         <article class="card">
-          <img src="/src/assets/Auxiliar.jpeg" />
+          <img src="/assets/Auxiliar.jpeg" />
           <h3>Policía Auxiliar</h3>
 
           <button
@@ -206,7 +206,7 @@ export class ConvocatoriasView extends LitElement {
 
         <!-- GUARDIA -->
         <article class="card">
-          <img src="/src/assets/Civica.jpg" />
+          <img src="/assets/Civica.JPG" />
           <h3>Guardia Cívica</h3>
 
           <button

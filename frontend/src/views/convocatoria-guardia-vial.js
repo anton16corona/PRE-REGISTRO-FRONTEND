@@ -23,10 +23,10 @@ export class ConvocatoriaGuardiaVial extends ConvocatoriaBase {
     // ========== CONFIGURACIÓN DE CARRUSEL ==========
     this.tipoCarrusel = 'simple';
     this.carouselImages = [
-      '/src/assets/guardia/VialA.jpg',
-      '/src/assets/guardia/VialB.jpg',
-      '/src/assets/guardia/VialC.jpg',
-      '/src/assets/guardia/VialD.jpg',
+      '/assets/guardia/VialA.JPG',
+      '/assets/guardia/VialB.JPG',
+      '/assets/guardia/VialC.JPG',
+      '/assets/guardia/VialD.jpg',
     ];
 
     // ========== RUTAS ==========

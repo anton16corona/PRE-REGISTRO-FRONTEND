@@ -45,7 +45,7 @@ export class PreregistroCompletado extends LitElement {
 
       <main>
         <section class="panel">
-          <img class="verified" src="/src/assets/correcto.png" alt="Completado" />
+          <img class="verified" src="/assets/correcto.png" alt="Completado" />
 
           <div class="title">PRE-REGISTRO COMPLETADO</div>
 

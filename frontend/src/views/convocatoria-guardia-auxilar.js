@@ -23,10 +23,10 @@ export class ConvocatoriaGuardiaAuxiliar extends ConvocatoriaBase {
     // ========== CONFIGURACIÓN DE CARRUSEL ==========
     this.tipoCarrusel = 'simple';
     this.carouselImages = [
-      '/src/assets/guardia/AuxiliarA.jpg',
-      '/src/assets/guardia/AuxiliarB.jpg',
-      '/src/assets/guardia/AuxiliarC.jpg',
-      '/src/assets/guardia/AuxiliarD.jpg',
+      '/assets/guardia/AuxiliarA.jpg',
+      '/assets/guardia/AuxiliarB.jpg',
+      '/assets/guardia/AuxiliarC.jpg',
+      '/assets/guardia/AuxiliarD.JPG',
     ];
 
     // ========== RUTAS ==========

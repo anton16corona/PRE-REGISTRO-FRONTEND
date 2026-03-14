@@ -635,23 +635,23 @@ export class ConvocatoriaAuxiliar extends LitElement {
 
     // ---------- CARRUSEL DE FOTOS. ----------
     imagesLeft = [
-      '/src/assets/policia/AuxiliarA.jpeg',
-      '/src/assets/policia/AuxiliarB.jpeg',
-      '/src/assets/policia/AuxiliarC.jpg',
-      '/src/assets/policia/AuxiliarD.jpg',
-      '/src/assets/policia/AuxiliarE.jpg',
-      '/src/assets/policia/AuxiliarF.jpg',
-      '/src/assets/policia/AuxiliarG.jpg'
+      '/assets/policia/AuxiliarA.jpeg',
+      '/assets/policia/AuxiliarB.jpeg',
+      '/assets/policia/AuxiliarC.jpg',
+      '/assets/policia/AuxiliarD.jpg',
+      '/assets/policia/AuxiliarE.jpg',
+      '/assets/policia/AuxiliarF.jpg',
+      '/assets/policia/AuxiliarG.jpg'
     ];
 
     imagesRight = [
-      '/src/assets/policia/AuxiliarI.jpeg',
-      '/src/assets/policia/AuxiliarJ.jpeg',
-      '/src/assets/policia/AuxiliarK.jpeg',
-      '/src/assets/policia/AuxiliarL.jpeg',
-      '/src/assets/policia/AuxiliarM.jpg',
-      '/src/assets/policia/AuxiliarN.jpg',
-      '/src/assets/policia/AuxiliarO.jpg'
+      '/assets/policia/AuxiliarI.jpeg',
+      '/assets/policia/AuxiliarJ.jpeg',
+      '/assets/policia/AuxiliarK.jpeg',
+      '/assets/policia/AuxiliarL.jpeg',
+      '/assets/policia/AuxiliarM.jpg',
+      '/assets/policia/AuxiliarN.jpg',
+      '/assets/policia/AuxiliarO.jpeg'
     ];
 
   /* ========================================= HTML ======================================== */

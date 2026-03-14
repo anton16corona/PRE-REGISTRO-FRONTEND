@@ -203,7 +203,7 @@ export class PerfilesGuardias extends LitElement {
       <section class="cards">
         ${this.renderCard({
           title: 'Guardia Vial',
-          image: '/src/assets/GV.jpg',
+          image: '/assets/GV.jpg',
           registroPath: '/convocatoria-guardia-vial',
           consultaPath: '/consulta-folio',
           registroClass: 'vial-registro',
@@ -212,7 +212,7 @@ export class PerfilesGuardias extends LitElement {
 
         ${this.renderCard({
           title: 'Guardia Cívica',
-          image: '/src/assets/GC.jpg',
+          image: '/assets/GC.JPG',
           registroPath: '/convocatoria-guardia-civica',
           consultaPath: '/consulta-folio',
           registroClass: 'civica-registro',
@@ -221,7 +221,7 @@ export class PerfilesGuardias extends LitElement {
 
         ${this.renderCard({
           title: 'Guardia Auxiliar',
-          image: '/src/assets/GA.jpg',
+          image: '/assets/GA.jpg',
           registroPath: '/convocatoria-guardia-auxiliar',
           consultaPath: '/consulta-folio',
           registroClass: 'auxiliar-registro',

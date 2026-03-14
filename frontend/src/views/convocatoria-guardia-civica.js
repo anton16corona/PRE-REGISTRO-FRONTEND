@@ -23,16 +23,16 @@ export class ConvocatoriaGuardiaCivica extends ConvocatoriaBase {
     // ========== CONFIGURACIÓN DE CARRUSEL DOBLE ==========
     this.tipoCarrusel = 'doble';
     this.carouselImagesLeft = [
-      '/src/assets/guardia/CivicaA.jpg',
-      '/src/assets/guardia/CivicaB.jpg',
-      '/src/assets/guardia/CivicaC.jpg',
-      '/src/assets/guardia/CivicaD.jpg'
+      '/assets/guardia/CivicaA.jpg',
+      '/assets/guardia/CivicaB.jpg',
+      '/assets/guardia/CivicaC.jpg',
+      '/assets/guardia/CivicaD.jpg'
     ];
     this.carouselImagesRight = [
-      '/src/assets/guardia/CivicaE.jpg',
-      '/src/assets/guardia/CivicaF.jpg',
-      '/src/assets/guardia/CivicaG.jpg',
-      '/src/assets/guardia/CivicaH.jpg'
+      '/assets/guardia/CivicaE.jpg',
+      '/assets/guardia/CivicaF.jpg',
+      '/assets/guardia/CivicaG.jpg',
+      '/assets/guardia/CivicaH.jpg'
     ];
 
     // ========== RUTAS ==========

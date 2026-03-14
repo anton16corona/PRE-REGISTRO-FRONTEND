@@ -24,14 +24,14 @@ export class ConvocatoriaProximidadSegPub extends ConvocatoriaProximidadBase {
     // ========== CONFIGURACIÓN DE CARRUSEL DOBLE ==========
     this.tipoCarrusel = 'doble';
     this.carouselImagesLeft = [
-      '/src/assets/proximidad/SegPubA.jpeg',
-      '/src/assets/proximidad/SegPubB.jpeg',
-      '/src/assets/proximidad/SegPubC.jpeg'
+      '/assets/proximidad/SegPubA.jpeg',
+      '/assets/proximidad/SegPubB.jpeg',
+      '/assets/proximidad/SegPubC.jpeg'
     ];
     this.carouselImagesRight = [
-      '/src/assets/proximidad/SegPubD.jpeg',
-      '/src/assets/proximidad/SegPubE.jpeg',
-      '/src/assets/proximidad/SegPubF.jpeg'
+      '/assets/proximidad/SegPubD.jpeg',
+      '/assets/proximidad/SegPubE.jpeg',
+      '/assets/proximidad/SegPubF.jpeg'
     ];
 
     // ========== RUTAS ==========

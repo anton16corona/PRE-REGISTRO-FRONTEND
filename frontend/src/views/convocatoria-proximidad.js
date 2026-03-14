@@ -24,18 +24,18 @@ export class ConvocatoriaProximidad extends ConvocatoriaProximidadBase {
     // ========== CONFIGURACIÓN DE CARRUSEL DOBLE ==========
     this.tipoCarrusel = 'doble';
     this.carouselImagesLeft = [
-      '/src/assets/proximidad/ProximidadA.jpg',
-      '/src/assets/proximidad/ProximidadB.jpg',
-      '/src/assets/proximidad/ProximidadC.jpg',
-      '/src/assets/proximidad/ProximidadD.jpg',
-      '/src/assets/proximidad/ProximidadE.jpg',
+      '/assets/proximidad/ProximidadA.jpg',
+      '/assets/proximidad/ProximidadB.jpg',
+      '/assets/proximidad/ProximidadC.jpg',
+      '/assets/proximidad/ProximidadD.jpg',
+      '/assets/proximidad/ProximidadE.jpg',
     ];
     this.carouselImagesRight = [
-      '/src/assets/proximidad/ProximidadF.jpg',
-      '/src/assets/proximidad/ProximidadG.jpg',
-      '/src/assets/proximidad/ProximidadH.jpg',
-      '/src/assets/proximidad/ProximidadI.jpg',
-      '/src/assets/proximidad/ProximidadJ.jpg'
+      '/assets/proximidad/ProximidadF.jpg',
+      '/assets/proximidad/ProximidadG.jpg',
+      '/assets/proximidad/ProximidadH.jpg',
+      '/assets/proximidad/ProximidadI.jpg',
+      '/assets/proximidad/ProximidadJ.jpg'
     ];
 
     // ========== RUTAS ==========

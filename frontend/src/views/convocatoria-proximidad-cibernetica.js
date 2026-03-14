@@ -24,9 +24,9 @@ export class ConvocatoriaProximidadCibernetica extends ConvocatoriaProximidadBas
     // ========== CONFIGURACIÓN DE CARRUSEL SIMPLE ==========
     this.tipoCarrusel = 'simple';
     this.carouselImages = [
-      '/src/assets/proximidad/CiberneticaA.jpg',
-      '/src/assets/proximidad/CiberneticaB.jpg',
-      '/src/assets/proximidad/CiberneticaC.jpg',
+      '/assets/proximidad/CiberneticaA.jpg',
+      '/assets/proximidad/CiberneticaB.JPG',
+      '/assets/proximidad/CiberneticaC.jpg',
     ];
 
     // ========== RUTAS ==========
